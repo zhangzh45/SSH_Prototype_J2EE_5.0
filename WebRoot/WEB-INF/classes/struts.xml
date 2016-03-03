@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<constant name="struts.objectFactory" value="spring"></constant> 
+<constant name="struts.i18n.encoding" value="utf-8"></constant> 
+<package name="ajaxCheck"  extends="json-default">
+	 <action name="approveService"  class="srAction" method="approveService">
+         <result type="json">
+                <param name="root">applyString</param>
+            </result>
+        </action>
+     <action name="agree" class="TempAct" method="agree">
+     	<result name="success" type="json">
+     		 <param name="root"></param>
+     	</result>
+     </action>
+     <action name="disagree" class="TempAct" method="disagree"> 
+     	<result name="success" type="json">
+     		 <param name="root"></param>
+     	</result>
+     </action>
+     <action name="loadRoleSpecSer" class="RoleSpecSerAct" method="loadRoleSpecSer">
+     	 <result type="json">
+                <param name="root">RoleSpecSerString</param>
+         </result>
+     </action>
+     <action name="deleteRoleSpecSer"  class="RoleSpecSerAct" method="deleteRoleSpecSer" >
+     	 <result name="success" type="json">
+     	 </result>
+     </action>
+     <action name="addRoleService" class="RoleSpecSerAct" method="addRoleService">
+     	 <result name="success" type="json">
+     	 	<param name="root"></param>
+     	 </result>
+     </action>
+   
+</package>
+	<package name="common" extends="struts-default">
+        <action name="register" class="srAction" method="register">
+            <result name="success">/WEB-INF/ServiceManage/ServiceRequest.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="ServiceRequest">
+        	<result>/WEB-INF/ServiceManage/ServiceRequest.jsp</result>
+        </action>
+        <action name="AddLocalConfig">
+        	<result>/WEB-INF/ServiceManage/AddLocalConfig.jsp</result>
+        </action>
+        <action name="AddParameterJSP">
+        	<result>/WEB-INF/ServiceManage/AddParameter.jsp</result>
+        </action>
+        <action name="AddOutputJSP">
+        	<result>/WEB-INF/ServiceManage/AddOutput.jsp</result>
+        </action>
+        <action name="AddSiteJSP">
+        	<result>/WEB-INF/ServiceManage/AddSite.jsp</result>
+        </action>
+        <action name="AddKeywordJSP">
+        	<result>/WEB-INF/ServiceManage/AddKeyword.jsp</result>
+        </action>
+        <action name="AddPermissionJSP">
+        	<result>/WEB-INF/ServiceManage/AddPermission.jsp</result>
+        </action>
+        <action name="AddUserJSP">
+        	<result>/WEB-INF/ServiceManage/AddUser.jsp</result>
+        </action>
+       <action name="appService" >
+        	<result >/WEB-INF/ServiceManage/AddUserSpecSer.jsp</result>
+        </action>
+        <action name="chooseRoleService">
+        	<result >/WEB-INF/ServiceManage/AddRoleSpecSer.jsp</result>
+        </action>
+        <action name="addAll" class="TempAct" method="addAll">
+        	<result name="success">/WEB-INF/ServiceManage/AddUserSpecSer.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+        <action name="rejectAll" class="TempAct" method="rejectAll" >
+        	<result name="success">/WEB-INF/ServiceManage/AddUserSpecSer.jsp</result>
+       		 <result name="error">/error.jsp</result>	
+        </action>
+        <action name="list" class="srAction" method="acceptedService">
+        	<result name="success">/WEB-INF/ServiceManage/statistic.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="auditService" class="srAction" method="auditService">
+        	<result name="success">/WEB-INF/ServiceManage/AuditService.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="acceptService" class="srAction" method="acceptService">
+        	<result name="success">/ServiceRequestSuccess.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="login" class="userAction" method="login">
+        	<result name="success">/index.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="dashboard" class="userAction" method="dashboard">
+        	<result name="success">/index.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="addUser" class="userAction" method="addUser">
+        	<result name="success">/ServiceRequestSuccess.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="listUser" class="userAction" method="listUser">
+        	<result name="success">/WEB-INF/ServiceManage/ListUser.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="addRole" class="roleAction" method="addRole">
+        	<result name="success">/ServiceRequestSuccess.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="deleteUser" class="userAction" method="deleteUser">
+        	<result name="success">/ServiceRequestSuccess.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="listRole" class="roleAction" method="listRole">
+        	<result name="success">/WEB-INF/ServiceManage/ListRole.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="deleteRole" class="roleAction" method="deleteRole">
+        	<result name="success">/ServiceRequestSuccess.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="inputParameter" class="parameterAction" method="inputParameter">
+        	<result name="success">/WEB-INF/ServiceManage/inputParameter.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="runService" class="parameterAction" method="runService">
+        	<result name="success">/WEB-INF/ServiceManage/runService.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="getWebService" class="srAction" method="getWebService">
+        	<result name="success">/WEB-INF/ServiceManage/statistic.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="getAllService" class="srAction" method="getAllService">
+        	<result name="success">/WEB-INF/ServiceManage/statistic.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="getURL" class="srAction" method="getURL">
+        	<result name="success">/WEB-INF/ServiceManage/statistic.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="getPicture" class="srAction" method="getPicture">
+        	<result name="success">/WEB-INF/ServiceManage/chart.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="addConfig" class="licenceAction" method="addConfig">
+        	<result name="success">/Config.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="evaluateService" class="evaluationAction" method="getUnEvaluateNotSave">
+        	<result name="success">/WEB-INF/ServiceManage/EvaluateAccepted.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="getUnEvaluate" class="evaluationAction" method="getUnEvaluate">
+        	<result name="success">/WEB-INF/ServiceManage/EvaluateAccepted.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="getMyEvaluate" class="evaluationAction" method="getMyEvaluate">
+        	<result name="success">/WEB-INF/ServiceManage/EvaluateHistory.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="quality" class="evaluationAction" method="quality">
+        	<result name="success">/WEB-INF/ServiceManage/ServiceQuality.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="addPermission" class="permissionAction" method="addPermission">
+        	<result name="success">/ServiceRequestSuccess.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="choosePermissionRole" class="permissionAction" method="choosePermissionRole">
+        	<result name="success">/WEB-INF/ServiceManage/ChoosePermissionRole.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="addPermissionRole" class="rolepermissionAction" method="addPermissionRole">
+        	<result name="success">/ServiceRequestSuccess.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="choosePermissionService" class="permissionAction" method="choosePermissionService">
+        	<result name="success">/WEB-INF/ServiceManage/ChoosePermissionService.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="addPermissionService" class="permissionserviceAction" method="addPermissionService">
+        	<result name="success">/ServiceRequestSuccess.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="conbineService" class="srAction" method="conbineService">
+        	<result name="success">/ConbineService.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+        <action name="conbineServiceB" class="srAction" method="conbineServiceB">
+        	<result name="success">/ConbineServiceB.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+        <action name="saveConbineService" class="conditionAction" method="saveConbineService">
+        	<result name="success">/ServiceRequestSuccess.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+        <action name="combinedService" class="srAction" method="combinedService">
+        	<result name="success">/CombinedService.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+        <action name="searchService" class="srAction" method="searchService">
+        	<result name="success">/WEB-INF/ServiceManage/statistic.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+        <action name="getServiceRelation" class="conditionAction" method="getServiceRelation">
+        	<result name="success">/WEB-INF/ServiceManage/topodemo.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+        <action name="combineRelation" class="conditionAction" method="combineRelation">
+        	<result name="success">/CombineRelation.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+        <action name="addParameter" class="parameterAction" method="addParameter">
+            <result name="success">/WEB-INF/ServiceManage/ServiceRequestSuccess.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="busyClass" class="conditionAction" method="busyClass">
+            <result name="success">/WEB-INF/ServiceManage/dtree.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="workClass" class="conditionAction" method="workClass">
+            <result name="success">/WEB-INF/ServiceManage/workdtree.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="relationDetail" class="conditionAction" method="relationDetail">
+            <result name="success">/WEB-INF/ServiceManage/topodemo.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="combineAService" class="srAction" method="combineAService">
+        	<result name="success">/WEB-INF/ServiceManage/CombineATree.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+        <action name="combineBService" class="srAction" method="combineBService">
+        	<result name="success">/WEB-INF/ServiceManage/CombineBTree.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+        <action name="serviceDetail" class="srAction" method="serviceDetail">
+        	<result name="success">/WEB-INF/ServiceManage/CombineATree.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="addCombineA" class="srAction" method="addCombineA">
+        	<result name="success">/ServiceRequestSuccess.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="addCombineB" class="srAction" method="addCombineB">
+        	<result name="success">/ServiceRequestSuccess.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="userAndRole" class="userAction" method="userAndRole">
+        	<result name="success">/WEB-INF/ServiceManage/UserRole.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="addUserRole" class="userroleAction" method="addUserRole">
+        	<result name="success">ServiceRequestSuccess.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="myService" class="srAction" method="myService">
+        	<result name="success">/WEB-INF/ServiceManage/MyService.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+        <action name="addOutput" class="srAction" method="addOutput">
+        	<result name="success">/WEB-INF/ServiceManage/AddOutput.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+        <action name="freRole" class="roleAction" method="freRole">
+        	<result name="success">/WEB-INF/ServiceManage/AddRole.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+        <action name="addKeyword" class="skeywordAction" method="addKeyword">
+        	<result name="success">/WEB-INF/ServiceManage/AddKeyword.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+        <action name="listKey" class="skeywordAction" method="listKey">
+        	<result name="success">/WEB-INF/ServiceManage/ListKeyword.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+        <action name="listResult" class="skeywordAction" method="listResult">
+        	<result name="success">/WEB-INF/ServiceManage/ListResult.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+        <action name="addSite" class="searchsiteAction" method="addSearchsite">
+        	<result name="success">/WEB-INF/ServiceManage/AddSite.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+        <action name="listSite" class="searchsiteAction" method="listSearchsite">
+        	<result name="success">/WEB-INF/ServiceManage/ListSite.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+        <action name="listPermission" class="permissionAction" method="listPermission">
+        	<result name="success">/WEB-INF/ServiceManage/ListPermission.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+        <action name="deletePermission" class="permissionAction" method="deletePermission">
+        	<result name="success">/WEB-INF/ServiceManage/ListPermission.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+    </package>
+</struts>    
