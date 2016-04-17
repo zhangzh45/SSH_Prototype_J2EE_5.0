@@ -121,4 +121,8 @@ public class SerService
 	public List<Service> findyByServiceName(String serviceName){
 		return srDAO.findByServiceName(serviceName);
 	}
+	
+	public List<Service> findByProperty(String name,String value){
+		return srDAO.findByProperty(name, value);
+	}
 }
