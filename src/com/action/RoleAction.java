@@ -1,7 +1,9 @@
 package com.action;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.algorithm.Aprioir;
 import com.algorithm.AprioirItemSet;
@@ -20,7 +22,13 @@ public class RoleAction extends ActionSupport
 	String option1;
 	private UserRoleService userrolesr;
 	List<AprioirResult> apresults = new ArrayList<AprioirResult>();
-	
+	private Map<String,List<Role>> mapRoles =new HashMap<String, List<Role>>();
+	public Map<String, List<Role>> getMapRoles() {
+		return mapRoles;
+	}
+	public void setMapRoles(Map<String, List<Role>> mapRoles) {
+		this.mapRoles = mapRoles;
+	}
 	public List<AprioirResult> getApresults() {
 		return apresults;
 	}
@@ -86,6 +94,30 @@ public class RoleAction extends ActionSupport
 		}
 	}
 	
+	/**
+	 * @method 提供外部访问角色数据
+	 * @return 以json格式返回所有的角色信息
+	 */
+	public String jsonListRole() {
+	     List<Role> jsonListRoles = new ArrayList<Role>();
+	     if (null == this.rolesr) {
+	    	 LOG.error("roleService初始化错误"+this.rolesr);
+	    	 return SUCCESS;
+	     }
+	     roles = this.rolesr.getAllRole();
+	     if (null == roles ) {
+	    		 return SUCCESS;
+	     }
+	    
+	     for (Role role : roles) {
+	    	Role roleList = new Role();
+	    	roleList.setRoleId(role.getRoleId());
+	    	roleList.setRoleName(role.getRoleName());
+	        jsonListRoles.add(roleList);
+	     }
+	     mapRoles.put("roles", jsonListRoles);
+	     return SUCCESS;
+	}
 	public String deleteRole()
 	{
 		try
