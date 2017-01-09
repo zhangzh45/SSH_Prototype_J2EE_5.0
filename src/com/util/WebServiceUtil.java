@@ -122,7 +122,7 @@ public class WebServiceUtil
 	            		NodeList nl = document.getElementsByTagName(OutputAtt.get(j));
 	            		Node n = nl.item(i);
 	            		String att = n.getFirstChild().getNodeValue();
-	            		System.out.println(att);
+	            		System.out.println("att:"+att);
 	            		result += att;
 	            	}
         		}

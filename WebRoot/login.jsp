@@ -1,3 +1,5 @@
+<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%@ taglib uri="/struts-tags" prefix="s"%>
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
@@ -6,7 +8,7 @@
 
 <head>
 	<meta charset="utf-8" />
-	<title>企业服务管理系统 | Login Page</title>
+	<title><s:text name="SystemName"></s:text> | Login Page</title>
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 	<meta content="" name="description" />
 	<meta content="" name="author" />
@@ -45,7 +47,7 @@
 	<div class="content">
 		<!-- BEGIN LOGIN FORM -->
 		<form class="form-vertical login-form" action="login.action" id="form1"	method="post">
-			<h3 class="form-title">企业服务管理系统</h3>
+			<h3 class="form-title"><s:text name="SystemName"></s:text></h3>
 			<div class="alert alert-error hide">
 				<button class="close" data-dismiss="alert"></button>
 				<span>Enter any username and password.</span>
@@ -198,7 +200,7 @@
 
 	<div class="copyright">
 
-		2013 &copy;中山大学软件学院.
+		2013 &copy;<s:text name="SchoolName"></s:text>
 
 	</div>
 

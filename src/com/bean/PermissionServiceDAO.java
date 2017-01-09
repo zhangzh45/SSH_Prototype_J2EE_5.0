@@ -9,30 +9,30 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  * A data access object (DAO) providing persistence and search support for
- * PermissionService entities. Transaction control of the save(), update() and
+ * Permissionservice entities. Transaction control of the save(), update() and
  * delete() operations can directly support Spring container-managed
  * transactions or they can be augmented to handle user-managed Spring
  * transactions. Each of these methods provides additional information for how
  * to configure it for the desired type of transaction control.
  * 
- * @see com.bean.PermissionService
+ * @see com.bean.Permissionservice
  * @author MyEclipse Persistence Tools
  */
 
-public class PermissionServiceDAO extends HibernateDaoSupport {
+public class PermissionserviceDAO extends HibernateDaoSupport {
 	private static final Logger log = LoggerFactory
-			.getLogger(PermissionServiceDAO.class);
+			.getLogger(PermissionserviceDAO.class);
 	// property constants
+	public static final String PERMISION_SERVICE_DESC = "permisionServiceDesc";
 	public static final String PERMISSION_ID = "permission.permissionId";
 	public static final String SERVICEID = "service.serviceId";
-	public static final String PERMISION_SERVICE_DESC = "permisionServiceDesc";
-
+	
 	protected void initDao() {
 		// do nothing
 	}
 
-	public void save(PermissionService transientInstance) {
-		log.debug("saving PermissionService instance");
+	public void save(Permissionservice transientInstance) {
+		log.debug("saving Permissionservice instance");
 		try {
 			getHibernateTemplate().save(transientInstance);
 			log.debug("save successful");
@@ -42,8 +42,8 @@ public class PermissionServiceDAO extends HibernateDaoSupport {
 		}
 	}
 
-	public void delete(PermissionService persistentInstance) {
-		log.debug("deleting PermissionService instance");
+	public void delete(Permissionservice persistentInstance) {
+		log.debug("deleting Permissionservice instance");
 		try {
 			getHibernateTemplate().delete(persistentInstance);
 			log.debug("delete successful");
@@ -53,11 +53,11 @@ public class PermissionServiceDAO extends HibernateDaoSupport {
 		}
 	}
 
-	public PermissionService findById(java.lang.Integer id) {
-		log.debug("getting PermissionService instance with id: " + id);
+	public Permissionservice findById(java.lang.Integer id) {
+		log.debug("getting Permissionservice instance with id: " + id);
 		try {
-			PermissionService instance = (PermissionService) getHibernateTemplate()
-					.get("com.bean.PermissionService", id);
+			Permissionservice instance = (Permissionservice) getHibernateTemplate()
+					.get("com.bean.Permissionservice", id);
 			return instance;
 		} catch (RuntimeException re) {
 			log.error("get failed", re);
@@ -65,8 +65,8 @@ public class PermissionServiceDAO extends HibernateDaoSupport {
 		}
 	}
 
-	public List findByExample(PermissionService instance) {
-		log.debug("finding PermissionService instance by example");
+	public List findByExample(Permissionservice instance) {
+		log.debug("finding Permissionservice instance by example");
 		try {
 			List results = getHibernateTemplate().findByExample(instance);
 			log.debug("find by example successful, result size: "
@@ -79,10 +79,10 @@ public class PermissionServiceDAO extends HibernateDaoSupport {
 	}
 
 	public List findByProperty(String propertyName, Object value) {
-		log.debug("finding PermissionService instance with property: "
+		log.debug("finding Permissionservice instance with property: "
 				+ propertyName + ", value: " + value);
 		try {
-			String queryString = "from PermissionService as model where model."
+			String queryString = "from Permissionservice as model where model."
 					+ propertyName + "= ?";
 			return getHibernateTemplate().find(queryString, value);
 		} catch (RuntimeException re) {
@@ -98,15 +98,15 @@ public class PermissionServiceDAO extends HibernateDaoSupport {
 	public List findByServiceid(Object serviceid) {
 		return findByProperty(SERVICEID, serviceid);
 	}
-
+	
 	public List findByPermisionServiceDesc(Object permisionServiceDesc) {
 		return findByProperty(PERMISION_SERVICE_DESC, permisionServiceDesc);
 	}
 
 	public List findAll() {
-		log.debug("finding all PermissionService instances");
+		log.debug("finding all Permissionservice instances");
 		try {
-			String queryString = "from PermissionService";
+			String queryString = "from Permissionservice";
 			return getHibernateTemplate().find(queryString);
 		} catch (RuntimeException re) {
 			log.error("find all failed", re);
@@ -114,10 +114,10 @@ public class PermissionServiceDAO extends HibernateDaoSupport {
 		}
 	}
 
-	public PermissionService merge(PermissionService detachedInstance) {
-		log.debug("merging PermissionService instance");
+	public Permissionservice merge(Permissionservice detachedInstance) {
+		log.debug("merging Permissionservice instance");
 		try {
-			PermissionService result = (PermissionService) getHibernateTemplate()
+			Permissionservice result = (Permissionservice) getHibernateTemplate()
 					.merge(detachedInstance);
 			log.debug("merge successful");
 			return result;
@@ -127,8 +127,8 @@ public class PermissionServiceDAO extends HibernateDaoSupport {
 		}
 	}
 
-	public void attachDirty(PermissionService instance) {
-		log.debug("attaching dirty PermissionService instance");
+	public void attachDirty(Permissionservice instance) {
+		log.debug("attaching dirty Permissionservice instance");
 		try {
 			getHibernateTemplate().saveOrUpdate(instance);
 			log.debug("attach successful");
@@ -138,8 +138,8 @@ public class PermissionServiceDAO extends HibernateDaoSupport {
 		}
 	}
 
-	public void attachClean(PermissionService instance) {
-		log.debug("attaching clean PermissionService instance");
+	public void attachClean(Permissionservice instance) {
+		log.debug("attaching clean Permissionservice instance");
 		try {
 			getHibernateTemplate().lock(instance, LockMode.NONE);
 			log.debug("attach successful");
@@ -149,8 +149,8 @@ public class PermissionServiceDAO extends HibernateDaoSupport {
 		}
 	}
 
-	public static PermissionServiceDAO getFromApplicationContext(
+	public static PermissionserviceDAO getFromApplicationContext(
 			ApplicationContext ctx) {
-		return (PermissionServiceDAO) ctx.getBean("PermissionServiceDAO");
+		return (PermissionserviceDAO) ctx.getBean("PermissionserviceDAO");
 	}
 }

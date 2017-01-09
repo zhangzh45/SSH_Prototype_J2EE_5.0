@@ -19,7 +19,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 	
 
-	<title>企业服务管理系统 | 添加权限</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="AddPermission"></s:text></title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
@@ -37,9 +37,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 						<h3 class="page-title">
 
-							添加权限
+							<s:text name="AddPermission"></s:text>
 
-							 <small>添加权限配置中的权限</small>
+							 <small><s:text name="AddPermission.Description"></s:text></small>
 
 						</h3>
 
@@ -57,13 +57,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 							<li>
 
-								<a href="#">权限配置</a>
+								<a href="#"><s:text name="PermissionConfiguration"></s:text></a>
 
 								<span class="icon-angle-right"></span>
 
 							</li>
 
-							<li><a href="#">添加权限</a></li>
+							<li><a href="#"><s:text name="AddPermission"></s:text></a></li>
 
 						</ul>
 
@@ -81,7 +81,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 							<div class="portlet-title">
 
-								<div class="caption"><i class="icon-reorder"></i>添加权限</div>
+								<div class="caption"><i class="icon-reorder"></i><s:text name="AddPermission"></s:text></div>
 
 								<div class="tools">
 
@@ -104,20 +104,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								<form action="addPermission.action" class="form-horizontal" id="form2">
 
 									<div class="control-group">
-								    <label class="control-label" for="inputRoleName">权限名</label>
+								    <label class="control-label" for="inputRoleName"><s:text name="PermissionName"></s:text></label>
 								    <div class="controls">
 								      <input type="text" id="inputPermissionName" name="permission.permissionName" placeholder="PermissionName">
 								    </div>
 								  </div>
 								  <div class="control-group">
-								    <label class="control-label" for="inputPermissionDesc">权限描述</label>
+								    <label class="control-label" for="inputPermissionDesc"><s:text name="PermissionDesc"></s:text></label>
 								    <div class="controls">
 								      <input type="text" id="inputPermissionDesc" name="permission.permissionDesc" placeholder="PermissionDesc">
 								    </div>
 								  </div>
 								  <div class="form-actions">
-									  <button type="submit" class="btn btn-primary">提交</button>
-									  <button type="button" class="btn">清空</button>
+									  <button type="submit" class="btn btn-primary"><s:text name="Submit"></s:text></button>
+									  <button type="button" class="btn"><s:text name="Clear"></s:text></button>
 									</div>
 
 								</form>
@@ -170,3 +170,26 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <!-- END BODY -->
 
 </html>
+
+
+<script>
+	jQuery(document).ready(function() {       
+
+		   checkuser();
+		});
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
+</script>

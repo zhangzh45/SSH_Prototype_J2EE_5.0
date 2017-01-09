@@ -32,7 +32,7 @@
             <value>root</value>
         </property>
         <property name="password">
-            <value>mysql</value>
+            <value>3330428190</value>
         </property>
     </bean>
     <!-- 事务管理器的配置 -->
@@ -62,9 +62,9 @@
 		<property name="hibernateProperties">
             <value>
                 hibernate.dialect=org.hibernate.dialect.MySQLDialect
-              <!-- hibernate.hbm2ddl.auto=update
+               <!-- hibernate.hbm2ddl.auto=update
                 hibernate.show_sql=true
-                hibernate.format_sql=false --> 
+                hibernate.format_sql=false   -->
             </value>
         </property>
         
@@ -79,7 +79,7 @@
                 <value>com/bean/Permission.hbm.xml</value>
                 <value>com/bean/RolePermission.hbm.xml</value>
                 <value>com/bean/RoleSpecSer.hbm.xml</value>
-                <value>com/bean/PermissionService.hbm.xml</value>
+                <value>com/bean/Permissionservice.hbm.xml</value>
                 <value>com/bean/Condition.hbm.xml</value>
                 <value>com/bean/Variable.hbm.xml</value>
                 <value>com/bean/UserRole.hbm.xml</value>
@@ -90,6 +90,10 @@
                 <value>com/bean/Servicerelation.hbm.xml</value>
                 <value>com/bean/UserSpecSer.hbm.xml</value>
                 <value>com/bean/Temp.hbm.xml</value>
+                <value>com/bean/Runlog.hbm.xml</value>
+                <value>com/bean/SpecTaskRoleUser.hbm.xml</value>
+                <value>com/bean/Specification.hbm.xml</value>
+                <value>com/bean/Attachment.hbm.xml</value>
             </list>
         </property>
 	</bean>
@@ -107,6 +111,9 @@
 		</property>
 	</bean>
 	<bean id="srAction" class="com.action.ServiceAction">
+		<property name="rolesr">
+			<ref bean="rolesr" />
+		</property>
 		<property name="srs">
 			<ref bean="srs" />
 		</property>
@@ -140,8 +147,29 @@
 		<property name="tempSr">
 			<ref bean="TempSer"/>
 		</property>
-			<property name="userSr">
+		<property name="userSr">
 			<ref bean="usersr"/>
+		</property>
+		<property name="srrelationsr">
+			<ref bean="srrelationsr"/>
+		</property>
+		<property name="specsr">
+			<ref bean="specificationService"/>
+		</property>
+		<property name="strusr">
+			<ref bean="specTaskRoleUserService" />
+		</property>
+		<property name="evaluationsr">
+			<ref bean="evaluationsr" />
+		</property>
+		<property name="licencesr">
+			<ref bean="licencesr" />
+		</property>
+		<property name="runlogsr">
+			<ref bean="runlogsr" />
+		</property>
+		<property name="attachmentsr">
+			<ref bean="attachmentsr" />
 		</property>
 	</bean>
 	
@@ -208,6 +236,12 @@
 		<property name="userrolesr">
 			<ref bean="userrolesr" />
 		</property>
+		<property name="rolepermissionsr">
+			<ref bean="rolepermissionsr" />
+		</property>
+		<property name="roleSpecSr">
+			<ref bean="RoleSpecSerService"/>
+		</property>
 	</bean>
 	
 	<bean id="ParameterDAO" class="com.bean.ParameterDAO">
@@ -226,6 +260,9 @@
 		</property>
 	</bean>
 	<bean id="parameterAction" class="com.action.ParameterAction">
+		<property name="sa">
+			<ref bean="srAction" />
+		</property>
 		<property name="parametersr">
 			<ref bean="parametersr" />
 		</property>
@@ -240,6 +277,27 @@
 		</property>
 		<property name="variablesr">
 			<ref bean="variablesr" />
+		</property>
+		<property name="runlogsr">
+			<ref bean="runlogsr" />
+		</property>
+		<property name="srs">
+			<ref bean="srs" />
+		</property>
+		<property name="userrolesr">
+			<ref bean="userrolesr" />
+		</property>
+		<property name="rolepermissionsr">
+			<ref bean="rolepermissionsr" />
+		</property>
+		<property name="permissionservicesr">
+			<ref bean="permissionservicesr" />
+		</property>
+		<property name="userSpecSr">
+			<ref bean="UserSpecSerService"/>
+		</property>
+		<property name="roleSpecSr">
+			<ref bean="RoleSpecSerService"/>
 		</property>
 	</bean>
 	<bean id="LicenceDAO" class="com.bean.LicenceDAO">
@@ -260,6 +318,9 @@
 	<bean id="licenceAction" class="com.action.LicenceAction">
 		<property name="licencesr">
 			<ref bean="licencesr" />
+		</property>
+		<property name="srs">
+			<ref bean="srs" />
 		</property>
 	</bean>
 	<bean id="EvaluationDAO" class="com.bean.EvaluationDAO">
@@ -332,14 +393,14 @@
 		<property name="srs">
 			<ref bean="srs" />
 		</property>
-	</bean>
-	<bean id="PermissionServiceDAO"
-		class="com.bean.PermissionServiceDAO">
-		<property name="sessionFactory">
-			<ref bean="sessionFactory" />
+		<property name="rolepermissionsr">
+			<ref bean="rolepermissionsr" />
+		</property>
+		<property name="permissionservicesr">
+			<ref bean="permissionservicesr" />
 		</property>
 	</bean>
-	<bean id="permissionserviceDao" class="com.bean.PermissionServiceDAO">
+	<bean id="permissionserviceDao" class="com.bean.PermissionserviceDAO">
 		<property name="sessionFactory">
 			<ref bean="sessionFactory" />
 		</property>
@@ -382,6 +443,9 @@
 		</property>
 		<property name="srs">
 			<ref bean="srs" />
+		</property>
+		<property name="srrelationsr">
+			<ref bean="srrelationsr"/>
 		</property>
 	</bean>
 
@@ -509,10 +573,27 @@
 		<property name="tempser">
 			<ref bean="TempSer"/>
 		</property>
+		<property name="conditionsr">
+			<ref bean="conditionsr"/>
+		</property>
+		<property name="specsr">
+			<ref bean="specificationService"/>
+		</property>
+		<property name="strusr">
+			<ref bean="specTaskRoleUserService"/>
+		</property>
+		<property name="runlogsr">
+			<ref bean="runlogsr" />
+		</property>
 	</bean>
 	<bean id="ServicerelationDAO" class="com.bean.ServicerelationDAO">
 		<property name="sessionFactory">
 			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="srrelationsr" class="com.service.ServicerelationService">
+		<property name="srrelationDao">
+			<ref bean="ServicerelationDAO" />
 		</property>
 	</bean>
 	<bean id="RoleSpecSerDAO" class="com.bean.RoleSpecSerDAO">
@@ -571,4 +652,92 @@
 			<ref bean="TempSer"/>
 		</property>
 	</bean>
-	</beans>
+	<bean id="RunlogDAO" class="com.bean.RunlogDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="runlogDao" class="com.bean.RunlogDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="runlogsr" class="com.service.RunlogService">
+		<property name="runlogDao">
+			<ref bean="runlogDao" />
+		</property>
+	</bean>
+	<bean id="runlogAction" class="com.action.RunlogAction">
+		<property name="runlogsr">
+			<ref bean="runlogsr" />
+		</property>
+	</bean>
+	<bean id="configAction" class="com.action.ConfigAction">
+		<property name="srs">
+			<ref bean="srs" />
+		</property>
+		<property name="licencesr">
+			<ref bean="licencesr"/>
+		</property>
+		<property name="parametersr">
+			<ref bean="parametersr"/>
+		</property>
+		<property name="srresultsr">
+			<ref bean="srresultsr" />
+		</property>
+	</bean>
+	
+	
+	
+	<bean id="specTaskRoleUserService" class="com.service.SpecTaskRoleUserService">
+		<property name="struDao">
+			<ref bean="SpecTaskRoleUserDAO" />
+		</property>
+	</bean>
+	
+	<bean id="SpecTaskRoleUserDAO"
+		class="com.bean.SpecTaskRoleUserDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+	<bean id="SpecificationDAO" class="com.bean.SpecificationDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="specificationDAO" class="com.bean.SpecificationDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="specificationService" class="com.service.SpecificationService">
+		<property name="specDao">
+			<ref bean="specificationDAO" />
+		</property>
+	</bean>
+	<bean id="parseYawl" class="com.util.ParseYawlFile">
+		<property name="strusr">
+			<ref bean="specTaskRoleUserService"/>
+		</property>
+		<property name="specsr">
+			<ref bean="specificationService"/>
+		</property>
+	</bean>
+	<bean id="attachmentDAO" class="com.bean.AttachmentDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="attachmentsr" class="com.service.AttachmentService">
+		<property name="attachmentDao">
+			<ref bean="attachmentDAO" />
+		</property>
+	</bean>
+	<bean id="PermissionserviceDAO"
+		class="com.bean.PermissionserviceDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean></beans>

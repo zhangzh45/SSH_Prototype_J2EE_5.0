@@ -1,17 +1,27 @@
 package com.action;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Set;
 
+import java.util.List;
 import com.bean.Condition;
 import com.bean.Parameter;
 import com.bean.Service;
+import com.bean.Servicerelation;
 import com.bean.Variable;
 import com.opensymphony.xwork2.ActionSupport;
 import com.service.ConditionService;
 import com.service.SerService;
+import com.service.ServicerelationService;
 import com.service.VariableService;
 import com.service.ParameterService;
+import com.util.CallRelationInf;
+import com.util.DTreeNode;
 import com.util.TopoInf;
 import com.util.RelationInf;
 
@@ -22,6 +32,7 @@ public class ConditionAction extends ActionSupport
 	private SerService srs = new SerService();
 	private VariableService variablesr = new VariableService();
 	private ParameterService parametersr = new ParameterService();
+	private ServicerelationService srrelationsr;
 
 	String option1;
 	String option2;
@@ -41,12 +52,63 @@ public class ConditionAction extends ActionSupport
 	List<Service> allservices = new ArrayList<Service>();
 	
 	List<Condition> conditions = new ArrayList<Condition>();
+	List<Servicerelation> srrelations = new ArrayList<Servicerelation>();
 	List<TopoInf> topo = new ArrayList<TopoInf>();
 	List<RelationInf> relations = new ArrayList<RelationInf>();
+	List<CallRelationInf> callrelations = new ArrayList<CallRelationInf>();
+	List<CallRelationInf> calldetails = new ArrayList<CallRelationInf>();
 	
 	List<String> combineServices = new ArrayList<String>();
 	List<Integer> combineTimes = new ArrayList<Integer>();
 	
+	
+	/*List<Condition> conditionsOfWebService = new ArrayList<Condition>();
+	List<Condition> conditionsOfHttp = new ArrayList<Condition>();
+	List<Condition> conditionsOfURL = new ArrayList<Condition>();
+	List<Condition> conditionsOfOther = new ArrayList<Condition>();*/
+	
+	String numOfLevelclass = "";
+	
+
+	public String getNumOfLevelclass() {
+		return numOfLevelclass;
+	}
+
+	public void setNumOfLevelclass(String numOfLevelclass) {
+		this.numOfLevelclass = numOfLevelclass;
+	}
+
+	/*public List<Condition> getConditionsOfWebService() {
+		return conditionsOfWebService;
+	}
+
+	public void setConditionsOfWebService(List<Condition> conditionsOfWebService) {
+		this.conditionsOfWebService = conditionsOfWebService;
+	}
+
+	public List<Condition> getConditionsOfHttp() {
+		return conditionsOfHttp;
+	}
+
+	public void setConditionsOfHttp(List<Condition> conditionsOfHttp) {
+		this.conditionsOfHttp = conditionsOfHttp;
+	}
+
+	public List<Condition> getConditionsOfURL() {
+		return conditionsOfURL;
+	}
+
+	public void setConditionsOfURL(List<Condition> conditionsOfURL) {
+		this.conditionsOfURL = conditionsOfURL;
+	}
+
+	public List<Condition> getConditionsOfOther() {
+		return conditionsOfOther;
+	}
+
+	public void setConditionsOfOther(List<Condition> conditionsOfOther) {
+		this.conditionsOfOther = conditionsOfOther;
+	}*/
 
 	public ParameterService getParametersr() {
 		return parametersr;
@@ -70,6 +132,22 @@ public class ConditionAction extends ActionSupport
 
 	public void setRelations(List<RelationInf> relations) {
 		this.relations = relations;
+	}
+
+	public List<CallRelationInf> getCallrelations() {
+		return callrelations;
+	}
+
+	public void setCallrelations(List<CallRelationInf> callrelations) {
+		this.callrelations = callrelations;
+	}
+
+	public List<CallRelationInf> getCalldetails() {
+		return calldetails;
+	}
+
+	public void setCalldetails(List<CallRelationInf> calldetails) {
+		this.calldetails = calldetails;
 	}
 
 	public List<String> getCombineServices() {
@@ -207,11 +285,47 @@ public class ConditionAction extends ActionSupport
 	public void setOpt2(String opt2) {
 		this.opt2 = opt2;
 	}
+	
+	public ServicerelationService getSrrelationsr() {
+		return srrelationsr;
+	}
+
+	public void setSrrelationsr(ServicerelationService srrelationsr) {
+		this.srrelationsr = srrelationsr;
+	}
+	
+	public List<Servicerelation> getSrrelations() {
+		return srrelations;
+	}
+
+	public void setSrrelations(List<Servicerelation> srrelations) {
+		this.srrelations = srrelations;
+	}
+	
+	List<DTreeNode> dtnodes = new ArrayList<DTreeNode>();
+	List<Service> selected = new ArrayList<Service>();
+	
+	public List<DTreeNode> getDtnodes() {
+		return dtnodes;
+	}
+
+	public void setDtnodes(List<DTreeNode> dtnodes) {
+		this.dtnodes = dtnodes;
+	}
+	
+	public List<Service> getSelected() {
+		return selected;
+	}
+
+	public void setSelected(List<Service> selected) {
+		this.selected = selected;
+	}
 
 	public String saveConbineService()
 	{
 		Service s = new Service();
-		s.setServiceType("Combine");
+		s.setCombineType("Combine");
+		//s.setServiceType("Combine");
 		s.setServiceTarget("NULL");
 		s.setServiceRange("NULL");
 		int id = srs.register(s);
@@ -312,6 +426,7 @@ public class ConditionAction extends ActionSupport
 		RelationInf ref = new RelationInf();
 		ref.setSonid(Integer.toString((father)));
 		ref.setType(srs.getServiceType(father));
+		ref.setAddress(srs.getUniqueService(Integer.toString(father)).getServiceAddress());
 		relations.add(ref);
 		
 		for(int i = 0; i < sons.size(); i++)
@@ -322,6 +437,7 @@ public class ConditionAction extends ActionSupport
 			
 			re.setSonid(Integer.toString(sonid));
 			re.setType(srs.getServiceType(sonid));
+			re.setAddress(srs.getUniqueService(Integer.toString(sonid)).getServiceAddress());
 			re.setDesc(srs.getUniqueService(Integer.toString(sonid)).getServiceDesc());
 			re.setCondition(sons.get(i).getCondtionExpression());
 			
@@ -330,8 +446,12 @@ public class ConditionAction extends ActionSupport
 			ps = parametersr.getServiceParameter(sonid);
 			for(int j = 0; j < ps.size(); j++)
 			{
-				pas += ps.get(j).getParametername();
-				pas += ",";
+				if(j == ps.size() - 1){
+					pas += ps.get(j).getParametername();
+				}else{
+					pas += ps.get(j).getParametername();
+					pas += ",";
+				}
 			}
 			re.setParameter(pas);
 			
@@ -341,118 +461,255 @@ public class ConditionAction extends ActionSupport
 		return SUCCESS;
 	}
 	
-	public String busyClass()
-	{
-		int busyclass = 1;
-		
-		try
-		{
-			conditions.clear();
-			List<Condition> cons = new ArrayList<Condition>();
-			List<Integer> fathers = new ArrayList<Integer>();
-			List<Integer> sons = new ArrayList<Integer>();
-			List<Integer> all = new ArrayList<Integer>();
-			Service service=new Service();
-			Service subservice=new Service();
-			cons = conditionsr.getAllCondition();
-			for(int i = 0; i < cons.size(); i++)
-			{
-				fathers.add(cons.get(i).getServiceByServiceId().getServiceId());
-				sons.add(cons.get(i).getServiceBySubServiceId().getServiceId());
-			}
-			int fatherid = 0;
-			for(int i = cons.size() - 1; i >= 0; i--)
-			{
-				int father = cons.get(i).getServiceByServiceId().getServiceId();
-				if(all.contains(father) == false)
-				{
-					all.add(father);
-					service.setServiceId(Integer.valueOf(busyclass));
-					subservice.setServiceId(Integer.valueOf(father));
-					conditions.add(new Condition(service,subservice,"",null));
-					fatherid = conditions.size() + busyclass;
-					//System.out.print(1);
-				}
-				else
-				{
-					fatherid = all.indexOf(father) + busyclass + 1;
-					//System.out.print(fatherid);
-				}
-				
-				int son = cons.get(i).getServiceBySubServiceId().getServiceId();
-				  service.setServiceId(Integer.valueOf(fatherid));
-				    subservice.setServiceId(Integer.valueOf(son));
-					conditions.add(new Condition(service,subservice, "",null));
-				all.add(son);
-				//System.out.print(3);
-				
-			}
-			//conditions = conditionsr.getAllCondition();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		
-		return SUCCESS;
-	}
 	
+	/**
+	 * 将组合服务按照业务分类
+	 * @return
+	 */
 	public String workClass()
 	{
-		int busyclass = 1;
-		
 		try
 		{
-			conditions.clear();
-			List<Condition> cons = new ArrayList<Condition>();
-			List<Integer> fathers = new ArrayList<Integer>();
-			List<Integer> sons = new ArrayList<Integer>();
-			List<Integer> all = new ArrayList<Integer>();
-			Service service=new Service();
-			Service subservice=new Service();
-			cons = conditionsr.getAllCondition();
-			for(int i = 0; i < cons.size(); i++)
+			services = srs.getAllService();
+			dtnodes.clear();
+			selected.clear();
+			for(int i = 0; i < services.size(); i++)
 			{
-				fathers.add(cons.get(i).getServiceByServiceId().getServiceId());
-				sons.add(cons.get(i).getServiceBySubServiceId().getServiceId());
+				if(services.get(i).getCombineType() != null)
+				{
+					selected.add(services.get(i));
+				}
 			}
-			int fatherid = 0;
-			for(int i = cons.size() - 1; i >= 0; i--)
+			List<String> nodeContent = new ArrayList<String>();
+			List<Integer> nodeid = new ArrayList<Integer>();
+			List<String> content = new ArrayList<String>();
+			nodeContent.clear();
+			nodeid.clear();
+			content.clear();
+			for(int i = 0; i < selected.size(); i++)
 			{
-				int father = cons.get(i).getServiceByServiceId().getServiceId();
-				if(all.contains(father) == false)
+				String ct = selected.get(i).getRelateBusiness();
+				if(content.contains(ct) == false)
 				{
-					all.add(father);
-					service.setServiceId(Integer.valueOf(busyclass));
-					subservice.setServiceId(Integer.valueOf(father));
-					conditions.add(new Condition(service,subservice,"",null));
-					fatherid = conditions.size() + busyclass;
-					//System.out.print(1);
+					nodeid.add(0);
+					nodeContent.add(ct);
+					content.add(ct);
 				}
-				else
+				int pos = content.indexOf(ct);
+				String ct2 = ct + " " + selected.get(i).getServiceId();
+				if(content.contains(ct2) == false)
 				{
-					fatherid = all.indexOf(father) + busyclass + 1;
-					//System.out.print(fatherid);
+					nodeid.add(pos + 1);
+					nodeContent.add(String.valueOf(selected.get(i).getServiceId()));
+					content.add(ct2);
 				}
-				
-				int son = cons.get(i).getServiceBySubServiceId().getServiceId();
-			    service.setServiceId(Integer.valueOf(fatherid));
-			    subservice.setServiceId(Integer.valueOf(son));
-				conditions.add(new Condition(service,subservice, "",null));
-				all.add(son);
-				//System.out.print(3);
-				
+				int pos2 = content.indexOf(ct2);
+				List<Condition> conlist = conditionsr.getConditionDao().findByServiceId(selected.get(i).getServiceId());
+				for(int j = 0; j < conlist.size(); j++){
+					String ct3 = ct2 + " " + conlist.get(j).getServiceBySubServiceId().getServiceId();
+					nodeid.add(pos2 + 1);
+					nodeContent.add(String.valueOf(conlist.get(j).getServiceBySubServiceId().getServiceId()));
+					content.add(ct3);
+				}
 			}
-			//conditions = conditionsr.getAllCondition();
+			
+			for(int i = 0; i < nodeid.size(); i++)
+			{
+				DTreeNode dn = new DTreeNode();
+				dn.setSelf(i + 1);
+				dn.setFather(nodeid.get(i));
+				dn.setContent(nodeContent.get(i));
+				dtnodes.add(dn);
+			}
+			
+			for(int i = 0; i < dtnodes.size(); i++)
+			{
+				System.out.print(dtnodes.get(i).getSelf() + " ");
+				System.out.print(dtnodes.get(i).getFather() + " ");
+				System.out.print(dtnodes.get(i).getContent() + "\n");
+			}
+			//System.out.println(services.size());
+			return SUCCESS;
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
+			return ERROR;
 		}
-		
-		return SUCCESS;
+	}
+   
+	/**
+	 * 将服务按级别分类
+	 * @return
+	 */
+	public String levelClass()
+	{
+		try
+		{
+			services = srs.getAllService();
+			dtnodes.clear();
+			//selected.addAll(services);
+			List<Integer> num = new ArrayList<Integer>();
+			for(int i = 0; i < services.size(); i++)
+			{
+				num.add(0);
+			}
+			for(int i = 0; i < services.size() - 1; i++)
+			{
+				for(int j = i + 1; j < services.size(); j++)
+				{
+					if(services.get(i).getServiceLevel() == null){
+						services.get(i).setServiceLevel("1");
+					}
+					if(services.get(j).getServiceLevel() == null){
+						services.get(j).setServiceLevel("1");
+					}
+					
+					if(services.get(i).getServiceLevel().equals(services.get(j).getServiceLevel())){
+						num.set(i, num.get(i) + 1);
+						num.set(j, num.get(j) + 1);
+					}
+				}
+			}
+			selected.clear();
+			for(int i = 0; i < services.size(); i++)
+			{
+				if(num.get(i) > 0)
+				{
+					selected.add(services.get(i));
+				}
+			}
+			List<String> nodeContent = new ArrayList<String>();
+			List<Integer> nodeid = new ArrayList<Integer>();
+			List<String> content = new ArrayList<String>();
+			nodeContent.clear();
+			nodeid.clear();
+			content.clear();
+			for(int i = 0; i < selected.size(); i++)
+			{
+				String ct = "Level " + selected.get(i).getServiceLevel();
+				if(content.contains(ct) == false)
+				{
+					nodeid.add(0);
+					nodeContent.add(ct);
+					content.add(ct);
+				}
+				int pos = content.indexOf(ct);
+				String ct2 = ct + " " + selected.get(i).getServiceId();
+				if(content.contains(ct2) == false)
+				{
+					nodeid.add(pos + 1);
+					nodeContent.add(String.valueOf(selected.get(i).getServiceId()));
+					content.add(ct2);
+				}
+				int pos2 = content.indexOf(ct2);
+				List<Servicerelation> srrlist = srrelationsr.getSrrelationDao().findByServiceId(selected.get(i).getServiceId());
+				for(int j = 0; j < srrlist.size(); j++){
+					String ct3 = ct2 + " " + srrlist.get(j).getServiceBySubServiceId().getServiceId();
+					nodeid.add(pos2 + 1);
+					nodeContent.add(String.valueOf(srrlist.get(j).getServiceBySubServiceId().getServiceId()));
+					content.add(ct3);
+				}
+			}
+			
+			for(int i = 0; i < nodeid.size(); i++)
+			{
+				DTreeNode dn = new DTreeNode();
+				dn.setSelf(i + 1);
+				dn.setFather(nodeid.get(i));
+				dn.setContent(nodeContent.get(i));
+				dtnodes.add(dn);
+			}
+			
+			for(int i = 0; i < dtnodes.size(); i++)
+			{
+				System.out.print(dtnodes.get(i).getSelf() + " ");
+				System.out.print(dtnodes.get(i).getFather() + " ");
+				System.out.print(dtnodes.get(i).getContent() + "\n");
+			}
+			//System.out.println(services.size());
+			return SUCCESS;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return ERROR;
+		}
 	}
 	
+	/**
+	 * 将组合服务按照技术分类
+	 */
+	public String busyClass(){
+		try
+		{
+			services = srs.getAllService();
+			dtnodes.clear();
+			selected.clear();
+			for(int i = 0; i < services.size(); i++)
+			{
+				if(services.get(i).getCombineType() != null)
+				{
+					selected.add(services.get(i));
+				}
+			}
+			List<String> nodeContent = new ArrayList<String>();
+			List<Integer> nodeid = new ArrayList<Integer>();
+			List<String> content = new ArrayList<String>();
+			nodeContent.clear();
+			nodeid.clear();
+			content.clear();
+			for(int i = 0; i < selected.size(); i++)
+			{
+				String ct = selected.get(i).getServiceType();
+				if(content.contains(ct) == false)
+				{
+					nodeid.add(0);
+					nodeContent.add(ct);
+					content.add(ct);
+				}
+				int pos = content.indexOf(ct);
+				String ct2 = ct + " " + selected.get(i).getServiceId();
+				if(content.contains(ct2) == false)
+				{
+					nodeid.add(pos + 1);
+					nodeContent.add(String.valueOf(selected.get(i).getServiceId()));
+					content.add(ct2);
+				}
+				int pos2 = content.indexOf(ct2);
+				List<Condition> conlist = conditionsr.getConditionDao().findByServiceId(selected.get(i).getServiceId());
+				for(int j = 0; j < conlist.size(); j++){
+					String ct3 = ct2 + " " + conlist.get(j).getServiceBySubServiceId().getServiceId();
+					nodeid.add(pos2 + 1);
+					nodeContent.add(String.valueOf(conlist.get(j).getServiceBySubServiceId().getServiceId()));
+					content.add(ct3);
+				}
+			}
+			
+			for(int i = 0; i < nodeid.size(); i++)
+			{
+				DTreeNode dn = new DTreeNode();
+				dn.setSelf(i + 1);
+				dn.setFather(nodeid.get(i));
+				dn.setContent(nodeContent.get(i));
+				dtnodes.add(dn);
+			}
+			
+			for(int i = 0; i < dtnodes.size(); i++)
+			{
+				System.out.print(dtnodes.get(i).getSelf() + " ");
+				System.out.print(dtnodes.get(i).getFather() + " ");
+				System.out.print(dtnodes.get(i).getContent() + "\n");
+			}
+			//System.out.println(services.size());
+			return SUCCESS;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return ERROR;
+		}
+	}
 	
 	public String combineRelation()
 	{
@@ -510,4 +767,329 @@ public class ConditionAction extends ActionSupport
 		
 		return SUCCESS;
 	}
+	
+	
+	public List<Integer> busyClassByConditiontype(List<Condition> cons, int busyclass, List<Integer> all, String classByConditionType, int index){
+		//cons排序
+		Collections.sort(cons, new Comparator<Condition>() {
+            public int compare(Condition arg0, Condition arg1) {
+                return arg0.getServiceByServiceId().getServiceId().compareTo(arg1.getServiceByServiceId().getServiceId());
+            }
+        });
+		all.clear();
+		int fatherid = 0;
+		int lastsizeOfConditions = conditions.size();
+		int count = 0;
+		for(int i = cons.size() - 1; i >= 0; i--)
+		{
+			int sametypeBefore = conditions.size();
+			int father = cons.get(i).getServiceByServiceId().getServiceId();
+			String condtionType = srs.getServiceType(father);
+			System.out.print("condtionType:"+condtionType);
+			if(condtionType.equalsIgnoreCase("web") || condtionType.equalsIgnoreCase("webservice")){
+				//conditionsOfWebService.get(i).setCondtionType("WebService");
+				condtionType = "WebService";
+			}else if(condtionType.equalsIgnoreCase("http") || condtionType.equalsIgnoreCase("mule") || condtionType.equalsIgnoreCase("mulehttp")){
+				condtionType = "Http";
+			}else if(condtionType.equalsIgnoreCase("url")){
+				condtionType = "URL";
+			}else{
+				condtionType = "Other";
+			}
+			System.out.print(condtionType);
+			
+			if(condtionType.equalsIgnoreCase(classByConditionType) || all.contains(father)){
+				
+				
+				if(all.contains(father) == false)
+				{
+					//count = 0;
+					all.add(father);
+					Service service=new Service();
+					Service subservice=new Service();
+					subservice.setServiceId(Integer.valueOf(father));
+					//if(conditions.size() == lastsizeOfConditions){
+						service.setServiceId(Integer.valueOf(busyclass) + index + lastsizeOfConditions);
+					//}else{
+					//	service.setServiceId(Integer.valueOf(busyclass) + index + conditions.size());
+					//}
+					
+					System.out.print("\n"+(Integer.valueOf(busyclass) + index + conditions.size()) + "----"+Integer.valueOf(father)+": "+classByConditionType+"\n");
+					conditions.add(new Condition(service,subservice,"",null, classByConditionType));
+					fatherid = conditions.size() + busyclass + index;
+				}
+				else
+				{
+					//count++;
+					//if(count == 1){
+					//	fatherid = all.indexOf(father) + busyclass + index + (conditions.size() - lastsizeOfConditions) - 1;
+					//}else{
+					//int subtype = 
+						fatherid = all.indexOf(father) + busyclass + index + 1 + lastsizeOfConditions;
+						//fatherid = all.indexOf(father) + busyclass + index + lastsizeOfConditions + 1;
+					//}
+					
+					//System.out.print("\nconditions.size() - lastsizeOfConditions: "+ (conditions.size() - lastsizeOfConditions)+"\n");
+				}
+				System.out.print("fatherid:"+fatherid+"   ");
+				int son = cons.get(i).getServiceBySubServiceId().getServiceId();
+				Service service=new Service();
+				Service subservice=new Service();
+				service.setServiceId(Integer.valueOf(fatherid));
+				subservice.setServiceId(Integer.valueOf(son));
+				conditions.add(new Condition(service,subservice, "",null, classByConditionType));
+				all.add(son);
+				System.out.print("\n"+Integer.valueOf(fatherid) + "----"+Integer.valueOf(son)+": "+classByConditionType+"\n");
+			}
+		}
+		System.out.print("conditions.size(): "+conditions.size());
+		return all;
+	}
+	
+	/**
+	 * 查找父服务的所有调用关系
+	 * @return
+	 */
+	public String callRelationDetail(){   //非递归遍历
+		callrelations.clear();
+		calldetails.clear();
+		String fatherid = relationFather;
+		System.out.print("relationFather:"+relationFather+"\n");
+		
+		
+		CallRelationInf fathercri = new CallRelationInf();
+		fathercri.setSonid(fatherid);
+		/*if(srs.getUniqueService(fatherid).getServiceType() == null){
+			fathercri.setSontype(toNodeType(srs.getUniqueService(fatherid).getServiceType()));
+		}*/
+		fathercri.setSontype(toNodeType(srs.getUniqueService(fatherid).getServiceType()));
+		fathercri.setSonaddress(srs.getUniqueService(fatherid).getServiceAddress() == null? "" : srs.getUniqueService(fatherid).getServiceAddress());
+		fathercri.setSonbusiness(srs.getUniqueService(fatherid).getRelateBusiness() == null? "" : srs.getUniqueService(fatherid).getRelateBusiness());
+		String param = "";
+		List<Parameter> ps = new ArrayList<Parameter>();
+		ps = parametersr.getServiceParameter(Integer.parseInt(fatherid));
+		for(int j = 0; j < ps.size(); j++)
+		{
+			if(ps.get(j).getParametername() == null){
+				ps.get(j).setParametername("parametername is null");
+			}
+			if(j == ps.size() - 1){
+				param += ps.get(j).getParametername();
+			}else{
+				param += ps.get(j).getParametername();
+				param += ",";
+			}
+		}
+		fathercri.setSonparameter(param == null? "" : param);
+		calldetails.add(fathercri);
+		
+		
+		Set<String> subsrlist = new HashSet<String>();   //用集合,去掉重复元素，提高查找效率
+		//callrelations.clear();
+		List<Servicerelation> maps = new ArrayList<Servicerelation>();
+		maps = srrelationsr.getSrrelationDao().findByServiceId(Integer.parseInt(fatherid));
+		System.out.print(maps.size()+"\n");
+		
+		for(int i = 0; i < maps.size(); i++){
+			String fathertype = srs.getUniqueService(fatherid).getServiceType();
+			fathertype = toNodeType(fathertype);
+			Service subservice = new Service();
+			subservice = maps.get(i).getServiceBySubServiceId();
+			String sid = String.valueOf(subservice.getServiceId());
+			String sontype = subservice.getServiceType();
+			sontype = toNodeType(sontype);
+			
+			String fatheraddress = srs.getUniqueService(fatherid).getServiceAddress() == null? "" : srs.getUniqueService(fatherid).getServiceAddress();
+			String fatherparam = "";
+			List<Parameter> fatherps = new ArrayList<Parameter>();
+			fatherps = parametersr.getServiceParameter(Integer.parseInt(fatherid));
+			for(int j = 0; j < fatherps.size(); j++)
+			{
+				if(fatherps.get(j).getParametername() == null){
+					fatherps.get(j).setParametername("parametername is null");
+				}
+				if(j == fatherps.size() - 1){
+					fatherparam += fatherps.get(j).getParametername();
+				}else{
+					fatherparam += fatherps.get(j).getParametername();
+					fatherparam += ",";
+				}
+			}
+			fatherparam = fatherparam == null? "" : fatherparam;
+			
+			String sonaddress =  subservice.getServiceAddress() == null? "" : subservice.getServiceAddress();
+			String sonparam = "";
+			List<Parameter> sonps = new ArrayList<Parameter>();
+			sonps = parametersr.getServiceParameter(Integer.parseInt(sid));
+			for(int j = 0; j < sonps.size(); j++)
+			{
+				if(sonps.get(j).getParametername() == null){
+					sonps.get(j).setParametername("parametername is null");
+				}
+				if(j == sonps.size() - 1){
+					sonparam += sonps.get(j).getParametername();
+				}else{
+					sonparam += sonps.get(j).getParametername();
+					sonparam += ",";
+				}
+			}
+			sonparam = sonparam == null? "" : sonparam;
+			String fatherbusiness = srs.getUniqueService(fatherid).getRelateBusiness() == null? "" : srs.getUniqueService(fatherid).getRelateBusiness();
+			String sonbusiness = subservice.getRelateBusiness() == null? "" : subservice.getRelateBusiness();
+			
+			CallRelationInf cri = new CallRelationInf(fatherid, sid, fathertype, sontype, fatherbusiness, sonbusiness, fatheraddress, sonaddress, fatherparam, sonparam);
+			System.out.print(cri.getSonbusiness());
+			callrelations.add(cri);
+			subsrlist.add(sid);
+		}
+		
+		while(!subsrlist.isEmpty()){
+			List<Servicerelation> sons = new ArrayList<Servicerelation>();
+			//String fid = subsrlist.removeFirst();
+			String fid = "";
+			Iterator<String> it = subsrlist.iterator();
+			if(it.hasNext()){
+				//System.out.println(((String)it.next()));
+				fid = it.next();
+				subsrlist.remove(fid);
+			}
+			String fathertype = srs.getUniqueService(fid).getServiceType();
+			fathertype = toNodeType(fathertype);
+			String fatheraddress = srs.getUniqueService(fid).getServiceAddress() == null? "" : srs.getUniqueService(fid).getServiceAddress();
+			String fatherbusiness = srs.getUniqueService(fid).getRelateBusiness() == null? "" : srs.getUniqueService(fid).getRelateBusiness();
+			String fatherparam = "";
+			List<Parameter> fatherps = new ArrayList<Parameter>();
+			fatherps = parametersr.getServiceParameter(Integer.parseInt(fid));
+			for(int j = 0; j < fatherps.size(); j++)
+			{
+				if(fatherps.get(j).getParametername() == null){
+					fatherps.get(j).setParametername("parametername is null");
+				}
+				if(j == fatherps.size() - 1){
+					fatherparam += fatherps.get(j).getParametername();
+				}else{
+					fatherparam += fatherps.get(j).getParametername();
+					fatherparam += ",";
+				}
+			}
+			fatherparam = fatherparam == null? "" : fatherparam;
+			sons = srrelationsr.getSrrelationDao().findByServiceId(Integer.parseInt(fid));
+			for(int i = 0; i < sons.size(); i++){
+				Service subservice = new Service();
+				subservice = sons.get(i).getServiceBySubServiceId();
+				String sid = String.valueOf(subservice.getServiceId());
+				String sontype = subservice.getServiceType();
+				sontype = toNodeType(sontype);
+				String sonaddress =  subservice.getServiceAddress() == null? "" : subservice.getServiceAddress();
+				String sonparam = "";
+				List<Parameter> sonps = new ArrayList<Parameter>();
+				sonps = parametersr.getServiceParameter(Integer.parseInt(fid));
+				for(int j = 0; j < sonps.size(); j++)
+				{
+					if(sonps.get(j).getParametername() == null){
+						sonps.get(j).setParametername("parametername is null");
+					}
+					if(j == sonps.size() - 1){
+						sonparam += sonps.get(j).getParametername();
+					}else{
+						sonparam += sonps.get(j).getParametername();
+						sonparam += ",";
+					}
+				}
+				sonparam = sonparam == null? "" : sonparam;
+				CallRelationInf cri = new CallRelationInf(fid, sid, fathertype, sontype, fatheraddress, sonaddress, fatherparam, sonparam);
+				callrelations.add(cri);
+				subsrlist.add(sid);
+			}
+			CallRelationInf subcri = new CallRelationInf();
+			subcri.setSonid(fid);
+			subcri.setSontype(fathertype);
+			subcri.setSonaddress(fatheraddress);
+			subcri.setSonparameter(fatherparam);
+			subcri.setSonbusiness(fatherbusiness);
+			for(int i = 0; i < calldetails.size(); i++){         //调用子服务去重
+				if(calldetails.contains(subcri) == false){
+					calldetails.add(subcri);
+					break;
+				}
+			}
+		}
+		System.out.print(callrelations.size());
+		return SUCCESS;
+	}
+	
+	/*
+	 * 将服务类型转换成前台调用拓扑图节点的类型
+	 */
+	public String toNodeType(String servicetype){
+		if(servicetype.toLowerCase().contains("application")){
+			servicetype = "APPLICATION";
+		}
+		else if(servicetype.toLowerCase().contains("service")){
+			servicetype = "SERVICE";
+		}
+		else if(servicetype.toLowerCase().contains("business")){
+			servicetype = "BUSINESS";
+		}
+		else if(servicetype.toLowerCase().contains("local")){
+			servicetype = "LOCAL";
+		}
+		return servicetype;
+	}
+	
+	/**
+	 * 获取所有的服务调用关系和详情
+	 */
+	public void getAllCallrelation(){
+		callrelations.clear();
+		List<Servicerelation> relationlist = new ArrayList<Servicerelation>();
+		relationlist = srrelationsr.getAllServicerelation();
+		for(int i = 0; i < relationlist.size(); i++){
+			Servicerelation rel = new Servicerelation();
+			rel = relationlist.get(i);
+			CallRelationInf callrel = new CallRelationInf();
+			Service service = new Service();
+			service = rel.getServiceByServiceId();
+			Service subservice = new Service();
+			subservice = rel.getServiceBySubServiceId();
+			callrel.setFatherid(String.valueOf(service.getServiceId()));
+			callrel.setFathertype(service.getServiceType());
+			callrel.setFatheraddress(service.getServiceAddress());
+			callrel.setSonid(String.valueOf(subservice.getServiceId()));
+			callrel.setSontype(subservice.getServiceType());
+			callrel.setSonaddress(subservice.getServiceAddress());
+			callrelations.add(callrel);
+		}
+		calldetails.clear();
+		List<Service> serlist = new ArrayList<Service>();
+		serlist = srs.getAllService();
+		for(int i = 0; i < serlist.size(); i++){
+			Service ser = new Service();
+			ser = serlist.get(i);
+			CallRelationInf callrel = new CallRelationInf();
+			callrel.setFatheraddress(ser.getServiceAddress());
+			callrel.setSonid(String.valueOf(ser.getServiceId()));
+			callrel.setSontype(ser.getServiceType());
+			callrel.setSonaddress(ser.getServiceAddress());
+			String sonparam = "";
+			List<Parameter> sonps = new ArrayList<Parameter>();
+			sonps = parametersr.getServiceParameter(ser.getServiceId());
+			for(int j = 0; j < sonps.size(); j++)
+			{
+				if(sonps.get(j).getParametername() == null){
+					sonps.get(j).setParametername("parametername is null");
+				}
+				if(j == sonps.size() - 1){
+					sonparam += sonps.get(j).getParametername();
+				}else{
+					sonparam += sonps.get(j).getParametername();
+					sonparam += ",";
+				}
+			}
+			sonparam = sonparam == null? "" : sonparam;
+			callrel.setSonparameter(sonparam);
+			calldetails.add(callrel);
+		}
+	}
+	
 }

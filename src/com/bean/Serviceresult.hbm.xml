@@ -10,6 +10,9 @@
             <column name="resultid" />
             <generator class="identity" />
         </id>
+        <property name="serviceid" type="integer" update="false" insert="false">
+            <column name="serviceid" />
+        </property>
         <many-to-one name="service" class="com.bean.Service" fetch="select">
             <column name="serviceid" />
         </many-to-one>

@@ -238,25 +238,25 @@ function adjust(topoData, nodeTypeArray) {
 		    	// VM 位置水平偏移
 	    		$(element).css('left', (originalLeft + vip_vmOffset*horizontalDistance) + 'px');
 	    		vip_vmOffset++;
-		    	topoDrawUtil.addEndpoints(nodeDivId, ['Top', 'Bottom', 'Right'], []);
+		    	topoDrawUtil.addEndpoints(nodeDivId, ['Top', 'Bottom', 'Right', 'Left'], ['Top', 'Bottom', 'Right', 'Left']);
 		    	break;
 		    case DEVICE_TYPE:
 		    	// DEVICE 位置垂直偏移
 	    		$(element).css('top', (originalTop + (vm_deviceOffset-1)*verticalDistance) + 'px');
 		    	vm_deviceOffset++;
-		    	topoDrawUtil.addEndpoints(nodeDivId, [], ['Left']);
+		    	topoDrawUtil.addEndpoints(nodeDivId, ['Top', 'Bottom', 'Right', 'Left'], ['Top', 'Bottom', 'Right', 'Left']);
 		    	break;
 		    case VIP_TYPE:
 		    	// VIP 位置水平偏移
 		    	$(element).css('left', (originalLeft + vm_vipOffset*horizontalDistance) + 'px');
 		    	vm_vipOffset++;
-		    	topoDrawUtil.addEndpoints(nodeDivId, ['Top'], ['Bottom']);
+		    	topoDrawUtil.addEndpoints(nodeDivId, ['Top', 'Bottom', 'Right', 'Left'], ['Top', 'Bottom', 'Right', 'Left']);
 		    	break;
 		    case NC_TYPE:
 		    	// NC 位置水平偏移
 		    	$(element).css('left', (originalLeft + vm_ncOffset*verticalDistance) + 'px');
 		    	vm_ncOffset++;
-		    	topoDrawUtil.addEndpoints(nodeDivId, ['Bottom'], ['Top']);
+		    	topoDrawUtil.addEndpoints(nodeDivId, ['Top', 'Bottom', 'Right', 'Left'], ['Top', 'Bottom', 'Right', 'Left']);
 		    	break;
 		    default:
 		    	break;
@@ -345,8 +345,8 @@ function connectionNodes(beginNode, endNode, nodeTypeArray)
 {
 	var startNodeType = beginNode.type;
 	var endNodeType = endNode.type;
-	var startDirection = '';
-	var endDirection = '';
+	var startDirection = 'Right';
+	var endDirection = 'Left';
 	
 	var VM_TYPE = nodeTypeArray[0];
 	var DEVICE_TYPE = nodeTypeArray[1];
@@ -356,31 +356,31 @@ function connectionNodes(beginNode, endNode, nodeTypeArray)
 	switch (startNodeType) {
 	    case VM_TYPE:
 	    	if (endNodeType == VIP_TYPE) {
-	    		// VIP 绘制于 VM 上方
+	    		// VIP 缁樺埗浜?VM 涓婃柟
 	    		startDirection = 'Top';
 	    		endDirection = 'Bottom';
 	    	}
 	    	else if (endNodeType == DEVICE_TYPE) {
-	    		// DEVICE 绘制于 VM 右方
+	    		// DEVICE 缁樺埗浜?VM 鍙虫柟
 	    		startDirection = 'Right';
 	    		endDirection = 'Left';
 	    	}
 	    	else if (endNodeType == NC_TYPE) {
-	    		// NC 绘制于 VM 下方
+	    		// NC 缁樺埗浜?VM 涓嬫柟
 	    		startDirection = 'Bottom';
 	    		endDirection = 'Top';
 	    	}
 	    	break;
 	    case VIP_TYPE:
 	    	if (endNodeType == VM_TYPE) {
-	    		// VM 绘制于 VIP 上方
+	    		// VM 缁樺埗浜?VIP 涓婃柟
 	    		startDirection = 'Top';
 	    		endDirection = 'Top';
 	    	}
 	    	break;
 	    case NC_TYPE:
 	    	if (endNodeType == VM_TYPE) {
-	    		// VM 绘制于 NC 下方
+	    		// VM 缁樺埗浜?NC 涓嬫柟
 	    		startDirection = 'Bottom';
 	    		endDirection = 'Bottom';
 	    	}
@@ -394,8 +394,28 @@ function connectionNodes(beginNode, endNode, nodeTypeArray)
 }
 
 function createDiv(metaNode) {
-	return '<div class="node" id="' + obtainNodeDivId(metaNode) + '"><strong>' 
-	        + metaNode.type + '<br/><a href="http://www.baidu.com">' + metaNode.key + '</a><br/></strong></div>'
+	//alert(metaNode.data);
+	var node = document.getElementById(obtainNodeDivId(metaNode));
+	if(node == null){
+		/*return '<div class="node" id="' + obtainNodeDivId(metaNode) + '"><strong>' 
+        	+ metaNode.type + '<br/><a href="http://www.baidu.com">' + metaNode.key + '</a><br/></strong></div>'*/
+		if(typeof metaNode.data == "undefined"){
+			return '<div class="node" id="' + obtainNodeDivId(metaNode) + '"><strong>' 
+    			+ metaNode.type + '<br/><a href="">' + metaNode.key + '</a><br/></strong></div>';
+		}
+		else{
+			var serviceid = metaNode.key;
+			//alert(serviceid);
+			/*return '<div class="node" id="' + obtainNodeDivId(metaNode) + '"><strong>' 
+    			+ metaNode.type + '<br/><a href="'+metaNode.data.url+'">' + metaNode.key + '</a><br/></strong></div>';*/
+			return '<div class="node" id="' + obtainNodeDivId(metaNode) + '"><strong>' 
+				+ metaNode.type + '<br/><a onclick="loadservice('+serviceid+')">' + metaNode.key + '</a><br/></strong></div>';
+		}
+	}
+	else {
+		//alert("existed");  //重复的节点不创建
+		return "";
+	}
 }
 
 /**
@@ -435,13 +455,21 @@ function mergeNewTopo(srcTopoData, newTopoData) {
 
 	var newRelData = newTopoData.rel;
 	var i=0, newRelLen = relLength(newRelData);
-	
+	//alert(newRelLen);
 	var matched = findMatched(srcRoot, newRoot);
 	if (matched == null) {
 		// 没有找到匹配的节点, 直接返回原有的拓扑结构
 		return srcTopoData;
 	}
-	matched.rel = matched.rel.concat(newRelData);
+	//alert(matched.key);
+	//alert(matched.rel);
+	if(typeof matched.rel == "undefined"){
+		matched.rel = newRelData;
+	}
+	else{
+		matched.rel = matched.rel.concat(newRelData);
+	}
+	//matched.rel = matched.rel.concat(newRelData);
 	//matched.rel = newRelData.concat(matched.rel);
 	return srcTopoData;
 }
@@ -461,6 +489,7 @@ function findMatched(srcRootData, newRootData) {
 	}
 	for (i=0; i<srcRelLen; i++) {
 		matched = findMatched(srcRelData[i], newRootData);
+		//matched = findMatched(newRootData, srcRelData[i]);
 		if (matched != null) {
 			return matched;
 		}

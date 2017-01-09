@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>操作成功</title>
+		<title><s:text name="Success"></s:text></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 		<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
@@ -31,8 +31,8 @@
 			
 			<div class="span9">
 			  <div class="hero-unit">
-				<h2>操作成功</h2>
-				页面将在<span id="jump"></span>秒后自动跳转......
+				<h2><s:text name="Success"></s:text></h2>
+				<s:text name="JumpPage"></s:text><span id="jump"></span><s:text name="Second"></s:text>......
 			  </div>
 			</div><!--/span-->
 		  </div><!--/row-->
@@ -49,7 +49,8 @@
   					if (--secs > 0){
    					setTimeout("countDown(" + secs + " )", 1000);
    					}else{
-  					 location.href="index.jsp";
+  					 //location.href="index.jsp";
+  					 location.href="dashboard.action";
    					}
  				}
 		</script>

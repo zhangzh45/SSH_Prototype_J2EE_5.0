@@ -19,7 +19,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 	<meta charset="utf-8" />
 
-	<title>企业服务管理系统 | 服务注册</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="ServiceRegistration"></s:text></title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
@@ -48,9 +48,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 						<h3 class="page-title">
 
-							服务注册
+							<s:text name="ServiceRegistration"></s:text>
 
-							 <small>注册需要添加服务的</small>
+							 <small><s:text name="ServiceRegistration.Description"></s:text></small>
 
 						</h3>
 
@@ -68,13 +68,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 							<li>
 
-								<a href="#">服务管理</a>
+								<a href="#"><s:text name="ServiceManagement"></s:text></a>
 
 								<span class="icon-angle-right"></span>
 
 							</li>
 
-							<li><a href="#">服务注册</a></li>
+							<li><a href="#"><s:text name="ServiceRegistration"></s:text></a></li>
 
 						</ul>
 
@@ -96,7 +96,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 							<div class="portlet-title">
 
-								<div class="caption"><i class="icon-reorder"></i>服务注册信息</div>
+								<div class="caption"><i class="icon-reorder"></i><s:text name="ServiceRegistration.Info"></s:text></div>
 
 								<div class="tools">
 
@@ -119,51 +119,68 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								<form name="form2" class="form-horizontal" action="register.action" method="post" enctype="multipart/form-data">
 
 									<div class="control-group">
-								    <label class="control-label" for="inputServiceName">服务名称</label>
+								    <label class="control-label" for="inputServiceName"><s:text name="ServiceName"></s:text></label>
 								    <div class="controls">
 								      <input type="text" id="inputServiceName" name="sr.serviceName" placeholder="ServiceName">
 								    </div>
 								  </div>
 								  <div class="control-group">
-								    <label class="control-label" for="inputServiceType">服务类型</label>
+								    <label class="control-label" for="inputServiceType"><s:text name="ServiceType"></s:text></label>
 								    <div class="controls">
-								      <input type="text" id="inputServiceType" name="sr.serviceType" placeholder="ServiceType">
+								      <select id="servicetype"  onchange="changeServicetype()">
+										  <option>SERVICE</option>
+										  <option>APPLICATION</option>
+										  <option>BUSINESS</option>
+										  <option>LOCAL</option>
+								      </select>
 								    </div>
 								  </div>
 								  <div class="control-group">
-								    <label class="control-label" for="inputServiceTarget">服务目标</label>
+								    <label class="control-label" for="inputServiceTarget"><s:text name="ServiceTarget"></s:text></label>
 								    <div class="controls">
 								      <input type="text" id="inputServiceTarget" name="sr.serviceTarget" placeholder="ServiceTarget">
 								    </div>
 								  </div>
 								  <div class="control-group">
-								    <label class="control-label" for="inputServiceDesc">服务描述</label>
+								    <label class="control-label" for="inputServiceDesc"><s:text name="ServiceDesc"></s:text></label>
 								    <div class="controls">
 								      <input type="text" id="inputServiceDesc" name="sr.serviceDesc" placeholder="ServiceDesc">
 								    </div>
 								  </div>
 								  <div class="control-group">
-								    <label class="control-label" for="inputServiceRange">服务范围</label>
+								    <label class="control-label" for="inputServiceRange"><s:text name="ServiceRange"></s:text></label>
 								    <div class="controls">
 								      <input type="text" id="inputServiceRange" name="sr.serviceRange" placeholder="ServiceRange">
 								    </div>
 								  </div>
 								  <div class="control-group">
-								    <label class="control-label" for="inputServiceAddress">服务地址</label>
+								    <label class="control-label" for="inputServiceAddress"><s:text name="ServiceAddress"></s:text></label>
 								    <div class="controls">
 								      <input type="text" id="inputServiceAddress" name="sr.serviceAddress" placeholder="ServiceAddress">
 								    </div>
 								  </div>
+								  <div id='ServiceQuery' class="control-group">
+								    <label class="control-label" for="inputServiceQuery"><s:text name="ServiceQuery"></s:text></label>
+								    <div class="controls">
+								      <input type="text" id="inputServiceQuery" name="sr.serviceQuery" placeholder="ServiceQuery">
+								    </div>
+								  </div>
+								  <div id='AppRoleURL' style="display:none" class="control-group">
+								    <label class="control-label" for="inputServiceQuery"><s:text name="ServiceAppRoleURL"></s:text></label>
+								    <div class="controls">
+								      <input type="text" id="inputAppRoleURL" name="sr.appRoleUrl" placeholder="AppRoleURL">
+								    </div>
+								  </div>
 								  <div class="control-group">
-								    <label class="control-label" for="inputServiceMaxLoad">服务最大负荷</label>
+								    <label class="control-label" for="inputServiceMaxLoad"><s:text name="ServiceMaxLoad"></s:text></label>
 								    <div class="controls">
 								      <input type="text" id="inputServiceMaxLoad" name="maxLoad" placeholder="ServiceMaxLoad">
 								    </div>
 								  </div>
 								  <div class="control-group">
-								    <label class="control-label" for="inputServiceLevel">服务级别</label>
+								    <label class="control-label" for="inputServiceLevel"><s:text name="ServiceLevel"></s:text></label>
 								    <div class="controls">
-								      <select>
+								      <select id="servicelevel">
 										  <option>1</option>
 										  <option>2</option>
 										  <option>3</option>
@@ -173,21 +190,48 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								    </div>
 								  </div>
 								  <div class="control-group">
-								    <label class="control-label" for="inputRelateBusiness">涉及业务</label>
+								    <label class="control-label" for="inputRelateBusiness"><s:text name="ServiceRelateBusiness"></s:text></label>
 								    <div class="controls">
 								      <input type="text" id="inputRelateBusiness" name="sr.relateBusiness" placeholder="RelateBusiness">
 								    </div>
 								  </div>
+								  
 								  <div class="control-group">
-								    <label class="control-label" for="inputServiceWay">服务提供方式</label>
+								    <label class="control-label" for="inputCallService"><s:text name="ServiceCalledServices"></s:text></label>
+								    <div class="controls">
+								    <table class="" style="" id="CallServiceTable">
+									    <tr>
+											<td>
+												<select name="callservices">  <!-- 审核通过的服务 -->
+												      <s:iterator value="calledservices" status="L" var="calledservices">
+														<option><s:property value="serviceId"/></option>
+													  </s:iterator>
+												  </select>
+												  <button type="button" onclick="addCallService();">+</button>
+												  <button type="button" onclick="deleteCallService();">-</button>
+											</td>
+										</tr>
+									</table>
+									</div>
+								  </div>
+								  
+								  <div id="Businessfile" style="display:none" class="control-group">
+								    <label class="control-label" for="inputBusinessfile"><s:text name="UploadSpecificationFile"></s:text></label>
+								    <div class="controls">
+										<input name="myFile" type="FILE" id="myFile" size="500" >
+									</div>
+								  </div>
+								  
+								  <div class="control-group">
+								    <label class="control-label" for="inputServiceWay"><s:text name="ServiceProvidingMode"></s:text></label>
 								    <div class="controls">
 								      <label class="radio">
 										<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
-										     本地
+										     <s:text name="ServiceLocalMode"></s:text>
 								  	  </label>
 									  <label class="radio">
 										<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-										   远程
+										   <s:text name="ServiceRemoteMode"></s:text>
 									  </label>
 								    </div>
 								  </div>
@@ -195,21 +239,37 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								  <div class="control-group">
 								    <div class="controls">
 								      <label class="checkbox">
-								        <input type="checkbox"> 匿名
+								        <input type="checkbox"><s:text name="ServiceAnonymous"></s:text>
 								      </label>
+								    </div>
+								  </div>
+								<div class="control-group" id="upload" style="display:none">
+								    <div class="controls">
+										<s:text name="ServiceAppendix"></s:text><input name="uploadFile" type="FILE" id="uploadFile" size="500" >
+									</div>
+								</div>
+								  
+								  <div class="control-group">
+								    <div class="controls">
+								      <input id="inputServiceType" name="sr.serviceType" type="hidden" value="">
 								    </div>
 								  </div>
 								  <div class="control-group">
 								    <div class="controls">
-										附件<input name="myFile" type="FILE" id="myFile" size="50" >
-									</div>
+								      <input id="inputServiceLevel" name="sr.serviceLevel" type="hidden" value="">
+								    </div>
+								  </div>
+								  <div class="control-group">
+								    <div class="controls">
+								      <input id="inputCallService" name="sr.callService" type="hidden" value="">
+								    </div>
 								  </div>
 
-									<div class="form-actions">
+									<div class="form-actions">             
 
-										<button type="button" class="btn blue" onclick="alert('注册成功！您还可以继续注册');form2.action='register.action'; form2.submit()" >Submit</button>
+										<button type="button" class="btn blue" onclick="changevalue()" ><s:text name="Submit"></s:text></button>
 
-										<button type="button" class="btn">Cancel</button></div>
+										<button type="button" class="btn"><s:text name="Cancel"></s:text></button></div>
 
 								</form>
 
@@ -219,6 +279,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 						</div>
 
+
+                        <div class="portlet-body" style="display:none">
+							<s:iterator value="services" status="L">
+								<input name="servicenames" type="hidden" value=<s:property value="serviceName"/>>
+							</s:iterator>
+						</div>
 						<!-- END SAMPLE FORM PORTLET-->
 
 					</div>
@@ -247,15 +313,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 				</div>
 
-			        
-
-
-		
-
-		
-
-
-
 	
 	<script src="media/js/form-components.js"></script>     
 
@@ -263,15 +320,142 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 	<script>
 
-		jQuery(document).ready(function() {       
-
-		   // initiate layout and plugins
-
-		   App.init();
-
-		   FormComponents.init();
-
+		jQuery(document).ready(function() {     
+		   checkuser(); 
+		  // App.init();
+		  // FormComponents.init();
+		  // alert("ss");
+		   
 		});
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(admin != "true"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
+		
+		function changeServicetype(){
+			var servicetypeobj = document.getElementById("servicetype");
+			var servicetypeindex = servicetypeobj.selectedIndex;
+			var servicetypevalue = servicetypeobj.options[servicetypeindex].value;
+			if(servicetypevalue == "APPLICATION"){
+				document.getElementById("Businessfile").style="display:none";
+				document.getElementById("AppRoleURL").style="display:block";
+				document.getElementById("ServiceQuery").style="display:none";
+				document.getElementById("upload").style="display:none";
+			}else if(servicetypevalue == "SERVICE"){
+				document.getElementById("Businessfile").style="display:none";
+				document.getElementById("AppRoleURL").style="display:none";
+				document.getElementById("ServiceQuery").style="display:block";
+				document.getElementById("upload").style="display:none";
+			}else if(servicetypevalue == "BUSINESS"){
+				document.getElementById("Businessfile").style="display:block";
+				document.getElementById("AppRoleURL").style="display:none";
+				document.getElementById("ServiceQuery").style="display:none";
+				document.getElementById("upload").style="display:none";
+			}else if(servicetypevalue == "LOCAL"){
+				document.getElementById("Businessfile").style="display:none";
+				document.getElementById("AppRoleURL").style="display:none";
+				document.getElementById("ServiceQuery").style="display:none";
+				document.getElementById("upload").style="display:block";
+			}
+		}
+		
+		function addCallService()
+		{
+			var table=document.getElementById("CallServiceTable");
+			var row = table.insertRow(-1);
+			var cc = row.insertCell(0);
+			cc.innerHTML='<select name="callservices"><s:iterator value="services" status="L" var="services"><option><s:property value="serviceId"/></option></s:iterator></select>';
+		}
+		function deleteCallService()
+		{
+			var table=document.getElementById("CallServiceTable");
+			table.deleteRow(table.rows.length-1);
+		}
+		
+		
+		
+		function changevalue(){
+			var inputServiceName = document.getElementById("inputServiceName").value;
+			if(inputServiceName=="" || inputServiceName==null)
+		    {
+		        alert("服务名称不能为空");
+		        return;
+		    }
+		    else{
+		    	var servicenames = document.getElementsByName("servicenames");
+		    	for(var i = 0; i < servicenames.length; i++){
+		    		if(inputServiceName == servicenames[i].value){
+		    			alert("服务名称已存在");
+		        		return;
+		    		}
+		    	}
+		    }
+		    
+		    var servicetypeobj = document.getElementById("servicetype");
+			var servicetypeindex = servicetypeobj.selectedIndex;
+			var servicetypevalue = servicetypeobj.options[servicetypeindex].value;
+			if(servicetypevalue == "BUSINESS"){
+				var inputfile = document.getElementById("myFile").value;
+				if(inputfile == "" || inputfile == null)
+			    {
+			        alert("请上传流程文件");
+			        return;
+			    }
+			    else{
+					var point = inputfile.lastIndexOf(".");
+					var type = inputfile.substr(point).toLowerCase();
+					if (type != ".xml" && type != ".yawl") {
+						 alert("只支持上传xml和yawl格式的流程文件");
+						 return;
+					 }
+			    }
+			}
+		    
+			
+			var servicetypeobj = document.getElementById("servicetype");
+			var servicetypeindex = servicetypeobj.selectedIndex;
+			var servicetypevalue = servicetypeobj.options[servicetypeindex].value;
+			document.getElementById("inputServiceType").value = servicetypevalue;
+			
+			var servicelevelobj = document.getElementById("servicelevel");
+			var servicelevelindex = servicelevelobj.selectedIndex;
+			var servicelevelvalue = servicelevelobj.options[servicelevelindex].value;
+			document.getElementById("inputServiceLevel").value = servicelevelvalue;
+			
+			
+			var callservicesobj = document.getElementsByName("callservices");
+			var callstring = "";
+			for(var i = 0; i < callservicesobj.length; i++){
+				var callservice = callservicesobj[i];
+				var callserviceindex = callservice.selectedIndex;
+				var callservicevalue = callservice.options[callserviceindex].value;
+				if(callstring.indexOf(callservicevalue) >= 0 )  //程序健壮性，处理添加相同调用服务的情况
+				{
+				    //alert('重复调用相同服务');
+				}
+				else{
+					if(i != callservicesobj.length - 1){
+						callstring += callservicevalue + ",";
+					}else{
+						callstring += callservicevalue;
+					}
+				}
+			}
+			document.getElementById("inputCallService").value = callstring;
+			form2.action='register.action'; 
+			form2.submit();
+		}
 
 	</script>
 
@@ -281,4 +465,4 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 <!-- END BODY -->
 
-</html>
+</html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                

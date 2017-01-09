@@ -23,19 +23,23 @@ public class LicenceService
 	{
 		this.licenceDao.save(l);
 	}
+	
 	//删除本地许可证配置
 	public void deleteLocalConfig(Licence l)
 	{
+		this.licenceDao.delete(l);
 		return;
 	}
+	
 	//获取全部已配置的本地许可证
-	public void getLocalLicence(Licence l)
+	public List getLocalLicence(Licence l)
 	{
-		return;
+		return this.licenceDao.findAll();
 	}
-	//
-	public void getServiceLicence(Licence l)
+	
+	//获得一项服务的许可证配置
+	public List getServiceLicence(int serviceId)
 	{
-		return;
+		return this.licenceDao.findByServiceId(serviceId);
 	}
 }

@@ -16,6 +16,7 @@ public class SearchsiteAction extends ActionSupport
 {
 	private SearchsiteService searchsitesr = new SearchsiteService();
 	Searchsite searchsite;
+	String option1;
 	
 	List<Searchsite> searchsites = new ArrayList<Searchsite>();
 	
@@ -33,6 +34,14 @@ public class SearchsiteAction extends ActionSupport
 
 	public void setSearchsite(Searchsite searchsite) {
 		this.searchsite = searchsite;
+	}
+	
+	public String getOption1() {
+		return option1;
+	}
+
+	public void setOption1(String option1) {
+		this.option1 = option1;
 	}
 
 	public List<Searchsite> getSearchsites() {
@@ -71,4 +80,21 @@ public class SearchsiteAction extends ActionSupport
 		}
 	}
 	
+	public String deleteSite(){
+		try
+		{
+			searchsite = searchsitesr.getSearchsiteDao().findById(Integer.valueOf(option1));
+			if(searchsite != null){
+				searchsitesr.getSearchsiteDao().delete(searchsite);
+			}
+			 
+			listSearchsite();
+			return SUCCESS;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return ERROR;
+		}
+	}
 }

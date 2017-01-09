@@ -13,7 +13,7 @@
 
 	<meta charset="utf-8" />
 
-	<title>企业服务管理系统 | 角色权限配置</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="RolePermissionConfiguration"></s:text></title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
@@ -37,7 +37,7 @@
 
 						<h3 class="page-title">
 
-							角色权限配置 <small>配置角色拥有的权限</small>
+							<s:text name="RolePermissionConfiguration"></s:text><small><s:text name="RolePermissionConfiguration.Description"></s:text></small>
 
 						</h3>
 
@@ -55,13 +55,13 @@
 
 							<li>
 
-								<a href="#">权限配置</a>
+								<a href="#"><s:text name="PermissionConfiguration"></s:text></a>
 
 								<i class="icon-angle-right"></i>
 
 							</li>
 
-							<li><a href="#">角色权限配置</a></li>
+							<li><a href="#"><s:text name="RolePermissionConfiguration"></s:text></a></li>
 
 						</ul>
 
@@ -83,7 +83,7 @@
 
 							<div class="portlet-title">
 
-								<div class="caption"><i class="icon-globe"></i>角色列表</div>
+								<div class="caption"><i class="icon-globe"></i><s:text name="RoleList"></s:text></div>
 
 								<div class="actions">
 
@@ -98,9 +98,9 @@
 										</a>
 
 										<div id="sample_2_column_toggler" class="dropdown-menu hold-on-click dropdown-checkboxes pull-right">
-											<label><input type="checkbox" checked data-column="0">角色编号</label>
-											<label><input type="checkbox" checked data-column="1">角色名称</label>
-											<label><input type="checkbox" checked data-column="2">角色描述</label>
+											<label><input type="checkbox" checked data-column="0">Role Id</label>
+											<label><input type="checkbox" checked data-column="1">Role Name</label>
+											<label><input type="checkbox" checked data-column="2">Role Desc</label>
 										</div>
 									</div>
 
@@ -114,11 +114,9 @@
 
 									<thead>
 										<tr>
-											<th>角色编号</th>
-											<th>角色名称</th>
-											<th>角色描述</th>
-							
-			
+											<th>Role Id</th>
+											<th>Role Name</th>
+											<th>Role Desc</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -139,7 +137,7 @@
 
 							<div class="portlet-title">
 
-								<div class="caption"><i class="icon-globe"></i>权限列表</div>
+								<div class="caption"><i class="icon-globe"></i><s:text name="PermissionList"></s:text></div>
 
 								<div class="actions">
 
@@ -154,9 +152,9 @@
 										</a>
 
 										<div id="sample_3_column_toggler" class="dropdown-menu hold-on-click dropdown-checkboxes pull-right">
-											<label><input type="checkbox" checked data-column="0">权限编号</label>
-											<label><input type="checkbox" checked data-column="1">权限名称</label>
-											<label><input type="checkbox" checked data-column="2">权限描述</label>
+											<label><input type="checkbox" checked data-column="0">Permission Id</label>
+											<label><input type="checkbox" checked data-column="1">Permission Name</label>
+											<label><input type="checkbox" checked data-column="2">Permission Desc</label>
 										</div>
 									</div>
 
@@ -170,11 +168,9 @@
 
 									<thead>
 										<tr>
-											<th>权限编号</th>
-											<th>权限名称</th>
-											<th>权限描述</th>
-							
-			
+											<th>Permission Id</th>
+											<th>Permission Name</th>
+											<th>Permission Desc</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -194,23 +190,23 @@
 						<form name="form2" action="" method="post">
 							<div class="portlet box blue">
 								<div class="portlet-title">
-									角色权限配置
+									<s:text name="RolePermissionConfiguration"></s:text>
 								</div>
 								<div class="portlet-body">
-									<br>选择配置权限
+									<br><s:text name="PermissionId"></s:text>
 									<select class="form-control" name="opt1" id="opt1">
 										<s:iterator value="permissions" status="L2">
 											<option><s:property value="permissionId"/></option>
 										</s:iterator>
 									</select>
-									<br>选择配置角色
+									<br><s:text name="RoleId"></s:text>
 									<select class="form-control" name="opt2" id="opt2">
 										<s:iterator value="roles" status="L2">
 											<option><s:property value="roleId"/></option>
 										</s:iterator>
 									</select>
-									<br>确认配置
-									<button type="button" class="btn" onclick="changeValue(); form2.action='addPermissionRole.action'; form2.submit();">确定&raquo; </button>
+									<br>
+									<button type="button" class="btn" onclick="changeValue(); form2.action='addPermissionRole.action'; form2.submit();"><s:text name="OK"></s:text>&raquo; </button>
 									<input name="option1" type="hidden" value="" id="option1">
 									<input name="option2" type="hidden" value="" id="option2">
 									
@@ -236,7 +232,26 @@
 
 
 	<script>
-
+		jQuery(document).ready(function() {       
+		  checkuser();
+		});
+		
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
+		
 		function changeValue()
 		{
 			var selectIndex1 = document.getElementById("opt1").selectedIndex;

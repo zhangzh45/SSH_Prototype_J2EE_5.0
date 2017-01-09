@@ -19,14 +19,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 	<meta charset="utf-8" />
 
-	<title>企业服务管理系统 | 添加关键字</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="AddKeyword"></s:text></title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
 	<meta content="" name="description" />
 
 	<meta content="" name="author" />
-
+	
+	<script src="media/js/jquery-1.10.2.js" type="text/javascript"></script>
 
 </head>
 
@@ -39,9 +40,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<div >
 						<h3 class="page-title">
 
-							添加关键字
+							<s:text name="AddKeyword"></s:text>
 
-							 <small>设置服务信息爬取的关键字</small>
+							 <small><s:text name="AddKeyword.Description"></s:text></small>
 
 						</h3>
 
@@ -59,13 +60,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 							<li>
 
-								<a href="#">服务信息爬取</a>
+								<a href="#"><s:text name="ServiceInfoCrawling"></s:text></a>
 
 								<span class="icon-angle-right"></span>
 
 							</li>
 
-							<li><a href="#">添加关键字</a></li>
+							<li><a href="#"><s:text name="AddKeyword"></s:text></a></li>
 
 						</ul>
 
@@ -87,7 +88,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 							<div class="portlet-title">
 
-								<div class="caption"><i class="icon-reorder"></i>添加关键字</div>
+								<div class="caption"><i class="icon-reorder"></i><s:text name="AddKeyword"></s:text></div>
 
 								<div class="tools">
 
@@ -111,7 +112,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 									<div class="control-group">
 
-										<label class="control-label">关键字名称</label>
+										<label class="control-label"><s:text name="KeywordName"></s:text></label>
 
 										<div class="controls">
 
@@ -126,7 +127,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 									<div class="control-group">
 
-										<label class="control-label">关键字内容</label>
+										<label class="control-label"><s:text name="KeywordContent"></s:text></label>
 
 										<div class="controls">
 
@@ -138,7 +139,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 									<div class="control-group">
 
-										<label class="control-label">关键字权值</label>
+										<label class="control-label"><s:text name="KeywordValue"></s:text></label>
 
 										<div class="controls">
 
@@ -150,7 +151,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 									<div class="control-group">
 
-										<label class="control-label">有效期限</label>
+										<label class="control-label"><s:text name="KeywordValidityPeriod"></s:text></label>
 
 										<div class="controls">
 
@@ -170,7 +171,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 									<div class="control-group">
 
-										<label class="control-label">关键字类型</label>
+										<label class="control-label"><s:text name="KeywordType"></s:text></label>
 
 										<div class="controls">
 
@@ -196,7 +197,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 									<div class="control-group">
 
-										<label class="control-label">权值计算方式</label>
+										<label class="control-label"><s:text name="KeywordWeightCalculationMethod"></s:text></label>
 
 										<div class="controls">
 
@@ -226,7 +227,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 									<div class="control-group">
 
-										<label class="control-label">大小写敏感</label>
+										<label class="control-label"><s:text name="KeywordCaseSensitive"></s:text></label>
 
 										<div class="controls">
 
@@ -234,7 +235,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 											<input type="radio" name="optionsRadios1" value="option1" />
 
-											敏感
+											<s:text name="KeywordSensitive"></s:text>
 
 											</label>
 
@@ -242,7 +243,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 											<input type="radio" name="optionsRadios1" value="option2" checked />
 
-											不敏感
+											<s:text name="KeywordNotSensitive"></s:text>
 
 											</label>  
 
@@ -254,19 +255,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 									<div class="control-group">
 
-										<label class="control-label">匹配方式</label>
+										<label class="control-label"><s:text name="KeywordMatchingMethod"></s:text></label>
 
 										<div class="controls">
 
 											<label class="checkbox">
 
-											<input type="checkbox" value="" /> 完全匹配
+											<input type="checkbox" value="" /> <s:text name="KeywordWrapSearch"></s:text>
 
 											</label>
 
 											<label class="checkbox">
 
-											<input type="checkbox" value="" /> 正则表达式
+											<input type="checkbox" value="" /> <s:text name="KeywordRegularExpressions"></s:text>
 
 											</label>
 
@@ -276,7 +277,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 									<div class="control-group">
 
-										<label class="control-label">关键字描述</label>
+										<label class="control-label"><s:text name="KeywordDesc"></s:text></label>
 
 										<div class="controls">
 
@@ -288,9 +289,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 									<div class="form-actions">
 
-										<button type="button" class="btn blue" onclick="alert('添加成功！您还可以继续添加');form2.action='addKeyword.action'; form2.submit()" >Submit</button>
+										<button type="button" class="btn blue" onclick="alert('添加成功！您还可以继续添加');form2.action='addKeyword.action'; form2.submit()" ><s:text name="Submit"></s:text></button>
 
-										<button type="button" class="btn">Cancel</button></div>
+										<button type="button" class="btn"><s:text name="Cancel"></s:text></button></div>
 
 								</form>
 
@@ -334,3 +335,29 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <!-- END BODY -->
 
 </html>
+
+
+
+	<script>
+
+		jQuery(document).ready(function() {       
+			alert("ss");
+		  checkuser();
+
+		});
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
+		
+	</script>

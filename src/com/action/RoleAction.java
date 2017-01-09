@@ -9,9 +9,13 @@ import com.algorithm.Aprioir;
 import com.algorithm.AprioirItemSet;
 import com.algorithm.AprioirResult;
 import com.bean.Role;
+import com.bean.RolePermission;
+import com.bean.RoleSpecSer;
 import com.bean.UserRole;
 import com.opensymphony.xwork2.ActionSupport;
+import com.service.RolePermissionService;
 import com.service.RoleService;
+import com.service.RoleSpecSerService;
 import com.service.UserRoleService;
 
 public class RoleAction extends ActionSupport
@@ -21,6 +25,8 @@ public class RoleAction extends ActionSupport
 	private List<Role> roles = new ArrayList<Role>();
 	String option1;
 	private UserRoleService userrolesr;
+	private RolePermissionService rolepermissionsr;
+	private RoleSpecSerService roleSpecSr;
 	List<AprioirResult> apresults = new ArrayList<AprioirResult>();
 	private Map<String,List<Role>> mapRoles =new HashMap<String, List<Role>>();
 	public Map<String, List<Role>> getMapRoles() {
@@ -46,6 +52,19 @@ public class RoleAction extends ActionSupport
 	}
 	public void setRolesr(RoleService rolesr) {
 		this.rolesr = rolesr;
+	}
+	
+	public RolePermissionService getRolepermissionsr() {
+		return rolepermissionsr;
+	}
+	public void setRolepermissionsr(RolePermissionService rolepermissionsr) {
+		this.rolepermissionsr = rolepermissionsr;
+	}
+	public RoleSpecSerService getRoleSpecSr() {
+		return roleSpecSr;
+	}
+	public void setRoleSpecSr(RoleSpecSerService roleSpecSr) {
+		this.roleSpecSr = roleSpecSr;
 	}
 	public Role getRole() {
 		return role;
@@ -126,8 +145,30 @@ public class RoleAction extends ActionSupport
 			//role.setRoleId(Integer.valueOf(option1));
 			if(role != null)
 			{
+				List<UserRole> userroles = new ArrayList<UserRole>();
+				userroles = userrolesr.getUserroleDao().findByRoleid(role.getRoleId());
+				for(int i = 0; i < userroles.size(); i++){
+					userrolesr.delUserrole(userroles.get(i));
+				}
+				
+				List<RolePermission> rolepermissions = new ArrayList<RolePermission>();
+				rolepermissions = rolepermissionsr.getRolePermission(role.getRoleId());
+				for(int i = 0; i < rolepermissions.size(); i++){
+					rolepermissionsr.getRolepermissionDao().delete(rolepermissions.get(i));
+				}
+				
+				List<RoleSpecSer> rolespecsers = new ArrayList<RoleSpecSer>();
+				rolespecsers = roleSpecSr.findSpecSerByRoleId(role.getRoleId());
+				System.out.print("role.getRoleId():"+role.getRoleId()+"rolespecsers.size():"+rolespecsers.size());
+				for(int i = 0; i < rolespecsers.size(); i++){
+					roleSpecSr.getRoleSpecSerDao().delete(rolespecsers.get(i));
+				}
+				
 				rolesr.deleteRole(role);
 			}
+			
+			listRole();
+			
 			return SUCCESS;
 		}
 		catch(Exception e)

@@ -16,14 +16,14 @@ request.getSession().setAttribute("username", user);     //用Session保存用�
 <head>
 
 	<meta charset="utf-8" />
-	<title>企业服务管理系统 | 查看关键字</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="ViewKeyword"></s:text></title>
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
 	<meta content="" name="description" />
 
 	<meta content="" name="author" />
 
-	
+	<script src="media/js/table-managed.js"></script> 
 
 </head>
 
@@ -37,7 +37,7 @@ request.getSession().setAttribute("username", user);     //用Session保存用�
 						<!-- BEGIN PAGE TITLE & BREADCRUMB-->
 
 						<h3 class="page-title">
-							关键字信息 <small>可以查看关键字的详细信息</small>
+							<s:text name="ViewKeyword"></s:text><small><s:text name="ViewKeyword.Description"></s:text></small>
 						</h3>
 
 						<ul class="breadcrumb">
@@ -47,10 +47,10 @@ request.getSession().setAttribute("username", user);     //用Session保存用�
 								<i class="icon-angle-right"></i>
 							</li>
 							<li>
-								<a href="#">服务信息爬取</a>
+								<a href="#"><s:text name="ServiceInfoCrawling"></s:text></a>
 								<i class="icon-angle-right"></i>
 							</li>
-							<li><a href="#">查看关键字</a></li>
+							<li><a href="#"><s:text name="ViewKeyword"></s:text></a></li>
 						</ul>
 
 						<!-- END PAGE TITLE & BREADCRUMB-->
@@ -66,10 +66,11 @@ request.getSession().setAttribute("username", user);     //用Session保存用�
 					<div class="span12">
 
 						<!-- BEGIN EXAMPLE TABLE PORTLET-->
-
+					<form name="form2" action="" method="post">
+					
 						<div class="portlet box light-grey">
 							<div class="portlet-title">
-								<div class="caption"><i class="icon-globe"></i>关键字信息</div>
+								<div class="caption"><i class="icon-globe"></i><s:text name="ViewKeyword.KeywordInfo"></s:text></div>
 								<div class="tools">
 									<a href="javascript:;" class="collapse"></a>
 									<a href="#portlet-config" data-toggle="modal" class="config"></a>
@@ -141,9 +142,34 @@ request.getSession().setAttribute("username", user);     //用Session保存用�
 							</div>
 
 						</div>
-
+						
+						<div name="byadmin" class="portlet box light-grey">
+								<div class="portlet-title">
+									<s:text name="ViewKeyword.Management"></s:text>
+								</div>
+								<div class="portlet-body">
+									<div class="container-fluid">
+									  <div class="row-fluid">
+										
+										<div class="span9">
+											<br><s:text name="ViewKeyword.KeywordId"></s:text>
+											<select class="form-control" name="opt1" id="opt1">
+												<s:iterator value="keywords" status="L2">
+													<option><s:property value="searchkeywordid"/></option>
+												</s:iterator>
+											</select>
+											<br>
+											<br><s:text name="ViewKeyword.Delete"></s:text>
+											<button type="button" class="btn" onclick="changeValue(); form2.action='deleteKeyword.action'; form2.submit();"><s:text name="Delete"></s:text>&raquo; </button>
+											<input name="option1" type="hidden" value="" id="option1">
+											<input name="option2" type="hidden" value="" id="option2">	
+										</div><!--/span-->
+									  </div><!--/row-->
+									</div><!--/.fluid-container-->
+								</div>
+							</div>
 						<!-- END EXAMPLE TABLE PORTLET-->
-
+						</form>
 					</div>
 
 				</div><!-- END PAGE CONTAINER-->
@@ -155,13 +181,31 @@ request.getSession().setAttribute("username", user);     //用Session保存用�
 	<!-- BEGIN FOOTER -->
 
 	<script>
+		
 		jQuery(document).ready(function() {       
-
-		   App.init();
-
-		   TableManaged.init();
-
+		    checkuser();
 		});
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
+		
+		function changeValue()
+		{
+			var selectIndex1 = document.getElementById("opt1").selectedIndex;
+			document.getElementById("option1").value = document.getElementById("opt1").options[selectIndex1].text;
+		}
 	</script>
 </body>
 <!-- END BODY -->

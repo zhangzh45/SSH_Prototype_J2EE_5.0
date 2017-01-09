@@ -29,7 +29,7 @@
             <key>
                 <column name="permissionId" not-null="true" />
             </key>
-            <one-to-many class="com.bean.PermissionService" />
+            <one-to-many class="com.bean.Permissionservice" />
         </set>
     </class>
 </hibernate-mapping>

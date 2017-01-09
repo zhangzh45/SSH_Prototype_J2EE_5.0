@@ -4,7 +4,7 @@
  		<pattern>/login.*</pattern>     
  		<pattern>/error.*</pattern>     
   	</excludes>  
-    <decorator name="main" page="MainBody.jsp">      
+   <decorator name="main" page="MainBody.jsp">      
   		<pattern>/WEB-INF/ServiceManage/*</pattern>
     </decorator>
 </decorators>

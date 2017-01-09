@@ -143,4 +143,14 @@ public class ServicerelationDAO extends HibernateDaoSupport {
 			ApplicationContext ctx) {
 		return (ServicerelationDAO) ctx.getBean("ServicerelationDAO");
 	}
+	
+	public List findByServiceId(Object serviceId) {
+		try {
+			String queryString = "from Servicerelation sr where sr.serviceByServiceId.serviceId = ?";
+			return getHibernateTemplate().find(queryString, serviceId);
+		} catch (RuntimeException re) {
+			log.error("find by property serviceId failed", re);
+			throw re;
+		}
+	}
 }

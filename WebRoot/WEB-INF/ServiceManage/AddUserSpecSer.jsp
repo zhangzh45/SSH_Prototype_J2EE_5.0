@@ -25,7 +25,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<meta   http-equiv="Expires"   CONTENT="0">     
 	<meta   http-equiv="Cache-Control"   CONTENT="no-cache">     
 	<meta   http-equiv="Pragma"   CONTENT="no-cache">      
-	<title>企业服务管理系统 | 服务申请审批</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="ServiceApplyApproval"></s:text></title>
 	 
 	<link rel="stylesheet" type="text/css" href="media/css/jquery.dataTables.css">
 	<link rel="stylesheet" href="media/css/bootstrap.min.css">
@@ -71,7 +71,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 						<h3 class="page-title">
 
-							服务申请审批 <small>审批用户申请的服务</small>
+							<s:text name="ServiceApplyApproval"></s:text><small><s:text name="ServiceApplyApproval.Description"></s:text></small>
 
 						</h3>
 
@@ -89,13 +89,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 							<li>
 
-								<a href="#">服务管理</a>
+								<a href="#"><s:text name="ServiceManagement"></s:text></a>
 
 								<i class="icon-angle-right"></i>
 
 							</li>
 
-							<li><a href="#">服务申请审批</a></li>
+							<li><a href="#"><s:text name="ServiceApplyApproval"></s:text></a></li>
 
 						</ul>
 
@@ -121,7 +121,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 							<div class="portlet-title">
 
-								<div class="caption"><i class="icon-globe"></i>用户申请服务列表</div>
+								<div class="caption"><i class="icon-globe"></i><s:text name="ServiceList"></s:text></div>
 
 							</div>
 
@@ -137,9 +137,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 										 <tr>
 										 	<th><input type="checkbox" name="myBox" id="chkAll" value="0" onclick="selectAll();"/></th>
 											<th>tempId</th>
-											<th>applyId</th>
+											<th>userId</th>
+											<!--<th>applyId</th>
 											<th>applyName</th>
-											<th >applyType</th>
+											<th >applyType</th>  -->
 											<th >serviceId</th>
 											<th >serviceName</th>
 											<th >serviceType</th>
@@ -152,8 +153,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									</tbody>
 								</table>
 								  <div class="form-actions" >
-											  <button type="button" class="btn btn-primary" value="submit"  id="agree_submit" onclick="agreeAll();">同意</button>
-											  <button type="button" class="btn btn-primary" value="reject" id= "reject_submit" onclick="rejectAll();" >拒绝</button>
+											  <button type="button" class="btn btn-primary" value="submit"  id="agree_submit" onclick="agreeAll();">Accept</button>
+											  <button type="button" class="btn btn-primary" value="reject" id= "reject_submit" onclick="rejectAll();" >Refuse</button>
 								 			  <input name="submitToken" value="<%=submitToken%>" type="hidden" id="submitToken"/>
 								 </div>
 								 </form>
@@ -221,9 +222,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				 columns: [
 		{data: null},
 		{data: 'tempId'},
-        { data: 'applyId' },
+		{ data: 'userId' },
+        /*{ data: 'applyId' },
         { data: 'applyName' },
-        { data: 'applyType' },
+        { data: 'applyType' },*/
         { data: 'serviceId' },
         { data: 'serviceName' },
         { data: 'serviceType' },
@@ -233,23 +235,23 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				],
 	    "aoColumnDefs": [ { "bVisible": false, "aTargets": [ 1 ] },
 	    				  { "bSortable": false, "aTargets": [ 0 ] },
-	    				  { "bSortable": false, "aTargets": [ 10 ] }
+	    				  { "bSortable": false, "aTargets": [ 8 ] }
 	    					
 	    				] ,
 		"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
 			 	$('td:eq(0)', nRow).html("<td><input type='checkbox' name='myBox' id='subcheck' value=\""+aData.tempId+"\"  onclick='setSelectAll();' /></td>");
-				$('td:eq(10)', nRow).html("<button class='btn btn-primary' onclick='agree(\""+ aData.tempId+"\",\""+ aData.applyId+"\",\""+ aData.serviceId+"\")'>Approve</button>"+
-				"<button class='btn  btn-primary' onclick='disagree(\""+ aData.tempId+"\",\""+ aData.applyId+"\",\""+ aData.serviceId+"\")'>Reject&nbsp;&nbsp;&nbsp;&nbsp;</button>" );
+				$('td:eq(8)', nRow).html("<button class='btn btn-primary' onclick='agree(\""+ aData.tempId+"\",\""+ aData.userId+"\",\""+ aData.serviceId+"\")'>Approve</button>"+
+				"<button class='btn  btn-primary' onclick='disagree(\""+ aData.tempId+"\",\""+ aData.userId+"\",\""+ aData.serviceId+"\")'>Reject&nbsp;&nbsp;&nbsp;&nbsp;</button>" );
 				
 			return nRow;
-		},
+		}/*,
 		"language": {
                  "lengthMenu": "每页 _MENU_ 条记录",
                  "zeroRecords": "没有找到记录",
                  "info": "第 _PAGE_ 页 ( 总共 _PAGES_ 页 )",
                  "infoEmpty": "无记录",
                  "infoFiltered": "(从 _MAX_ 条记录过滤)"
-             }
+             }*/
          
 			   });
 	}
@@ -356,7 +358,8 @@ var checknum=$("input[type='checkbox'][id='subcheck']:checked").length;
 	}
 }
 
-	jQuery(document).ready(function() {       
+	jQuery(document).ready(function() {    
+		 checkuser();   
 		   // initiate layout and plugins
 		   loadApply();
 		   updateTable();
@@ -366,7 +369,20 @@ var checknum=$("input[type='checkbox'][id='subcheck']:checked").length;
         //$('tr td checkebox').attr('checked').value="checked";
     } );
 		});
-	
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
 		
 		
 		

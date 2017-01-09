@@ -9,14 +9,15 @@ public class CombineService {
 	public static String main(String s) {
 		  // TODO Auto-generated method stub
 		  
-		  String endpoint = "http://localhost:8080/ServiceInf/DemoPort?wsdl";
+		  //String endpoint = "http://localhost:8080/ServiceInf/DemoPort?wsdl";
+		  String endpoint = "http://localhost:8020/SSH_Prototype_J2EE_5.0/GetServiceInfoPort?wsdl";
           //直接引用远程的wsdl文件
          //以下都是套路 
 		  try
 		  {
 	          Service service = new Service();
 	          Call call = (Call) service.createCall();
-	          call.setTargetEndpointAddress(endpoint);
+	          call.setTargetEndpointAddress(endpoint);  
 	          call.setOperationName(new QName("http://server/", "sayHello")); //WSDL里面描述的接口名称
 	          call.addParameter("arg0", org.apache.axis.encoding.XMLType.XSD_STRING,
 	                        javax.xml.rpc.ParameterMode.IN);//接口的参数
@@ -33,14 +34,15 @@ public class CombineService {
 		  catch (Exception e) 
 		  {
 			  
-			  endpoint="http://localhost:8080/SayHello/Demo2Port?wsdl";
-				
+			  //endpoint="http://localhost:8080/SayHello/Demo2Port?wsdl";
+			  endpoint = "http://zhangzhao-pc:8080/SSH_Prototype_J2EE_5.0/GetServiceInfoPort?wsdl";
 			  try
 			  {
 				  Service service = new Service();
 		          Call call = (Call) service.createCall();
 		          call.setTargetEndpointAddress(endpoint);
-		          call.setOperationName(new QName("http://server/", "sayHello")); //WSDL里面描述的接口名称
+		          //call.setOperationName(new QName("http://server/", "sayHello")); //WSDL里面描述的接口名称
+		          call.setOperationName(new QName("http://zhangzhao-pc:8080/SSH_Prototype_J2EE_5.0/GetServiceInfoPort/", "getAllService")); //WSDL里面描述的接口名称
 		          call.addParameter("arg0", org.apache.axis.encoding.XMLType.XSD_STRING,
 		                        javax.xml.rpc.ParameterMode.IN);//接口的参数
 		          call.setReturnType(org.apache.axis.encoding.XMLType.XSD_STRING);//设置返回类型  

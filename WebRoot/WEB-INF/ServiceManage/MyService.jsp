@@ -13,7 +13,7 @@
 
 	<meta charset="utf-8" />
 
-	<title>企业服务管理系统 | 我的服务</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="ServiceOperation"></s:text></title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
@@ -50,7 +50,7 @@
 
 						<h3 class="page-title">
 
-							我的服务 <small>查看和运行具有使用权限的服务</small>
+							<s:text name="ServiceOperation"></s:text> <small><s:text name="ServiceOperation.Description"></s:text></small>
 
 						</h3>
 
@@ -68,13 +68,13 @@
 
 							<li>
 
-								<a href="#">服务管理</a>
+								<a href="#"><s:text name="ServiceManagement"></s:text></a>
 
 								<i class="icon-angle-right"></i>
 
 							</li>
 
-							<li><a href="#">运行服务</a></li>
+							<li><a href="#"><s:text name="ServiceOperation"></s:text></a></li>
 
 						</ul>
 
@@ -99,7 +99,7 @@
 
 							<div class="portlet-title">
 
-								<div class="caption"><i class="icon-globe"></i>服务列表</div>
+								<div class="caption"><i class="icon-globe"></i><s:text name="ServiceList"></s:text></div>
 
 								<div class="actions">
 
@@ -114,10 +114,10 @@
 										</a>
 
 										<div id="sample_2_column_toggler" class="dropdown-menu hold-on-click dropdown-checkboxes pull-right">
-											<label><input type="checkbox" checked data-column="0">编号</label>
-											<label><input type="checkbox" checked data-column="1">类型</label>
-											<label><input type="checkbox" checked data-column="2">名称</label>
-											<label><input type="checkbox" checked data-column="3">地址</label>
+											<label><input type="checkbox" checked data-column="0">Service Id</label>
+											<label><input type="checkbox" checked data-column="1">Service Name</label>
+											<label><input type="checkbox" checked data-column="2">Service Type</label>
+											<label><input type="checkbox" checked data-column="3">Service Address</label>
 										</div>
 									</div>
 
@@ -131,10 +131,10 @@
 
 									<thead>
 										<tr>
-											<th>编号</th>
-											<th>类型</th>
-											<th class="hidden-480">名称</th>
-											<th class="hidden-480">地址</th>
+											<th>Service Id</th>
+											<th>Service Name</th>
+											<th class="hidden-480">Service Type</th>
+											<th class="hidden-480">Service Address</th>
 										</tr>
 									</thead>
 
@@ -157,17 +157,17 @@
 						<form name="form2" action="" method="post">
 							<div class="portlet box blue">
 								<div class="portlet-title">
-									审核操作
+									<s:text name="ServiceOperation.Operation"></s:text>
 								</div>
 								<div class="portlet-body">
-									<h5>服务编号
+									<h5><s:text name="ServiceId"></s:text>
 										<select class="form-control" name="opt1" id="opt1">
 											<s:iterator value="services" status="L2">
 												<option><s:property value="serviceId"/></option>
 											</s:iterator>
 										</select>
 									</h5>
-									<button type="button" class="btn btn-primary" onclick="changeValue(); form2.action='inputParameter.action'; form2.submit();">运行</button>
+									<button type="button" class="btn btn-primary" onclick="changeValue(); form2.action='inputParameter.action'; form2.submit();"><s:text name="Run"></s:text></button>
 									
 									<input name="option1" type="hidden" value="" id="option1">
 									<input name="option2" type="hidden" value="" id="option2">
@@ -186,14 +186,31 @@
 	
 
 	<script>
-
+		jQuery(document).ready(function() {       
+		   checkuser();
+		});
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
 	
 		function changeValue()
 		{
 			var selectIndex1 = document.getElementById("opt1").selectedIndex;
 			document.getElementById("option1").value = document.getElementById("opt1").options[selectIndex1].text;
-			var selectIndex2 = document.getElementById("opt2").selectedIndex;
-			document.getElementById("option2").value = document.getElementById("opt2").options[selectIndex2].text;
+			/*var selectIndex2 = document.getElementById("opt2").selectedIndex;
+			document.getElementById("option2").value = document.getElementById("opt2").options[selectIndex2].text;*/
 		}
 
 	</script>

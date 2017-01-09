@@ -17,6 +17,7 @@ public class Condition implements java.io.Serializable {
 	private Service serviceByServiceId;
 	private Service serviceBySubServiceId;
 	private String condtionExpression;
+	private String condtionType;
 	private Set servicerelations = new HashSet(0);
 
 	// Constructors
@@ -41,6 +42,16 @@ public class Condition implements java.io.Serializable {
 		this.serviceBySubServiceId = serviceBySubServiceId;
 		this.condtionExpression = condtionExpression;
 		this.servicerelations = servicerelations;
+	}
+	
+	public Condition(Service serviceByServiceId,
+			Service serviceBySubServiceId, String condtionExpression,
+			Set servicerelations, String condtionType) {
+		this.serviceByServiceId = serviceByServiceId;
+		this.serviceBySubServiceId = serviceBySubServiceId;
+		this.condtionExpression = condtionExpression;
+		this.servicerelations = servicerelations;
+		this.condtionType = condtionType;
 	}
 
 	// Property accessors
@@ -75,6 +86,15 @@ public class Condition implements java.io.Serializable {
 
 	public void setCondtionExpression(String condtionExpression) {
 		this.condtionExpression = condtionExpression;
+	}
+
+	
+	public String getCondtionType() {
+		return condtionType;
+	}
+
+	public void setCondtionType(String condtionType) {
+		this.condtionType = condtionType;
 	}
 
 	public Set getServicerelations() {

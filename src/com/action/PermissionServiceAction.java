@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bean.Permission;
-import com.bean.PermissionService;
+import com.bean.Permissionservice;
 import com.bean.Role;
 import com.bean.RolePermission;
 import com.bean.Service;
@@ -16,12 +16,12 @@ import com.service.RolePermissionService;
 public class PermissionServiceAction extends ActionSupport
 {
 	private PermissionServiceService permissionservicesr = new PermissionServiceService();
-	PermissionService permissionservice;
+	Permissionservice permissionservice;
 	
 	String option1;
 	String option2;
 	
-	List<PermissionService> permissionservices = new ArrayList<PermissionService>();
+	List<Permissionservice> permissionservices = new ArrayList<Permissionservice>();
 	
 	public PermissionServiceService getPermissionservicesr() {
 		return permissionservicesr;
@@ -31,19 +31,19 @@ public class PermissionServiceAction extends ActionSupport
 		this.permissionservicesr = permissionservicesr;
 	}
 
-	public PermissionService getPermissionservice() {
+	public Permissionservice getPermissionservice() {
 		return permissionservice;
 	}
 
-	public void setPermissionservice(PermissionService permissionservice) {
+	public void setPermissionservice(Permissionservice permissionservice) {
 		this.permissionservice = permissionservice;
 	}
 
-	public List<PermissionService> getPermissionservices() {
+	public List<Permissionservice> getPermissionservices() {
 		return permissionservices;
 	}
 
-	public void setPermissionservices(List<PermissionService> permissionservices) {
+	public void setPermissionservices(List<Permissionservice> permissionservices) {
 		this.permissionservices = permissionservices;
 	}
 
@@ -67,7 +67,7 @@ public class PermissionServiceAction extends ActionSupport
 	{
 		try
 		{
-			permissionservice = new PermissionService();
+			permissionservice = new Permissionservice();
 			Permission per=new Permission();
 			per.setPermissionId(Integer.valueOf(option1));
 			permissionservice.setPermission(per);

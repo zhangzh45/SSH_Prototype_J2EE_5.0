@@ -25,7 +25,7 @@ public class ServiceresultService
 	
 	public void deleteServiceresult(Serviceresult e)
 	{
-		return;
+		this.srresultDao.delete(e);
 	}
 	
 	public List<Serviceresult> getAllServiceresult()

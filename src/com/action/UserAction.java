@@ -1,29 +1,50 @@
 package com.action;
 
 import java.util.ArrayList;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
+
+import org.apache.struts2.ServletActionContext;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import com.algorithm.Aprioir;
 import com.algorithm.AprioirItemSet;
 import com.bean.Role;
 import com.bean.User;
 import com.bean.UserRole;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.service.RoleService;
 import com.service.SerService;
 import com.service.UserRoleService;
 import com.service.UserService;
+import com.util.GetRemoteService;
 import com.util.RegisterKey;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 
 public class UserAction extends ActionSupport
 {
+	
 	private User user;
 	private UserService usersr;
 	private RoleService rolesr;
 	private UserRoleService userrolesr;
 	private SerService srs;
+	private String result ="error";
+	private String language="Chinese";
+	
+	
+	private GetRemoteService grs = new GetRemoteService();
+
 	String option1;
 	
 	String username;
@@ -40,7 +61,19 @@ public class UserAction extends ActionSupport
 	String runTime;
 	String userNum;
 	String roleNum;
+	public String getResult() {
+		return result;
+	}
+	public void setResult(String result) {
+		this.result = result;
+	}
 	
+	public String getLanguage() {
+		return language;
+	}
+	public void setLanguage(String language) {
+		this.language = language;
+	}
 	public SerService getSrs() {
 		return srs;
 	}
@@ -153,7 +186,8 @@ public class UserAction extends ActionSupport
 			serviceNum = String.valueOf(srs.getServiceNum());
 			runTime = String.valueOf(srs.getRunTime());
 			roleNum = String.valueOf(rolesr.getRoleNum());
-			userNum = String.valueOf(usersr.getUserNum());
+			userNum = grs.getUserNum();
+			System.out.println(userNum+"$\n");
 			return SUCCESS;
 		}
 		catch(Exception e)
@@ -167,10 +201,51 @@ public class UserAction extends ActionSupport
 	{
 		try
 		{
-		
-			System.out.println(usersr.getUniqueUser(user.getUserId()).getPassword()+"$");
+			Map<String, Object> session = ActionContext.getContext().getSession();
+			//System.out.println(usersr.getUniqueUser(user.getUserId()).getPassword()+"$");
 			System.out.println(user.getPassword()+"$");
-			if(usersr.getUniqueUser(user.getUserId()).getPassword().equals(user.getPassword()))
+			System.out.println(user.getUserId()+"$");
+			if(user.getUserId() == 0 && user.getPassword().equals("1234")){
+				dashboard();
+				session.put("admin", "true");  
+				session.put("user", "0");   //将用户id保存在session中,管理员的userid标记为0
+				return SUCCESS;
+			}
+			else{
+				
+				String loginresult = grs.loginVerify(String.valueOf(user.getUserId()), user.getPassword());
+				
+				JSONArray json = JSONArray.fromObject(loginresult ); // 棣栧厛鎶婂瓧绗︿覆杞垚 JSONArray  瀵硅薄
+				  System.out.println(json.toString()+"="+loginresult+"\n") ;
+				  Map<String ,String> mp=new HashMap<String,String>();
+			         if(json.size()>0){
+			           for(int i=0;i<json.size();i++){// 閬嶅巻 jsonarray 鏁扮粍锛屾妸姣忎竴涓璞¤浆鎴?json 瀵硅薄
+			             JSONObject job = json.getJSONObject(i); 
+			             if(job.getString("userid").equals(user.getUserId().toString())){
+			            	 if(job.getString("LoginVerify").equals("success")){  //鐧诲綍鎴愬姛
+			            		 //username = usersr.getUniqueUser(user.getUserId()).getUserName();
+			     				 dashboard();
+			     				 
+			     				/*Map<String, Object> session = ActionContext.getContext().getSession();
+			     				 if(job.containsKey("Administrator") && job.getString("Administrator").equalsIgnoreCase("1")){
+			     					   //为管理员
+			     					session.put("admin", "true");  
+			     				 }
+			     				 else{
+			     					session.put("admin", "false"); 
+			     				 }*/
+			     				session.put("admin", "false"); 
+			     				session.put("user", user.getUserId().toString());   //将用户id保存在session中
+			     				return SUCCESS;
+			            	 }else{
+			            		 return ERROR;
+			            	 }	 
+			             }
+			           }
+			         }
+
+			}
+			/*if(usersr.getUniqueUser(user.getUserId()).getPassword().equals(user.getPassword()))
 			{
 				 List<UserRole> list=userrolesr.getUserRole(user.getUserId());
 				username = usersr.getUniqueUser(user.getUserId()).getUserName();
@@ -184,14 +259,33 @@ public class UserAction extends ActionSupport
 			else
 			{
 				return ERROR;
-			}
+			}*/
+			
+			
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 			return ERROR;
 		}
-			return SUCCESS;
+		return SUCCESS;
+	}
+	
+	
+	public String logout(){
+		try{
+			System.out.print("....\n");
+			Map<String, Object> session = ActionContext.getContext().getSession();
+			//session.remove("user");
+			//session.remove("admin");
+			session.clear();
+			System.out.print(session.toString()+"....\n");
+			result="success";
+		}catch(Exception e){
+			
+		}
+		return result;
+		
 	}
 	
 	public String addUser()
@@ -247,6 +341,27 @@ public class UserAction extends ActionSupport
 			rolenames.add((roles.get(i).getRoleName()));
 		}
 		
+		return SUCCESS;
+	}
+	
+	public String displayLanguage(){
+		try{
+			HttpSession session=ServletActionContext.getRequest().getSession();
+			if(language.equalsIgnoreCase("Chinese")){
+				ActionContext.getContext().setLocale(Locale.CHINA);
+				
+			}
+			else if(language.equalsIgnoreCase("English")){
+				ActionContext.getContext().setLocale(Locale.US);
+			}
+			session.setAttribute("WW_TRANS_I18N_LOCALE", ActionContext.getContext().getLocale());
+			session.setAttribute("language", language);
+			result = language;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			result = ERROR;
+		}
 		return SUCCESS;
 	}
 }

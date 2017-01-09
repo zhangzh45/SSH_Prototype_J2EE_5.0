@@ -13,7 +13,7 @@
 
 	<meta charset="utf-8" />
 
-	<title>企业服务管理系统 | 我的评价</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="ServiceEvaluation.MyEvaluation"></s:text></title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
@@ -35,7 +35,7 @@
 
 						<h3 class="page-title">
 
-							我的评价 <small>查看我评价的历史记录</small>
+							<s:text name="ServiceEvaluation.MyEvaluation"></s:text> <small><s:text name="ServiceEvaluation.MyEvaluation.Description"></s:text></small>
 
 						</h3>
 
@@ -53,13 +53,13 @@
 
 							<li>
 
-								<a href="#">服务管理</a>
+								<a href="#"><s:text name="ServiceManagement"></s:text></a>
 
 								<i class="icon-angle-right"></i>
 
 							</li>
 
-							<li><a href="#">我的评价</a></li>
+							<li><a href="#"><s:text name="ServiceEvaluation.MyEvaluation"></s:text></a></li>
 
 						</ul>
 
@@ -84,7 +84,7 @@
 
 							<div class="portlet-title">
 
-								<div class="caption"><i class="icon-globe"></i>我的评价列表</div>
+								<div class="caption"><i class="icon-globe"></i><s:text name="ServiceEvaluation.MyEvaluation.List"></s:text></div>
 
 								<div class="actions">
 
@@ -97,14 +97,13 @@
 										<i class="icon-angle-down"></i>
 
 										</a>
-
 										<div id="sample_2_column_toggler" class="dropdown-menu hold-on-click dropdown-checkboxes pull-right">
-											<label><input type="checkbox" checked data-column="0">评价Id</label>
-											<label><input type="checkbox" checked data-column="1">被评价服务</label>
-											<label><input type="checkbox" checked data-column="2">评价人</label>
-											<label><input type="checkbox" checked data-column="3">我的评分</label>
-											<label><input type="checkbox" checked data-column="4">评分人数</label>
-											<label><input type="checkbox" checked data-column="4">平均评分</label>
+											<label><input type="checkbox" checked data-column="0">Evaluation Id</label>
+											<label><input type="checkbox" checked data-column="1">Evaluated Service</label>
+											<label><input type="checkbox" checked data-column="2">Evaluation User</label>
+											<label><input type="checkbox" checked data-column="3">My Evaluation</label>
+											<label><input type="checkbox" checked data-column="4">Evaluation Number</label>
+											<label><input type="checkbox" checked data-column="5">Average Evaluation</label>
 										</div>
 									</div>
 								</div>
@@ -114,12 +113,12 @@
 								<table class="table table-striped table-bordered table-hover table-full-width" id="sample_2">
 									<thead>
 										<tr>
-											<th>评价Id</th>
-											<th>被评价服务</th>
-											<th>评价人</th>
-											<th>我的评分</th>
-											<th>评分人数</th>
-											<th>平均评分</th>
+											<th>Evaluation Id</th>
+											<th>Evaluated Service</th>
+											<th>Evaluation User</th>
+											<th>My Evaluation</th>
+											<th>Evaluation Number</th>
+											<th>Average Evaluation</th>
 										</tr>
 									</thead>
 
@@ -165,9 +164,24 @@
 	<script>
 
 		jQuery(document).ready(function() {       
-		   App.init();
-		   TableAdvanced.init();
+		
+		   checkuser();
 		});
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
 		
 		function changeValue()
 		{

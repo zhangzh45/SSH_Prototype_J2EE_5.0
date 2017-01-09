@@ -20,6 +20,7 @@ public class UserSpecSerService {
 	}
 	
 	public List<UserSpecSer> findSpecSerByUserId(int userId){
+		//System.out.print(userId+"!!!!!\n");
 		return userSpecSerDao.findSpecSerByUserId(userId);
 	}
 	

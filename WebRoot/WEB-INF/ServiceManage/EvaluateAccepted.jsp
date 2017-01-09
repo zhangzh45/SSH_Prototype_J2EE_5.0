@@ -13,7 +13,7 @@
 
 	<meta charset="utf-8" />
 
-	<title>企业服务管理系统 | 服务评价</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="ServiceEvaluation"></s:text></title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
@@ -36,7 +36,7 @@
 
 						<h3 class="page-title">
 
-							服务评价 <small>评价我可以使用的服务</small>
+							<s:text name="ServiceEvaluation"></s:text><small><s:text name="ServiceEvaluation.Description"></s:text></small>
 
 						</h3>
 
@@ -54,13 +54,13 @@
 
 							<li>
 
-								<a href="#">服务管理</a>
+								<a href="#"><s:text name="ServiceManagement"></s:text></a>
 
 								<i class="icon-angle-right"></i>
 
 							</li>
 
-							<li><a href="#">服务评价</a></li>
+							<li><a href="#"><s:text name="ServiceEvaluation"></s:text></a></li>
 
 						</ul>
 
@@ -83,7 +83,7 @@
 
 							<div class="portlet-title">
 
-								<div class="caption"><i class="icon-globe"></i>服务列表</div>
+								<div class="caption"><i class="icon-globe"></i><s:text name="ServiceList"></s:text></div>
 
 								<div class="actions">
 
@@ -98,10 +98,10 @@
 										</a>
 
 										<div id="sample_2_column_toggler" class="dropdown-menu hold-on-click dropdown-checkboxes pull-right">
-											<label><input type="checkbox" checked data-column="0">编号</label>
-											<label><input type="checkbox" checked data-column="1">类型</label>
-											<label><input type="checkbox" checked data-column="2">名称</label>
-											<label><input type="checkbox" checked data-column="3">地址</label>
+											<label><input type="checkbox" checked data-column="0">Service Id</label>
+											<label><input type="checkbox" checked data-column="1">Service Name</label>
+											<label><input type="checkbox" checked data-column="2">Service Type</label>
+											<label><input type="checkbox" checked data-column="3">Service Level</label>
 										</div>
 									</div>
 
@@ -115,10 +115,10 @@
 
 									<thead>
 										<tr>
-											<th>服务编号</th>
-											<th>服务名称</th>
-											<th>服务类型</th>
-											<th>服务级别</th>
+											<th>Service Id</th>
+											<th>Service Name</th>
+											<th>Service Type</th>
+											<th>Service Level</th>
 			
 										</tr>
 									</thead>
@@ -140,16 +140,16 @@
 						<form name="form2" action="" method="post">
 							<div class="portlet box blue">
 								<div class="portlet-title">
-									服务评价
+									<s:text name="ServiceEvaluation"></s:text>
 								</div>
 								<div class="portlet-body">
-									<br>选择服务编号
+									<br><s:text name="ServiceId"></s:text>
 									<select class="form-control" name="opt1" id="opt1">
 										<s:iterator value="services" status="L2">
 											<option><s:property value="serviceId"/></option>
 										</s:iterator>
 									</select>
-									<br>选择评价分数
+									<br><s:text name="ServiceEvaluation.Score"></s:text>
 									<select class="form-control" name="opt2" id="opt2">
 										<option>5</option>
 										<option>4</option>
@@ -157,9 +157,9 @@
 										<option>2</option>
 										<option>1</option>
 									</select>
-									<br>确认评价意见
-									<button type="button" class="btn" onclick="changeValue(); form2.action='getUnEvaluate.action'; form2.submit();">确定&raquo; </button>
-									<button type="button" class="btn" onclick="changeValue(); form2.action='getMyEvaluate.action'; form2.submit()">我的评价&raquo; </button>
+									<br>
+									<button type="button" class="btn" onclick="changeValue(); form2.action='getUnEvaluate.action'; form2.submit();"><s:text name="OK"></s:text>&raquo; </button>
+									<button type="button" class="btn" onclick="changeValue(); form2.action='getMyEvaluate.action'; form2.submit()"><s:text name="ServiceEvaluation.MyEvaluation"></s:text>&raquo; </button>
 									<input name="option1" type="hidden" value="" id="option1">
 									<input name="option2" type="hidden" value="" id="option2">
 									<input name="option3" type="hidden" value=<%=request.getSession().getAttribute("user")%> id="option3">
@@ -184,7 +184,24 @@
 
 	
 	<script>
-
+		jQuery(document).ready(function() {       
+		   checkuser();
+		});
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
 		
 		
 		function changeValue()

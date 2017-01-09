@@ -114,6 +114,9 @@ public class RoleSpecSerAction extends ActionSupport{
 	public String deleteRoleSpecSer(){
 		RoleSpecSer rss=roleSpecSerService.findById(Integer.parseInt(rssId));
 		roleSpecSerService.delete(rss);
+		
+		loadRoleSpecSer();
+		
 		return SUCCESS;
 	}
 	
@@ -154,6 +157,9 @@ public class RoleSpecSerAction extends ActionSupport{
 		rss.setRole(role.get(0));
 		rss.setService(service.get(0));
 		roleSpecSerService.add(rss);
+		
+		loadRoleSpecSer();
+		
 		return SUCCESS;
 	}
 

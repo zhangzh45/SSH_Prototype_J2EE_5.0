@@ -34,12 +34,12 @@
 					<div class="span4">
 					  <h2>配置本地软件</h2>
 					  <p>配置本地软件的序列号 </p>
-					  <p><a class="btn" href="AddLocalConfig.jsp">View details &raquo;</a></p>
+					  <p><a class="btn" href="WEB-INF/ServiceManage/AddLocalConfig.jsp">View details &raquo;</a></p>
 					</div><!--/span-->
 					<div class="span4">
 					  <h2>配置服务参数</h2>
 					  <p>配置Web服务参数 </p>
-					  <p><a class="btn btn-primary" href="AddParameter.jsp">View details &raquo;</a></p>
+					  <p><a class="btn btn-primary" href="/WEB-INF/ServiceManage/AddParameter.jsp">View details &raquo;</a></p>
 					</div><!--/span-->
 					<div class="span4">
 					  <h2>查看配置</h2>

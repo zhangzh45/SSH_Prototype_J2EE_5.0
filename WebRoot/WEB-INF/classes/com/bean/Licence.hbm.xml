@@ -11,7 +11,7 @@
             <generator class="identity" />
         </id>
         <many-to-one name="service" class="com.bean.Service" fetch="select">
-            <column name="ServiceId" not-null="true" />
+            <column name="ServiceId"/>
         </many-to-one>
         <property name="licenceType" type="string">
             <column name="LicenceType" length="45" />

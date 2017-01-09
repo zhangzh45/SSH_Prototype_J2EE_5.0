@@ -20,7 +20,8 @@
 		_dom = function(el) { return jsPlumb.CurrentLibrary.getDOMElement(el); },		
 		_getOffset = function(el, _instance) {
             var o = jsPlumb.CurrentLibrary.getOffset(_gel(el));
-			if (_instance != null) {
+			//if (_instance != null && (typeof o !== "undefined")) {
+            if (_instance != null) {
                 var z = _instance.getZoom();
                 return {left:o.left / z, top:o.top / z };    
             }
@@ -862,10 +863,11 @@
 			
 			// test for endpoint uuids to connect
 			if (params.uuids) {
+				//alert(params.uuids[0] + " gggggg " + params.uuids[1]);
 				_p.sourceEndpoint = _getEndpoint(params.uuids[0]);
 				_p.targetEndpoint = _getEndpoint(params.uuids[1]);
 			}						
-
+			//alert(_p.sourceEndpoint + " gggggg " + _p.targetEndpoint);
 			// now ensure that if we do have Endpoints already, they're not full.
 			// source:
 			if (_p.sourceEndpoint && _p.sourceEndpoint.isFull()) {
@@ -955,6 +957,9 @@
 		},
 		
 		_newConnection = function(params) {
+			//alert(params.sourceEndpoint);
+			//alert(params.source);
+			//alert(params.sourceEndpoint.constructor);
 			var connectionFunc = _currentInstance.Defaults.ConnectionType || _currentInstance.getDefaultConnectionType(),
 			    endpointFunc = _currentInstance.Defaults.EndpointType || jsPlumb.Endpoint,
 			    parent = jsPlumb.CurrentLibrary.getParent;
@@ -964,10 +969,20 @@
 			else {
 				if (params.sourceEndpoint)
 					params.parent = params.sourceEndpoint.parent;
-				else if (params.source.constructor == endpointFunc)
+				else if (params.source.constructor == endpointFunc){
+				/*else{
+					alert(params);
+					alert(params.source);*/
 					params.parent = params.source.parent;
+				}
+					
 				else params.parent = parent(params.source);
 			}
+			
+			
+			//params.parent = _getParentFromParams(params),
+			
+			
 			
 			params._jsPlumb = _currentInstance;
             params.newConnection = _newConnection;
@@ -1403,6 +1418,7 @@
 		this.connect = function(params, referenceParams) {
 			// prepare a final set of parameters to create connection with
 			var _p = _prepareConnectionParams(params, referenceParams), jpc;
+			//alert(_p.overlays + "  " + _p.source + "  " + _p.pointer-events);
 			// TODO probably a nicer return value if the connection was not made.  _prepareConnectionParams
 			// will return null (and log something) if either endpoint was full.  what would be nicer is to 
 			// create a dedicated 'error' object.

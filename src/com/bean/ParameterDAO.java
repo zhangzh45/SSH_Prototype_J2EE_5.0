@@ -12,7 +12,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * Parameter entities. Transaction control of the save(), update() and delete()
  * operations can directly support Spring container-managed transactions or they
  * can be augmented to handle user-managed Spring transactions. Each of these
- * methods provides additional information for how to configure it for the
+ * methods provides additional debugrmation for how to configure it for the
  * desired type of transaction control.
  * 
  * @see com.bean.Parameter

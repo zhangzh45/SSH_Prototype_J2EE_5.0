@@ -13,7 +13,7 @@
 
 	<meta charset="utf-8" />
 
-	<title>企业服务管理系统 | 审核服务</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="ServiceAudit"></s:text></title>
 	 
 	
 	
@@ -55,7 +55,7 @@
 
 						<h3 class="page-title">
 
-							审核服务 <small>审核已经注册但尚未通过的服务</small>
+							<s:text name="ServiceAudit"></s:text> <small><s:text name="ServiceAudit.Description"></s:text></small>
 
 						</h3>
 
@@ -73,13 +73,13 @@
 
 							<li>
 
-								<a href="#">服务管理</a>
+								<a href="#"><s:text name="ServiceManagement"></s:text></a>
 
 								<i class="icon-angle-right"></i>
 
 							</li>
 
-							<li><a href="#">审核服务</a></li>
+							<li><a href="#"><s:text name="ServiceAudit"></s:text></a></li>
 
 						</ul>
 
@@ -105,7 +105,7 @@
 
 							<div class="portlet-title">
 
-								<div class="caption"><i class="icon-globe"></i>服务列表</div>
+								<div class="caption"><i class="icon-globe"></i><s:text name="ServiceList"></s:text></div>
 
 								<div class="actions">
 
@@ -120,11 +120,11 @@
 										</a>
 
 										<div id="sample_2_column_toggler" class="dropdown-menu hold-on-click dropdown-checkboxes pull-right">
-											<label><input type="checkbox" checked data-column="0">编号</label>
-											<label><input type="checkbox" checked data-column="1">名称</label>
-											<label><input type="checkbox" checked data-column="2">类型</label>
-											<label><input type="checkbox" checked data-column="3">地址</label>
-											<label><input type="checkbox" checked data-column="4">目标</label>
+											<label><input type="checkbox" checked data-column="0">Service Id</label>
+											<label><input type="checkbox" checked data-column="1">Service Name</label>
+											<label><input type="checkbox" checked data-column="2">Service Type</label>
+											<label><input type="checkbox" checked data-column="3">Service Address</label>
+											<label><input type="checkbox" checked data-column="4">Service Target</label>
 										</div>
 									</div>
 
@@ -138,11 +138,11 @@
 
 									<thead>
 										<tr>
-											<th>编号</th>
-											<th>名称</th>
-											<th class="hidden-480">类型</th>
-											<th class="hidden-480">地址</th>
-											<th class="hidden-480">目标</th>
+											<th>Service Id</th>
+											<th>Service Name</th>
+											<th class="hidden-480">Service Type</th>
+											<th class="hidden-480">Service Address</th>
+											<th class="hidden-480">Service Target</th>
 										</tr>
 									</thead>
 
@@ -167,23 +167,23 @@
 							<div class="portlet box blue">
 								
 								<div class="portlet-title">
-									<div class="caption"><i class="icon-globe"></i>审核操作</div>
+									<div class="caption"><i class="icon-globe"></i><s:text name="ServiceAudit.Operation"></s:text></div>
 								</div>
 								<div class="portlet-body">
-									<h5>服务编号
+									<h5><s:text name="ServiceId"></s:text>
 										<select class="form-control" name="opt1" id="opt1">
 											<s:iterator value="services" status="L2">
 												<option><s:property value="serviceId"/></option>
 											</s:iterator>
 										</select>
-										审核意见
+										<s:text name="ServiceAudit.Opinion"></s:text>
 										<select class="form-control" name="opt2" id="opt2">
 											<option>Accept</option>
 											<option>Refuse</option>
 										</select>
 									</h5>
-									<button type="button" class="btn btn-primary" onclick="changeValue(); form2.action='inputParameter.action'; form2.submit();">运行</button>
-									<button type="button" class="btn" onclick="changeValue(); form2.action='acceptService.action'; form2.submit();">提交</button>
+									<button type="button" class="btn btn-primary" onclick="changeValue(); form2.action='inputParameter.action'; form2.submit();"><s:text name="Run"></s:text></button>
+									<button type="button" class="btn" onclick="changeValue(); form2.action='acceptService.action'; form2.submit();"><s:text name="Submit"></s:text></button>
 									<input name="option1" type="hidden" value="" id="option1">
 									<input name="option2" type="hidden" value="" id="option2">
 								</div>
@@ -220,7 +220,25 @@
 
 
 	<script>
-
+		 jQuery(document).ready(function() {       
+		 
+		   checkuser();
+		});
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
 		
 		function changeValue()
 		{

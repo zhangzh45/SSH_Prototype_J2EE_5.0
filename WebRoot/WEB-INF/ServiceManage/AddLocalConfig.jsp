@@ -13,7 +13,7 @@
 
 	<meta charset="utf-8" />
 
-	<title>企业服务管理系统 | 添加许可证</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="LicenseConfiguration"></s:text></title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
@@ -21,7 +21,7 @@
 
 	<meta content="" name="author" />
 
-	
+	<script src="media/js/jquery-1.10.2.js" type="text/javascript"></script>
 </head>
 
 <!-- END HEAD -->
@@ -33,7 +33,7 @@
 
 						<h3 class="page-title">
 
-							许可证配置 <small>为服务配置许可证</small>
+							<s:text name="LicenseConfiguration"></s:text><small><s:text name="LicenseConfiguration.Description"></s:text></small>
 
 						</h3>
 
@@ -51,13 +51,13 @@
 
 							<li>
 
-								<a href="#">服务配置</a>
+								<a href="#"><s:text name="ServiceConfiguration"></s:text></a>
 
 								<i class="icon-angle-right"></i>
 
 							</li>
 
-							<li><a href="#">许可证配置</a></li>
+							<li><a href="#"><s:text name="LicenseConfiguration"></s:text></a></li>
 
 						</ul>
 
@@ -75,45 +75,53 @@
 
 						<!-- BEGIN EXAMPLE TABLE PORTLET-->
 						<form name="form2" action="addConfig.action" method="post">
+						
+							<input name="nowuser" type="hidden" value=<%=request.getSession().getAttribute("user")%> id="nowuser">
+							
 							<div class="portlet box blue">
 								<div class="portlet-title">
-									许可证配置
+									<s:text name="LicenseConfiguration"></s:text>
 								</div>
 								<div class="portlet-body">
 									<div class="container-fluid">
 										<div class="control-group">
-									    <label class="control-label" for="inputServiceId">软件ID</label>
+									    <label class="control-label" for="inputServiceId"><s:text name="SoftwareId"></s:text></label>
 									    <div class="controls">
-									      <input type="text" id="inputServiceId" name="licence.ServiceId" placeholder="ServiceId">
+									    	<select id="providedservices">  <!-- 审核通过的服务 -->
+												<s:iterator value="providedservices" status="L" var="providedservices">
+													<option><s:property value="serviceId"/></option>
+												</s:iterator>
+											</select>
+									    	<input type="hidden" id="serviceId" name="serviceId" value="">
 									    </div>
 									  </div>
 									  <div class="control-group">
-									    <label class="control-label" for="inputLicenceType">许可证类型</label>
+									    <label class="control-label" for="inputLicenceType"><s:text name="LicenseType"></s:text></label>
 									    <div class="controls">
 									      <input type="text" id="inputLicenceType" name="licence.LicenceType" placeholder="LicenceType">
 									    </div>
 									  </div>
 									  <div class="control-group">
-									    <label class="control-label" for="inputLicenceTime">许可证时间</label>
+									    <label class="control-label" for="inputLicenceTime"><s:text name="LicenseTime"></s:text></label>
 									    <div class="controls">
 									      <input type="text" id="inputLicenceTime" name="licence.LicenceTime" placeholder="LicenceTime">
 									    </div>
 									  </div>
 									  <div class="control-group">
-									    <label class="control-label" for="inputLicenceCode">注册码</label>
+									    <label class="control-label" for="inputLicenceCode"><s:text name="LicenseCode"></s:text></label>
 									    <div class="controls">
 									      <input type="text" id="inputLicenceCode" name="licence.LicenceCode" placeholder="LicenceCode">
 									    </div>
 									  </div>
 									  <div class="control-group">
-									    <label class="control-label" for="inputLicenceLocation">安装路径</label>
+									    <label class="control-label" for="inputLicenceLocation"><s:text name="LicenseLocation"></s:text></label>
 									    <div class="controls">
 									      <input type="text" id="inputLicenceLocation" name="licence.LicenceLocation" placeholder="LicenceLocation">
 									    </div>
 									  </div>
 									  <div class="form-actions">
-										  <button type="submit" class="btn btn-primary">提交</button>
-										  <button type="button" class="btn">清空</button>
+										  <button type="button" class="btn btn-primary" onclick="changeValue();form2.submit()"><s:text name="Submit"></s:text></button>
+										  <button type="button" class="btn"><s:text name="Cancel"></s:text></button>
 										</div>
 									</div>
 								</div>
@@ -129,6 +137,29 @@
 
 
 	<script>
+
+
+		jQuery(document).ready(function() {       
+
+		  checkuser();
+
+		});
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
+		
+	
 		function showModal()
 		{
 			$("#myModal").modal('show');
@@ -248,10 +279,10 @@
 		
 		function changeValue()
 		{
-			var selectIndex1 = document.getElementById("opt1").selectedIndex;
-			document.getElementById("option1").value = document.getElementById("opt1").options[selectIndex1].text;
-			var selectIndex2 = document.getElementById("opt2").selectedIndex;
-			document.getElementById("option2").value = document.getElementById("opt2").options[selectIndex2].text;
+			var selectIndex1 = document.getElementById("providedservices").selectedIndex;
+			document.getElementById("serviceId").value = document.getElementById("providedservices").options[selectIndex1].text;
+			//alert(document.getElementById("serviceId").value);
+			//alert(document.getElementById("nowuser").value);
 		}
 
 	</script>

@@ -13,13 +13,17 @@
 
 	<meta charset="utf-8" />
 
-	<title>企业服务管理系统 | 可靠性组合</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="ReliabilityCombination"></s:text></title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
 	<meta content="" name="description" />
 
 	<meta content="" name="author" />
+	
+	<script src="js/dtree.js"></script>
+	
+	<script src="media/js/form-components.js"></script>
 
 </head>
 
@@ -34,7 +38,7 @@
 
 						<h3 class="page-title">
 
-							可靠性组合 <small>将子服务组合成可靠性更高的服务</small>
+							<s:text name="ReliabilityCombination"></s:text> <small><s:text name="ReliabilityCombination.Description"></s:text></small>
 
 						</h3>
 
@@ -51,15 +55,19 @@
 							</li>
 
 							<li>
-								<a href="#">服务组合</a>
+								<a ><s:text name="ServiceComposition"></s:text></a>
 								<i class="icon-angle-right"></i>
 							</li>
-							<li><a href="#">可靠性组合</a></li>
+							<li><a ><s:text name="ReliabilityCombination"></s:text></a></li>
 						</ul>
 
 						<!-- END PAGE TITLE & BREADCRUMB-->
 
-				
+				<div class="portlet-body" style="display:none">
+					<s:iterator value="allsers" status="L">
+						<input name="servicenames" type="hidden" value=<s:property value="serviceName"/>>
+					</s:iterator>
+				</div>
 				<!-- END PAGE HEADER-->
 
 				<!-- BEGIN PAGE CONTENT-->
@@ -78,9 +86,9 @@
 							  	<div class="navbar-inner">
 							  		<!--  <a class="brand" href="#">Title</a> -->
 							  		<ul class="nav">
-							  			<li class="active"><a onclick="form2.action='combineAService.action'; form2.submit();">可靠性组合	</a></li>
-							  			<li><a onclick="form2.action='combineBService.action'; form2.submit();">适用性组合</a></li>
-							  			<li><a href="#">其他</a></li>
+							  			<li class="active"><a onclick="form2.action='combineAService.action'; form2.submit();"><s:text name="ReliabilityCombination"></s:text></a></li>
+							  			<li><a onclick="form2.action='combineBService.action'; form2.submit();"><s:text name="ApplicabilityCombination"></s:text></a></li>
+							  			<li><a ><s:text name="Other"></s:text></a></li>
 							  		</ul>
 							  	</div>
 							  </div>
@@ -94,8 +102,8 @@
 										</s:iterator>
 									</div> 
 									<div class="dtree">
-									<p><a href="javascript: d.openAll();">展开全部</a> | <a href="javascript: d.closeAll();">关闭全部</a></p>
-									
+									<p><a href="javascript: d.openAll();"><s:text name="OpenAll"></s:text></a> | <a href="javascript: d.closeAll();"><s:text name="CloseAll"></s:text></a></p>
+					
 									<script type="text/javascript">
 										<!--
 											
@@ -103,7 +111,7 @@
 										var nfather = document.getElementsByName("nfather");
 										var ncontent= document.getElementsByName("ncontent");
 										
-										d.add(0,-1,'企业组合服务');
+										d.add(0,-1,'Combination Service');
 										//alert(nfather.length);
 										for(var i = 0; i < nfather.length; i++)
 										{
@@ -133,25 +141,61 @@
 									<script>
 										function smt()
 										{
+											
+											var inputServiceName = document.getElementById("inname").value;
+											if(inputServiceName=="" || inputServiceName==null)
+										    {
+										        alert("服务名称不能为空");
+										        return;
+										    }
+										    else{
+										    	var servicenames = document.getElementsByName("servicenames");
+										    	for(var i = 0; i < servicenames.length; i++){
+										    		if(inputServiceName == servicenames[i].value){
+										    			alert("服务名称已存在");
+										        		return;
+										    		}
+										    	}
+										    }
+										    
+											var servicetypeobj = document.getElementById("servicetype");
+											var servicetypeindex = servicetypeobj.selectedIndex;
+											var servicetypevalue = servicetypeobj.options[servicetypeindex].value;
+											document.getElementById("intype").value = servicetypevalue;
+											
+											var servicelevelobj = document.getElementById("servicelevel");
+											var servicelevelindex = servicelevelobj.selectedIndex;
+											var servicelevelvalue = servicelevelobj.options[servicelevelindex].value;
+											document.getElementById("inlevel").value = servicelevelvalue;
+											
+											
 											var srs = document.getElementsByName("sr1");
 											var pts = "s";
 											for(var i = 0; i < srs.length; i++)
 											{
-												pts += srs.item(i).value;
-												pts += "s";
+												if(pts.indexOf(srs.item(i).value) >= 0 )  //程序健壮性
+												{
+												    //alert('重复添加相同的子服务');
+												}
+												else{
+													pts += srs.item(i).value;
+													pts += "s";
+												}
 											}
 											//alert(pts);
 											document.getElementById("inpts").value = pts;
+											form2.action='addCombineA.action';
+											form2.submit();
 										}
 										function addSub()
 										{
 											var table=document.getElementById("table3");
 											var row = table.insertRow(-1);
 											var cc = row.insertCell(0);
-											cc.innerHTML='子服务<input name="sr1" type="text" value="" readOnly="true">';
+											cc.innerHTML='<s:text name="ServiceComposition.Subservice"></s:text><input name="sr1" type="text" value="" readOnly="true">';
 											var vars = document.getElementsByName("sr1");
-											vars.item(vars.length - 1).value = document.getElementById("userviceid").value;
-											
+											//vars.item(vars.length - 1).value = document.getElementById("userviceid").value;
+											vars.item(vars.length - 1).value = $('#userviceid').find("option:selected").text();
 											document.getElementById("smt").style.display="";
 											
 										}
@@ -184,12 +228,13 @@
 											{
 												//alert(i);
 												//alert(psids.item(i).value);
-												if(psids.item(i).value == document.getElementById("userviceid").value)
+												//if(psids.item(i).value == document.getElementById("userviceid").value)
+												if(psids.item(i).value == $('#userviceid').find("option:selected").text())
 												{
 													//alert("nimei");
 													var row = table.insertRow(-1);
 													var cc = row.insertCell(0);
-													cc.innerHTML='参数<input name="var1" type="text" value="" readOnly="true">';
+													cc.innerHTML='<s:text name="ServiceComposition.Parameter"></s:text><input name="var1" type="text" value="" readOnly="true">';
 													ct++;
 													var vars = document.getElementsByName("var1");
 													vars.item(ct - 1).value = ppnames.item(i).value;
@@ -198,21 +243,23 @@
 											var table=document.getElementById("table3");
 											var row = table.insertRow(-1);
 											var cc = row.insertCell(0);
-											cc.innerHTML='子服务<input name="sr1" type="text" value="" readOnly="true">';
+											cc.innerHTML='<s:text name="ServiceComposition.Subservice"></s:text><input name="sr1" type="text" value="" readOnly="true">';
 											var vars = document.getElementsByName("sr1");
-											vars.item(0).value = document.getElementById("userviceid").value;
-											
+											//vars.item(0).value = document.getElementById("userviceid").value;
+											vars.item(0).value = $('#userviceid').find("option:selected").text();
 										}
 										function showModal()
 										{
 											$("#myModal").modal('show');
-											document.getElementById("msid").value = document.getElementById("userviceid").value;
+											//document.getElementById("msid").value = document.getElementById("userviceid").value;
+											document.getElementById("msid").value = $('#userviceid').find("option:selected").text();
 											var names = document.getElementsByName("ssname");
 											var types = document.getElementsByName("sstype");
 											var tts = document.getElementsByName("sstt");
 											var ids = document.getElementsByName("ssid");
 											var ranges = document.getElementsByName("ssrange");
 											var adds = document.getElementsByName("ssadd");
+											var busis = document.getElementsByName("ssbusi");
 											var descs = document.getElementsByName("ssdesc");
 											for(var i = 0; i < names.length; i++)
 											{
@@ -224,6 +271,7 @@
 													document.getElementById("msrange").value = ranges.item(i).value;
 													document.getElementById("msadd").value = adds.item(i).value;
 													document.getElementById("msdesc").value = descs.item(i).value;
+													document.getElementById("msbusi").value = busis.item(i).value;
 												}
 											}
 											
@@ -236,87 +284,123 @@
 								</div>
 								<div class="span9">
 									<!-- Button to trigger modal -->
-									<input type="text" class="form-control" id="userviceid" name="userviceid" value="">
+									<!--<input type="text" class="form-control" id="userviceid" name="userviceid" value="">  -->
+									
+									<select  id="userviceid">
+										<s:iterator value="acceptedservices" status="L" var="acceptedservices">
+											<option><s:property value="serviceId"/></option>
+										</s:iterator>
+									</select>
+									
+									
+									
+									
 									<input type="hidden" id="inpts" name="inpts" value="">
-									<a onclick="showModal()"  role="button" class="btn" data-toggle="modal">查看服务详情</a>
-									<a onclick="newService()"  role="button" class="btn" data-toggle="modal">新建组合服务</a>
-									<a onclick="addSub()"  role="button" class="btn" id="bt1" data-toggle="modal" style="display:none">加入组合服务</a>
+									<a onclick="showModal()"  role="button" class="btn" data-toggle="modal"><s:text name="ServiceComposition.ViewServiceDetails"></s:text></a>
+									<a onclick="newService()"  role="button" class="btn" data-toggle="modal"><s:text name="ServiceComposition.NewCompositeService"></s:text></a>
+									<a onclick="addSub()"  role="button" class="btn" id="bt1" data-toggle="modal" style="display:none"><s:text name="ServiceComposition.JoinCompositeService"></s:text></a>
 										<table class="table table-condensed" style="display:none" id="table2">
 											<tr>
 									  			<td>
-										    		&nbsp;服务名称<input type="text" id="inname" name="inname" value="" style="width:80px" >
-										    		&nbsp;服务类型<input type="text" id="intype" name="intype" value="" style="width:80px" >
+										    		&nbsp;<s:text name="ServiceName"></s:text><input type="text" id="inname" name="inname" value="" style="width:80px" >
+										    		&nbsp;<s:text name="ServiceType"></s:text><select id="servicetype" style="width:150px">
+																  <option>SERVICE</option>
+																  <option>APPLICATION</option>
+																  <option>BUSINESS</option>
+																  <option>LOCAL</option>
+														       </select>
+														<input type="hidden" id="intype" name="intype" value="" style="width:80px" >
+										    	    &nbsp;<s:text name="ServiceLevel"></s:text><select id="servicelevel" style="width:80px">
+																  <option>1</option>
+																  <option>2</option>
+																  <option>3</option>
+																  <option>4</option>
+																  <option>5</option>
+														       </select>
+														<input type="hidden" id="inlevel" name="inlevel" value="" style="width:80px" >
+										    	
 										    	</td>
 										    </tr>
 										    <tr>
 										    	<td>
-										    		服务目标<input type="text" id="intt" name="intt" value="" style="width:100px" >
-										    		&nbsp;服务范围<input type="text" id="inrange" name="inrange" value="" style="width:100px" >
+										    		<s:text name="ServiceTarget"></s:text><input type="text" id="intt" name="intt" value="" style="width:100px" >
+										    		&nbsp;<s:text name="ServiceRange"></s:text><input type="text" id="inrange" name="inrange" value="" style="width:100px" >
 										    	</td>
 										    </tr>
 										    <tr>
 										    	<td>
-										    		服务地址<input type="text" id="inadd" name="inadd" value="" style="width:250px" >
+										    		<s:text name="ServiceRelateBusiness"></s:text><input type="text" id="inbusiness" name="inbusiness" value="" style="width:250px" >
 										    	</td>
 										    </tr>
 										    <tr>
 										    	<td>
-										    		服务描述<input type="text" id="indesc" name="indesc" value="" style="width:250px" >
+										    		<s:text name="ServiceAddress"></s:text><input type="text" id="inadd" name="inadd" value="" style="width:250px" >
+										    	</td>
+										    </tr>
+										    <tr>
+										    	<td>
+										    		<s:text name="ServiceDesc"></s:text><input type="text" id="indesc" name="indesc" value="" style="width:250px" >
 										    	</td>
 										    </tr>
 										</table>
 										<table class="table table-condensed" style="display:none" id="table3">
 											
 										</table>
-										<a onclick="smt(); form2.action='addCombineA.action';form2.submit()"  id="smt" class="btn" data-toggle="modal" style="display:none">提交</a>
+										<a onclick="smt()"  id="smt" class="btn" data-toggle="modal" style="display:none"><s:text name="Submit"></s:text></a>
 									</div>
 									<!-- Modal -->
 									<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 									  <div class="modal-header">
 									    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-									    <h3 id="myModalLabel">服务详情</h3>
+									    <h3 id="myModalLabel"><s:text name="ServiceDetail"></s:text></h3>
 									  </div>
 									  <div class="modal-body">
 									  	<table id="table1">
 									  		<tr>
 									  			<td>
-											     	服务编号<input type="text" id="msid" name="msid" value="" style="width:50px" readOnly="true">
-										    		&nbsp;服务名称<input type="text" id="msname" name="msname" value="" style="width:80px" readOnly="true">
-										    		&nbsp;服务类型<input type="text" id="mstype" name="mstype" value="" style="width:80px" readOnly="true">
+											     	<s:text name="ServiceId"></s:text><input type="text" id="msid" name="msid" value="" style="width:50px" readOnly="true">
+										    		&nbsp;<s:text name="ServiceName"></s:text><input type="text" id="msname" name="msname" value="" style="width:80px" readOnly="true">
+										    		&nbsp;<s:text name="ServiceType"></s:text><input type="text" id="mstype" name="mstype" value="" style="width:100px" readOnly="true">
 										    	</td>
 										    </tr>
 										    <tr>
 										    	<td>
-										    		服务目标<input type="text" id="mstt" name="mstt" value="" style="width:100px" readOnly="true">
-										    		&nbsp;服务范围<input type="text" id="msrange" name="msrange" value="" style="width:100px" readOnly="true">
+										    		<s:text name="ServiceTarget"></s:text><input type="text" id="mstt" name="mstt" value="" style="width:100px" readOnly="true">
+										    		&nbsp;<s:text name="ServiceRange"></s:text><input type="text" id="msrange" name="msrange" value="" style="width:100px" readOnly="true">
+										    	</td>
+										    </tr>
+										    
+										    <tr>
+										    	<td>
+										    		<s:text name="ServiceRelateBusiness"></s:text><input type="text" id="msbusi" name="msbusi" value="" style="width:250px" readOnly="true">
 										    	</td>
 										    </tr>
 										    <tr>
 										    	<td>
-										    		服务地址<input type="text" id="msadd" name="msadd" value="" style="width:250px" readOnly="true">
+										    		<s:text name="ServiceAddress"></s:text><input type="text" id="msadd" name="msadd" value="" style="width:250px" readOnly="true">
 										    	</td>
 										    </tr>
 										    <tr>
 										    	<td>
-										    		服务描述<input type="text" id="msdesc" name="msdesc" value="" style="width:250px" readOnly="true">
+										    		<s:text name="ServiceDesc"></s:text><input type="text" id="msdesc" name="msdesc" value="" style="width:250px" readOnly="true">
 										    	</td>
 										    </tr>
 										</table>
 									  </div>
 									  <div class="modal-footer">
-									    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-									    <button class="btn btn-primary">Save changes</button>
+									    <button class="btn" data-dismiss="modal" aria-hidden="true"><s:text name="Close"></s:text></button>
+									     <!-- <button class="btn btn-primary">Save changes</button>  -->
 									  </div>
 									</div>
 								</div>
 								<div>
-									<s:iterator value="selected" status="L" var="selected">
+									<s:iterator value="acceptedservices" status="L" var="acceptedservices">
 										<input name="ssname" type="hidden" value="<s:property value="serviceName"/>">
 										<input name="sstype" type="hidden" value="<s:property value="serviceType"/>">
+										<input name="ssbusi" type="hidden" value="<s:property value="relateBusiness"/>">
 										<input name="ssid" type="hidden" value="<s:property value="serviceId"/>">
 										<input name="sstt" type="hidden" value="<s:property value="serviceTarget"/>">
 										<input name="ssrange" type="hidden" value="<s:property value="serviceRange"/>">
-										<input name="ssbus" type="hidden" value="<s:property value="relateBusiness"/>">
 										<input name="ssadd" type="hidden" value="<s:property value="serviceAddress"/>">
 										<input name="ssdesc" type="hidden" value="<s:property value="serviceDesc"/>">
 									</s:iterator>
@@ -350,11 +434,28 @@
 	 
 
 	<script>
-
 		jQuery(document).ready(function() {       
 		  
 		   TableAdvanced.init();
+		   
+		   checkuser();
 		});
+		
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
 		
 		function changeValue()
 		{

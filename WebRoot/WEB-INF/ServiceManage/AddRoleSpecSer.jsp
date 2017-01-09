@@ -10,7 +10,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <head>
     <base href="<%=basePath%>">
     
-  	<title>企业服务管理系统 | 添加角色服务</title>
+  	<title><s:text name="SystemName"></s:text> | <s:text name="RoleServiceConfiguration"></s:text></title>
     
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
@@ -31,7 +31,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 						<h3 class="page-title">
 
-						角色特例服务 <small>角色特例服务管理</small>
+						<s:text name="RoleServiceConfiguration"></s:text> <small><s:text name="RoleServiceConfiguration.Description"></s:text></small>
 
 						</h3>
 
@@ -49,13 +49,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 							<li>
 
-								<a href="#">权限配置</a>
+								<a href="#"><s:text name="PermissionConfiguration"></s:text></a>
 
 								<i class="icon-angle-right"></i>
 
 							</li>
 
-							<li><a href="#">角色特例服务管理</a></li>
+							<li><a href="#"><s:text name="RoleServiceConfiguration"></s:text></a></li>
 
 						</ul>
 
@@ -66,7 +66,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		          <!-- BEGIN EXAMPLE TABLE PORTLET-->
 						<div class="portlet box blue">
 							<div class="portlet-title">
-								<div class="caption"><i class="icon-globe"></i>角色特有服务列表</div>
+								<div class="caption"><i class="icon-globe"></i><s:text name="RoleServiceConfiguration.List"></s:text></div>
 							</div>
 							<!-- BEGIN portlet body -->
 								<div class="portlet-body">
@@ -91,20 +91,30 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									<div class="container-fluid">
 									<form >
 										<div class="control-group">
-									    	<label class="control-label" for="inputRoleName">角色名</label>
+									    	<label class="control-label" for="inputRoleName"><s:text name="RoleName"></s:text></label>
 										    	<div class="controls">
-										    		<input type="text" id="inputRoleName" name="roleName" placeholder="UserName">
+										    		<select id="roles">  
+												      <s:iterator value="roles" status="L" var="roles">
+														<option><s:property value="roleName"/></option>
+													  </s:iterator>
+												    </select>
+										    		<input type="hidden" id="inputRoleName" name="roleName" placeholder="UserName">
 										    	</div>
 									  	</div>
 									  	<div class="control-group">
-									    	<label class="control-label" for="inputServiceName">服务名</label>
+									    	<label class="control-label" for="inputServiceName"><s:text name="ServiceName"></s:text></label>
 									    		<div class="controls">
-									      			<input type="text" id="inputServiceName" name="serviceName" placeholder="ServiceName">
+									    		    <select id="services">  
+												      <s:iterator value="services" status="L" var="services">
+														<option><s:property value="serviceName"/></option>
+													  </s:iterator>
+												    </select>
+									      			<input type="hidden" id="inputServiceName" name="serviceName" placeholder="ServiceName">
 									    		</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
 									  	</div>
 									  	<div class="form-actions">
-											<button type="button" class="btn btn-primary" onclick="add();">提交</button>
-											<button type="reset" class="btn">清空</button>
+											<button type="button" class="btn btn-primary" onclick="add();"><s:text name="Submit"></s:text></button>
+											<button type="reset" class="btn"><s:text name="Clear"></s:text></button>
 									  	</div>
 									  </form>
 									</div>
@@ -151,14 +161,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
 				$('td:eq(8)', nRow).html("<button class='btn btn-primary' onclick='deleteRoleSpecSer(\""+ aData.rssId+"\",\""+ aData.roleId+"\",\""+ aData.serviceId+"\")'>Delete</button>");
 			return nRow;
-		},
+		}/*,
 		"language": {
                  "lengthMenu": "每页 _MENU_ 条记录",
                  "zeroRecords": "没有找到记录",
                  "info": "第 _PAGE_ 页 ( 总共 _PAGES_ 页 )",
                  "infoEmpty": "无记录",
                  "infoFiltered": "(从 _MAX_ 条记录过滤)"
-             }
+             }*/
          
 			   });
 	}
@@ -169,22 +179,33 @@ function deleteRoleSpecSer(rssId,roleId,serviceId){
 			    async: false,
 			    data: {"rssId":rssId,"roleId":roleId,"serviceId":serviceId},
 			    dataType: "json",
-			    success: function(){
+			    success: function(RoleSpecSerString){
 			    	location.reload(true);
-			    	loadRoleSpecSer();
-			    	updateTable();
+			    	//loadRoleSpecSer();
+			    	//updateTable();
 			    }
 			    
 		});
-		location.reload(true);
+		//location.reload(true);
 }
 
 function add(){
+		var servicenameobj = document.getElementById("services");
+		var servicenameindex = servicenameobj.selectedIndex;
+		var servicenamevalue = servicenameobj.options[servicenameindex].value;
+		document.getElementById("inputServiceName").value = servicenamevalue;
+		
+		var rolenameobj = document.getElementById("roles");
+		var rolenameindex = rolenameobj.selectedIndex;
+		var rolenamevalue = rolenameobj.options[rolenameindex].value;
+		document.getElementById("inputRoleName").value = rolenamevalue;
+
+
 		var roleName=document.getElementById("inputRoleName").value.toString();
 		var serviceName=document.getElementById("inputServiceName").value.toString();
 		if((roleName!="")&&(serviceName!="")){
 			addRoleService(roleName,serviceName);
-			location.reload(true);
+			//location.reload(true);
 		}else{
 			alert("角色名或服务名不能为空！");
 		}
@@ -197,23 +218,42 @@ function addRoleService(roleName,serviceName){
 			dataType: "json",
 			    async:false,
 				data: {"roleName":roleName,"serviceName":serviceName},
-				success: function(){
+				success: function(RoleSpecSerString){
 					location.reload(true);
-					loadRoleSpecSer();
-			    	updateTable();
+					//loadRoleSpecSer();
+			    	//updateTable();
 				}
 			});
 }
 		
-	jQuery(document).ready(function() {       
+	jQuery(document).ready(function() {   
+		checkuser();
+	
+	    
 		   // initiate layout and plugins
 		  loadRoleSpecSer();
-		   updateTable();
-		   	 $('#table_id tbody').on( 'click', 'tr', function () {
-        $(this).toggleClass('selected');
-        //$('tr td checkebox').attr('checked').value="checked";
-    } );
+		  updateTable();
+		  $('#table_id tbody').on( 'click', 'tr', function () {
+		        $(this).toggleClass('selected');
+		        //$('tr td checkebox').attr('checked').value="checked";
+		    } );
+		   
 		});
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
 	</script>	
   </body>
   

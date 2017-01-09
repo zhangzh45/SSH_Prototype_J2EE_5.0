@@ -13,7 +13,7 @@
 
 	<meta charset="utf-8" />
 
-	<title>企业服务管理系统 | 权限服务配置</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="PermissionServiceConfiguration"></s:text></title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
@@ -37,7 +37,7 @@
 
 						<h3 class="page-title">
 
-							权限服务配置 <small>配置权限拥有的服务</small>
+							<s:text name="PermissionServiceConfiguration"></s:text><small><s:text name="PermissionServiceConfiguration.Description"></s:text></small>
 
 						</h3>
 
@@ -55,13 +55,13 @@
 
 							<li>
 
-								<a href="#">权限配置</a>
+								<a href="#"><s:text name="PermissionConfiguration"></s:text></a>
 
 								<i class="icon-angle-right"></i>
 
 							</li>
 
-							<li><a href="#">权限服务配置</a></li>
+							<li><a href="#"><s:text name="PermissionServiceConfiguration"></s:text></a></li>
 
 						</ul>
 
@@ -85,7 +85,7 @@
 
 							<div class="portlet-title">
 
-								<div class="caption"><i class="icon-globe"></i>权限列表</div>
+								<div class="caption"><i class="icon-globe"></i><s:text name="PermissionList"></s:text></div>
 
 								<div class="actions">
 
@@ -100,9 +100,9 @@
 										</a>
 
 										<div id="sample_2_column_toggler" class="dropdown-menu hold-on-click dropdown-checkboxes pull-right">
-											<label><input type="checkbox" checked data-column="0">权限编号</label>
-											<label><input type="checkbox" checked data-column="1">权限名称</label>
-											<label><input type="checkbox" checked data-column="2">权限描述</label>
+											<label><input type="checkbox" checked data-column="0">Permission Id</label>
+											<label><input type="checkbox" checked data-column="1">Permission Name</label>
+											<label><input type="checkbox" checked data-column="2">Permission Desc</label>
 										</div>
 									</div>
 
@@ -116,9 +116,9 @@
 
 									<thead>
 										<tr>
-											<th>权限编号</th>
-											<th>权限名称</th>
-											<th>权限描述</th>
+											<th>Permission Id</th>
+											<th>Permission Name</th>
+											<th>Permission Desc</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -139,7 +139,7 @@
 
 							<div class="portlet-title">
 
-								<div class="caption"><i class="icon-globe"></i>服务列表</div>
+								<div class="caption"><i class="icon-globe"></i><s:text name="ServiceList"></s:text></div>
 
 								<div class="actions">
 
@@ -154,9 +154,9 @@
 										</a>
 
 										<div id="sample_3_column_toggler" class="dropdown-menu hold-on-click dropdown-checkboxes pull-right">
-											<label><input type="checkbox" checked data-column="0">服务编号</label>
-											<label><input type="checkbox" checked data-column="1">服务名称</label>
-											<label><input type="checkbox" checked data-column="2">服务描述</label>
+											<label><input type="checkbox" checked data-column="0">Service Id</label>
+											<label><input type="checkbox" checked data-column="1">Service Name</label>
+											<label><input type="checkbox" checked data-column="2">Service Desc</label>
 										</div>
 									</div>
 
@@ -170,9 +170,9 @@
 
 									<thead>
 										<tr>
-											<th>服务编号</th>
-											<th>服务名称</th>
-											<th>服务描述</th>
+											<th>Service Id</th>
+											<th>Service Name</th>
+											<th>Service Desc</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -191,23 +191,23 @@
 						<form name="form2" action="" method="post">
 							<div class="portlet box blue">
 								<div class="portlet-title">
-									权限服务配置
+									<s:text name="PermissionServiceConfiguration"></s:text>
 								</div>
 								<div class="portlet-body">
-									<br>选择配置权限
+									<br><s:text name="PermissionId"></s:text>
 									<select class="form-control" name="opt1" id="opt1">
 										<s:iterator value="permissions" status="L2">
 											<option><s:property value="permissionId"/></option>
 										</s:iterator>
 									</select>
-									<br>选择配置服务
+									<br><s:text name="ServiceId"></s:text>
 									<select class="form-control" name="opt2" id="opt2">
 										<s:iterator value="services" status="L2">
 											<option><s:property value="serviceId"/></option>
 										</s:iterator>
 									</select>
-									<br>确认配置
-									<button type="button" class="btn" onclick="changeValue(); form2.action='addPermissionService.action'; form2.submit();">确定&raquo; </button>
+									<br>
+									<button type="button" class="btn" onclick="changeValue(); form2.action='addPermissionService.action'; form2.submit();"><s:text name="OK"></s:text>&raquo; </button>
 									<input name="option1" type="hidden" value="" id="option1">
 									<input name="option2" type="hidden" value="" id="option2">
 									
@@ -233,7 +233,25 @@
 	
 
 	<script>
-
+		jQuery(document).ready(function() {    
+		   checkuser();
+		});
+		
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
 		
 		function changeValue()
 		{

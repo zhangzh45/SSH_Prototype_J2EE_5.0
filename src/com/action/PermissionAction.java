@@ -1,13 +1,18 @@
 package com.action;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import com.bean.Permission;
 import com.bean.Role;
+import com.bean.RolePermission;
 import com.bean.Service;
+import com.bean.Permissionservice;
 import com.opensymphony.xwork2.ActionSupport;
 import com.service.PermissionService;
+import com.service.PermissionServiceService;
+import com.service.RolePermissionService;
 import com.service.RoleService;
 import com.service.SerService;
 
@@ -15,6 +20,9 @@ import com.service.SerService;
 public class PermissionAction extends ActionSupport
 {
 	private PermissionService permissionsr = new PermissionService();
+	private PermissionServiceService permissionservicesr = new PermissionServiceService();
+	private RolePermissionService rolepermissionsr = new RolePermissionService();
+	
 	Permission permission;
 	
 	private RoleService rolesr = new RoleService();
@@ -69,6 +77,19 @@ public class PermissionAction extends ActionSupport
 	public void setPermissionsr(PermissionService permissionsr) {
 		this.permissionsr = permissionsr;
 	}
+	
+	public PermissionServiceService getPermissionservicesr() {
+		return permissionservicesr;
+	}
+	public void setPermissionservicesr(PermissionServiceService permissionservicesr) {
+		this.permissionservicesr = permissionservicesr;
+	}
+	public RolePermissionService getRolepermissionsr() {
+		return rolepermissionsr;
+	}
+	public void setRolepermissionsr(RolePermissionService rolepermissionsr) {
+		this.rolepermissionsr = rolepermissionsr;
+	}
 	public Permission getPermission() {
 		return permission;
 	}
@@ -97,8 +118,22 @@ public class PermissionAction extends ActionSupport
 			permission = this.permissionsr.getUniquePermission(Integer.valueOf(option1));
 			if(permission != null)
 			{
+				List<Permissionservice> permissionservices = new ArrayList<Permissionservice>();
+				permissionservices = permissionservicesr.getPermissionserviceDao().findByPermissionId(permission.getPermissionId());
+				for(int i = 0; i < permissionservices.size(); i++){
+					permissionservicesr.getPermissionserviceDao().delete(permissionservices.get(i));
+				}
+				
+				List<RolePermission> rolepermissions = new ArrayList<RolePermission>();
+				rolepermissions = rolepermissionsr.getRolepermissionDao().findByPermissionId(permission.getPermissionId());
+				for(int i = 0; i < permissionservices.size(); i++){
+					rolepermissionsr.getRolepermissionDao().delete(rolepermissions.get(i));
+				}
+				
 				this.permissionsr.deletePermission(permission);
 			}
+			
+			listPermission();
 			return SUCCESS;
 		}
 		catch(Exception e)
@@ -144,7 +179,7 @@ public class PermissionAction extends ActionSupport
 		try
 		{
 			permissions = this.permissionsr.getAllPermission();
-			services = this.srs.getAllService();
+			services = this.srs.getAll();//.getAllService();
 			return SUCCESS;
 		}
 		catch(Exception e)
