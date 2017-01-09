@@ -1,12 +1,59 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE struts PUBLIC
 	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
 	"http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
+
+	<constant name="struts.custom.i18n.resources" value="resource"/>
+
 	<constant name="struts.objectFactory" value="spring"></constant> 
 <constant name="struts.i18n.encoding" value="utf-8"></constant> 
 <package name="ajaxCheck"  extends="json-default">
+	<action name="logout" class="userAction" method="logout">
+         <result type="json"  name="success" >
+         	<param name="root">result</param>
+         </result>
+     </action>
+     <action name="queryservice" class="srAction" method="queryservice">
+         <result type="json" >
+         	<param name="root">queryServiceresult</param>
+         </result>
+     </action>
+     <action name="language" class="userAction" method="displayLanguage">
+		 <result type="json" >
+         	<param name="root">result</param>
+         </result>
+	 </action>
+     <!-- <action name="ServiceOfSelectedType" class="srAction" method="ServiceOfSelectedType">
+         <result name="success" type="json" >
+         	<param name="root">queryServiceresult</param>
+         </result>
+         <result name="error" type="json" >
+         	<param name="root">queryServiceresult</param>
+         </result>
+     </action>
+     <action name="ServiceOfSelectedBusiness" class="srAction" method="ServiceOfSelectedBusiness">
+         <result name="success" type="json" >
+         	<param name="root">queryServiceresult</param>
+         </result>
+         <result name="error" type="json" >
+         	<param name="root">queryServiceresult</param>
+         </result>
+     </action> -->
+     <action name="removeConfig" class="configAction" method="removeConfig">
+         <result type="json" name="success">
+         	<param name="root">removeConfigResult</param>
+         </result>
+         <result type="json" name="error">
+         	<param name="root">removeConfigResult</param>
+         </result>
+     </action>
+     <action name="queryConfig" class="configAction" method="queryConfig">
+         <result type="json" >
+         	<param name="root">queryConfigResult</param>
+         </result>
+     </action>
 	 <action name="approveService"  class="srAction" method="approveService">
          <result type="json">
                 <param name="root">applyString</param>
@@ -29,11 +76,12 @@
      </action>
      <action name="deleteRoleSpecSer"  class="RoleSpecSerAct" method="deleteRoleSpecSer" >
      	 <result name="success" type="json">
+     	 	<param name="root">RoleSpecSerString</param>
      	 </result>
      </action>
      <action name="addRoleService" class="RoleSpecSerAct" method="addRoleService">
      	 <result name="success" type="json">
-     	 	<param name="root"></param>
+     	 	<param name="root">RoleSpecSerString</param>
      	 </result>
      </action>
    	 <!--  获取所有角色的action，并返回json格式的字符串-->
@@ -42,23 +90,35 @@
      	 	<param name="root">mapRoles</param>
      	 </result>
      </action>
+     <action name="getSpecRoleFromSpec" class="srAction" method="getSpecRoleFromSpec">
+     	 <result type="json">
+     	 	<param name="root">specJson</param>
+     	 </result>
+     </action>
 </package>
 	<package name="common" extends="struts-default">
         <action name="register" class="srAction" method="register">
-            <result name="success">/WEB-INF/ServiceManage/ServiceRequest.jsp</result>
+            <result name="success">/ServiceRequestSuccess.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
-        <action name="ServiceRequest">
+        <action name="ServiceRequest" class="srAction" method="calledservices">
         	<result>/WEB-INF/ServiceManage/ServiceRequest.jsp</result>
         </action>
-        <action name="AddLocalConfig">
-        	<result>/WEB-INF/ServiceManage/AddLocalConfig.jsp</result>
+        <action name="AddLocalConfig" class="srAction" method="providedService">
+        	<result name="success">/WEB-INF/ServiceManage/AddLocalConfig.jsp</result>
+            <result name="error">/error.jsp</result>
         </action>
-        <action name="AddParameterJSP">
-        	<result>/WEB-INF/ServiceManage/AddParameter.jsp</result>
+        <action name="AddParameterJSP" class="srAction" method="providedService">
+        	<result name="success">/WEB-INF/ServiceManage/AddParameter.jsp</result>
+            <result name="error">/error.jsp</result>
         </action>
-        <action name="AddOutputJSP">
-        	<result>/WEB-INF/ServiceManage/AddOutput.jsp</result>
+        <action name="AddOutputJSP" class="srAction" method="providedService">
+        	<result name="success">/WEB-INF/ServiceManage/AddOutput.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="ListConfigJSP" class="srAction" method="getAllService">
+        	<result name="success">/WEB-INF/ServiceManage/listConfiginfo.jsp</result>
+            <result name="error">/error.jsp</result>
         </action>
         <action name="AddSiteJSP">
         	<result>/WEB-INF/ServiceManage/AddSite.jsp</result>
@@ -75,8 +135,13 @@
        <action name="appService" >
         	<result >/WEB-INF/ServiceManage/AddUserSpecSer.jsp</result>
         </action>
-        <action name="chooseRoleService">
-        	<result >/WEB-INF/ServiceManage/AddRoleSpecSer.jsp</result>
+        <action name="chooseRoleService" class="srAction" method="chooseRoleService">
+        	<result name="success">/WEB-INF/ServiceManage/AddRoleSpecSer.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+        <action name="callRelation" class="conditionAction" method="levelClass">
+        	<result name="success">/WEB-INF/ServiceManage/leveldtree.jsp</result>
+        	<result name="error">/error.jsp</result>
         </action>
         <action name="addAll" class="TempAct" method="addAll">
         	<result name="success">/WEB-INF/ServiceManage/AddUserSpecSer.jsp</result>
@@ -98,10 +163,19 @@
         	<result name="success">/ServiceRequestSuccess.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
+        <action name="removeService" class="srAction" method="removeService">
+        	<result name="success">/WEB-INF/ServiceManage/RemoveService.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="deleteService" class="srAction" method="deleteService">
+        	<result name="success">/ServiceRequestSuccess.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
         <action name="login" class="userAction" method="login">
         	<result name="success">/index.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
+        
         <action name="dashboard" class="userAction" method="dashboard">
         	<result name="success">/index.jsp</result>
             <result name="error">/error.jsp</result>
@@ -127,7 +201,7 @@
             <result name="error">/error.jsp</result>
         </action>
         <action name="deleteRole" class="roleAction" method="deleteRole">
-        	<result name="success">/ServiceRequestSuccess.jsp</result>
+        	<result name="success">/WEB-INF/ServiceManage/ListRole.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
         <action name="inputParameter" class="parameterAction" method="inputParameter">
@@ -155,7 +229,8 @@
             <result name="error">/error.jsp</result>
         </action>
         <action name="addConfig" class="licenceAction" method="addConfig">
-        	<result name="success">/Config.jsp</result>
+        	<!-- <result name="success">/Config.jsp</result> -->
+        	<result name="success">/ServiceRequestSuccess.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
         <action name="evaluateService" class="evaluationAction" method="getUnEvaluateNotSave">
@@ -223,7 +298,7 @@
         	<result name="error">/error.jsp</result>
         </action>
         <action name="addParameter" class="parameterAction" method="addParameter">
-            <result name="success">/WEB-INF/ServiceManage/ServiceRequestSuccess.jsp</result>
+            <result name="success">/ServiceRequestSuccess.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
         <action name="busyClass" class="conditionAction" method="busyClass">
@@ -234,8 +309,28 @@
             <result name="success">/WEB-INF/ServiceManage/workdtree.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
+        <action name="serviceByType" class="srAction" method="serviceByType">
+            <result name="success">/WEB-INF/ServiceManage/ServiceByType.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="serviceByBusiness" class="srAction" method="serviceByBusiness">
+            <result name="success">/WEB-INF/ServiceManage/ServiceByBusiness.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+	    <action name="ServiceOfSelectedType" class="srAction" method="ServiceOfSelectedType">
+	        <result name="success">/WEB-INF/ServiceManage/ServiceByType.jsp</result>
+	        <result name="error">/error.jsp</result>
+	    </action>
+	    <action name="ServiceOfSelectedBusiness" class="srAction" method="ServiceOfSelectedBusiness">
+	        <result name="success">/WEB-INF/ServiceManage/ServiceByBusiness.jsp</result>
+	        <result name="error">/error.jsp</result>
+	    </action>
         <action name="relationDetail" class="conditionAction" method="relationDetail">
-            <result name="success">/WEB-INF/ServiceManage/topodemo.jsp</result>
+            <result name="success">/topodemo.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="callRelationDetail" class="conditionAction" method="callRelationDetail">
+            <result name="success">/ServiceRelation.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
         <action name="combineAService" class="srAction" method="combineAService">
@@ -271,7 +366,8 @@
         	<result name="error">/error.jsp</result>
         </action>
         <action name="addOutput" class="srAction" method="addOutput">
-        	<result name="success">/WEB-INF/ServiceManage/AddOutput.jsp</result>
+        	<!--<result name="success">/WEB-INF/ServiceManage/AddOutput.jsp</result> -->
+        	<result name="success">ServiceRequestSuccess.jsp</result>
         	<result name="error">/error.jsp</result>
         </action>
         <action name="freRole" class="roleAction" method="freRole">
@@ -286,7 +382,15 @@
         	<result name="success">/WEB-INF/ServiceManage/ListKeyword.jsp</result>
         	<result name="error">/error.jsp</result>
         </action>
+        <action name="deleteKeyword" class="skeywordAction" method="deleteKeyword">
+        	<result name="success">/WEB-INF/ServiceManage/ListKeyword.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
         <action name="listResult" class="skeywordAction" method="listResult">
+        	<result name="success">/WEB-INF/ServiceManage/ListResult.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
+        <action name="deleteResult" class="skeywordAction" method="deleteResult">
         	<result name="success">/WEB-INF/ServiceManage/ListResult.jsp</result>
         	<result name="error">/error.jsp</result>
         </action>
@@ -298,6 +402,10 @@
         	<result name="success">/WEB-INF/ServiceManage/ListSite.jsp</result>
         	<result name="error">/error.jsp</result>
         </action>
+        <action name="deleteSite" class="searchsiteAction" method="deleteSite">
+        	<result name="success">/WEB-INF/ServiceManage/ListSite.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
         <action name="listPermission" class="permissionAction" method="listPermission">
         	<result name="success">/WEB-INF/ServiceManage/ListPermission.jsp</result>
         	<result name="error">/error.jsp</result>
@@ -306,5 +414,38 @@
         	<result name="success">/WEB-INF/ServiceManage/ListPermission.jsp</result>
         	<result name="error">/error.jsp</result>
         </action>
+        <action name="runlog" class="runlogAction" method="runlog">
+        	<result name="success">/WEB-INF/ServiceManage/Runlog.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="accessService" class="parameterAction" method="accessService">
+        	<result name="success">/Serviceloaded.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="listconfig" class="configAction" method="listconfig">
+        	<result name="success">/WEB-INF/ServiceManage/listConfiginfo.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="editresult" class="configAction" method="editresult">
+        	<result name="success">/WEB-INF/ServiceManage/listConfiginfo.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="editparameter" class="configAction" method="editparameter">
+        	<result name="success">/WEB-INF/ServiceManage/listConfiginfo.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="editlicence" class="configAction" method="editlicence">
+        	<result name="success">/WEB-INF/ServiceManage/listConfiginfo.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        
+        <action name="ServiceRelation">
+        	<result>/ServiceRelation.jsp</result>
+        </action>
+        <action name="topodemo">
+        	<result>/topodemo.jsp</result>
+        </action>
+        
+        
     </package>
 </struts>    

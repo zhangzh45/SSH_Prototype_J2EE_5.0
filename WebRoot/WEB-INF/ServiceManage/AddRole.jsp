@@ -13,7 +13,7 @@
 
 	<meta charset="utf-8" />
 
-	<title>企业服务管理系统 |  添加角色</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="AddRole"></s:text></title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
@@ -35,7 +35,7 @@
 
 						<h3 class="page-title">
 
-							添加角色 <small>新建新的角色</small>
+							<s:text name="AddRole"></s:text> <small><s:text name="AddRole.Description"></s:text></small>
 
 						</h3>
 
@@ -53,13 +53,13 @@
 
 							<li>
 
-								<a href="#">组织管理</a>
+								<a href="#"><s:text name="PermissionConfiguration"></s:text></a>
 
 								<i class="icon-angle-right"></i>
 
 							</li>
 
-							<li><a href="#">添加角色</a></li>
+							<li><a href="#"><s:text name="AddRole"></s:text></a></li>
 
 						</ul>
 
@@ -78,26 +78,26 @@
 						<form name="form2" action="addRole.action" method="post">
 							<div class="portlet box blue">
 								<div class="portlet-title">
-									添加角色
+									<s:text name="AddRole"></s:text>
 								</div>
 								<div class="portlet-body">
 									<div class="container-fluid">
 										<div class="control-group">
-									    	<label class="control-label" for="inputRoleName">角色名</label>
+									    	<label class="control-label" for="inputRoleName"><s:text name="RoleName"></s:text></label>
 										    <div class="controls">
-										    	<input type="text" id="inputRoleName" name="role.roleName" placeholder="UserName">
+										    	<input type="text" id="inputRoleName" name="role.roleName" placeholder="RoleName">
 										    </div>
 									  	</div>
 									  	<div class="control-group">
-									    	<label class="control-label" for="inputRoleDesc">角色描述</label>
+									    	<label class="control-label" for="inputRoleDesc"><s:text name="RoleDesc"></s:text></label>
 									    	<div class="controls">
-									      		<input type="text" id="inputRoleDesc" name="role.roleDesc" placeholder="UserDesc">
+									      		<input type="text" id="inputRoleDesc" name="role.roleDesc" placeholder="RoleDesc">
 									    	</div>
 									  	</div>
 									  	<div class="form-actions">
-									  		<button type="button" onclick="showModal()" class="btn">角色派生</button>	
-											<button type="submit" class="btn btn-primary">提交</button>
-											<button type="button" class="btn">清空</button>
+									  		<button type="button" onclick="showModal()" class="btn"><s:text name="AddRole.RoleDerivation"></s:text></button>	
+											<button type="submit" class="btn btn-primary"><s:text name="Submit"></s:text></button>
+											<button type="button" class="btn"><s:text name="Clear"></s:text></button>
 									  	</div>
 									</div>
 								</div>
@@ -106,15 +106,15 @@
 						<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 						  <div class="modal-header">
 						    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-						    <h3 id="myModalLabel">推荐派生角色详情</h3>
+						    <h3 id="myModalLabel"><s:text name="AddRole.RoleDerivationDetail"></s:text></h3>
 						  </div>
 						  <div class="modal-body">
 						  	<table class="table table-condensed" id="table1">
 						  		<thead>
 									<tr>
-										<th>继承角色集合</th>
-										<th>支持度</th>
-										<th>阶数</th>
+										<th><s:text name="AddRole.InheritedRoleSet"></s:text></th>
+										<th><s:text name="AddRole.DegreeOfSupport"></s:text></th>
+										<th><s:text name="AddRole.OrderNumber"></s:text></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -129,7 +129,7 @@
 							</table>
 						  </div>
 						  <div class="modal-footer">
-						    <button class="btn" data-dismiss="modal">关闭</button>
+						    <button class="btn" data-dismiss="modal"><s:text name="Close"></s:text></button>
 						    
 						  </div>
 						</div>
@@ -151,7 +151,24 @@
 		jQuery(document).ready(function() {       
 		 
 		   TableAdvanced.init();
+		   
+		   checkuser();
 		});
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
 		
 		function showModal()
 		{

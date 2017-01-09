@@ -30,6 +30,10 @@ public class EvaluationAction extends ActionSupport
 	ArrayList<Double> score = new ArrayList<Double>();
 	ArrayList<Integer> num = new ArrayList<Integer>();
 	
+	String select1="true";
+	String select2="false";
+	String select3="false";
+
 	public static double maxScore = 5.0;
 	
 	public List<ServiceQuality> getSqs() {
@@ -144,20 +148,127 @@ public class EvaluationAction extends ActionSupport
 		this.alle = alle;
 	}
 	
+	public String getSelect1() {
+		return select1;
+	}
+
+	public void setSelect1(String select1) {
+		this.select1 = select1;
+	}
+
+	public String getSelect2() {
+		return select2;
+	}
+
+	public void setSelect2(String select2) {
+		this.select2 = select2;
+	}
+
+	public String getSelect3() {
+		return select3;
+	}
+
+	public void setSelect3(String select3) {
+		this.select3 = select3;
+	}
+	
 	public String quality()
+	{
+		//System.out.print("select1+select2+select3: "+select1+"  "+select2+"  "+select3+"  \n");
+		try
+		{
+			sqs.clear();
+			allservices = srs.getAll();
+			//alle = evaluationsr.getAllEvaluatuion();
+			//System.out.print("allservices.size()"+allservices.size()+"\n");
+			for(int i = 0; i < allservices.size(); i++)
+			{
+				ServiceQuality sq = new ServiceQuality();
+				sq.setServiceId(allservices.get(i).getServiceId());
+				sq.setServiceName(allservices.get(i).getServiceName());
+				sq.setServiceAddress(allservices.get(i).getServiceAddress());
+				if(allservices.get(i).getRunTimes() == null)
+				{
+					sq.setRunTime(0);
+				}else{
+					sq.setRunTime(allservices.get(i).getRunTimes());
+				}
+				alle = evaluationsr.getServiceEvaluate(allservices.get(i).getServiceId());
+				double sum = 0;
+				int num = alle.size();
+				if(select3.equalsIgnoreCase("true")){
+					
+				}else if(select2.equalsIgnoreCase("true")){
+					if( sq.getRunTime() == 0)
+					{
+						//System.out.print("sq.getRunTime() == 0: continue"+"\n");
+						continue;
+					}
+				}else if(select1.equalsIgnoreCase("true")){
+					if( sq.getRunTime() == 0 || num == 0)
+					{
+						//System.out.print("sq.getRunTime() == 0 || num == 0: continue"+"\n");
+						continue;
+					}
+				}
+				
+				if(allservices.get(i).getFailTimes() == null)
+				{
+					sq.setFailTime(0);
+				}else{
+					sq.setFailTime(allservices.get(i).getFailTimes());
+				}
+				double qos = 0.0;
+				if(sq.getRunTime() != 0){
+					qos = (sq.getRunTime() - sq.getFailTime()) * 1.0 / sq.getRunTime();
+				}
+				sq.setQos(qos);
+				
+				for(int j = 0; j < num; j++)
+				{
+					sum = sum + Integer.parseInt(alle.get(j).getEvaluationMark());
+				}
+				double avg = 0.0;
+				if(num != 0){
+					avg = sum / num / maxScore;
+				}
+				sq.setEvaluationNumber(num);
+				sq.setAvg(avg);
+				if((qos + avg) != 0){
+					sq.setF(2 * qos * avg / (qos + avg));
+				}else{
+					sq.setF(0.0);
+				}
+				
+				sqs.add(sq);
+			}
+			//System.out.print(sqs.size());
+			
+			return SUCCESS;
+		}
+		catch(Exception e)
+		{
+			System.out.print("error\n");
+			e.printStackTrace();
+			return ERROR;
+		}
+	}
+	
+	
+	/*public String quality()
 	{
 		try
 		{
 			sqs.clear();
 			allservices = srs.getAllService();
 			//alle = evaluationsr.getAllEvaluatuion();
-			
+			System.out.print("allservices.size()"+allservices.size()+"\n");
 			for(int i = 0; i < allservices.size(); i++)
 			{
 				ServiceQuality sq = new ServiceQuality();
 				sq.setServiceId(allservices.get(i).getServiceId());
 				sq.setRunTime(allservices.get(i).getRunTimes());
-				if(allservices.get(i).getRunTimes() == 0)
+				if(allservices.get(i).getRunTimes() == null || allservices.get(i).getRunTimes() == 0)
 				{
 					continue;
 				}
@@ -167,6 +278,7 @@ public class EvaluationAction extends ActionSupport
 				alle = evaluationsr.getServiceEvaluate(allservices.get(i).getServiceId());
 				double sum = 0;
 				int num = alle.size();
+				System.out.print("num:"+num+"\n");
 				if(num == 0)
 				{
 					continue;
@@ -187,9 +299,11 @@ public class EvaluationAction extends ActionSupport
 		}
 		catch(Exception e)
 		{
+			System.out.print("error\n");
+			e.printStackTrace();
 			return ERROR;
 		}
-	}
+	}*/
 
 	public String getUnEvaluateNotSave()
 	{
@@ -204,8 +318,7 @@ public class EvaluationAction extends ActionSupport
 				for(int j = 0; j < alle.size(); j++)
 				{
 					if(allservices.get(i).getServiceId().equals(alle.get(j).getEvaluationService()) 
-					&& alle.get(j).getEvaluationUser().equals(Integer.valueOf(option3))
-					)
+					&& alle.get(j).getEvaluationUser().equals(Integer.valueOf(option3)))
 					{
 						flag = 0;
 						break;

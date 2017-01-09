@@ -1,10 +1,10 @@
 package com.bean;
 
 /**
- * PermissionService entity. @author MyEclipse Persistence Tools
+ * Permissionservice entity. @author MyEclipse Persistence Tools
  */
 
-public class PermissionService implements java.io.Serializable {
+public class Permissionservice implements java.io.Serializable {
 
 	// Fields
 
@@ -16,21 +16,18 @@ public class PermissionService implements java.io.Serializable {
 	// Constructors
 
 	/** default constructor */
-	public PermissionService() {
+	public Permissionservice() {
 	}
 
 	/** minimal constructor */
-	public PermissionService(Integer permissionServiceId, Service service,
-			Permission permission) {
-		this.permissionServiceId = permissionServiceId;
+	public Permissionservice(Service service, Permission permission) {
 		this.service = service;
 		this.permission = permission;
 	}
 
 	/** full constructor */
-	public PermissionService(Integer permissionServiceId, Service service,
-			Permission permission, String permisionServiceDesc) {
-		this.permissionServiceId = permissionServiceId;
+	public Permissionservice(Service service, Permission permission,
+			String permisionServiceDesc) {
 		this.service = service;
 		this.permission = permission;
 		this.permisionServiceDesc = permisionServiceDesc;

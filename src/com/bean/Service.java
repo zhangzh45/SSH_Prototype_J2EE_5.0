@@ -29,17 +29,23 @@ public class Service implements java.io.Serializable {
 	private String serviceQuery;
 	private Integer runTimes;
 	private Integer failTimes;
-	private Set serviceresults = new HashSet(0);
-	private Set licences = new HashSet(0);
-	private Set servicerelationsForServiceId = new HashSet(0);
-	private Set parameters = new HashSet(0);
-	private Set conditionsForSubServiceId = new HashSet(0);
-	private Set roleSpecSers = new HashSet(0);
-	private Set userSpecSers = new HashSet(0);
-	private Set permissionServices = new HashSet(0);
-	private Set conditionsForServiceId = new HashSet(0);
+	private String callService;
+	private String serviceProvider;
+	private String appRoleUrl;
+	private String businessFile;
+	private String combineType;
+	private String attachments;
 	private Set variables = new HashSet(0);
+	private Set userSpecSers = new HashSet(0);
+	private Set servicerelationsForServiceId = new HashSet(0);
+	private Set conditionsForSubServiceId = new HashSet(0);
+	private Set conditionsForServiceId = new HashSet(0);
+	private Set serviceresults = new HashSet(0);
+	private Set parameters = new HashSet(0);
+	private Set roleSpecSers = new HashSet(0);
+	private Set permissionServices = new HashSet(0);
 	private Set servicerelationsForSubServiceId = new HashSet(0);
+	private Set licences = new HashSet(0);
 
 	// Constructors
 
@@ -47,24 +53,20 @@ public class Service implements java.io.Serializable {
 	public Service() {
 	}
 
-	/** minimal constructor */
-	public Service(Integer serviceId) {
-		this.serviceId = serviceId;
-	}
-
 	/** full constructor */
-	public Service(Integer serviceId, String serviceName, String serviceDesc,
-			Integer maxLoad, String serviceType, String serviceLevel,
-			String relateBusiness, String serviceTarget, String serviceRange,
-			String serviceState, String serviceAddress, String serviceVersion,
-			String serviceMaker, String serviceTime, String serviceHost,
-			String serviceQuery, Integer runTimes, Integer failTimes,
-			Set serviceresults, Set licences, Set servicerelationsForServiceId,
-			Set parameters, Set conditionsForSubServiceId, Set roleSpecSers,
-			Set userSpecSers, Set permissionServices,
-			Set conditionsForServiceId, Set variables,
-			Set servicerelationsForSubServiceId) {
-		this.serviceId = serviceId;
+	public Service(String serviceName, String serviceDesc, Integer maxLoad,
+			String serviceType, String serviceLevel, String relateBusiness,
+			String serviceTarget, String serviceRange, String serviceState,
+			String serviceAddress, String serviceVersion, String serviceMaker,
+			String serviceTime, String serviceHost, String serviceQuery,
+			Integer runTimes, Integer failTimes, String callService,
+			String serviceProvider, String appRoleUrl, String businessFile,
+			String combineType, String attachments, Set variables,
+			Set userSpecSers, Set servicerelationsForServiceId,
+			Set conditionsForSubServiceId, Set conditionsForServiceId,
+			Set serviceresults, Set parameters, Set roleSpecSers,
+			Set permissionServices, Set servicerelationsForSubServiceId,
+			Set licences) {
 		this.serviceName = serviceName;
 		this.serviceDesc = serviceDesc;
 		this.maxLoad = maxLoad;
@@ -82,17 +84,23 @@ public class Service implements java.io.Serializable {
 		this.serviceQuery = serviceQuery;
 		this.runTimes = runTimes;
 		this.failTimes = failTimes;
-		this.serviceresults = serviceresults;
-		this.licences = licences;
-		this.servicerelationsForServiceId = servicerelationsForServiceId;
-		this.parameters = parameters;
-		this.conditionsForSubServiceId = conditionsForSubServiceId;
-		this.roleSpecSers = roleSpecSers;
-		this.userSpecSers = userSpecSers;
-		this.permissionServices = permissionServices;
-		this.conditionsForServiceId = conditionsForServiceId;
+		this.callService = callService;
+		this.serviceProvider = serviceProvider;
+		this.appRoleUrl = appRoleUrl;
+		this.businessFile = businessFile;
+		this.combineType = combineType;
+		this.attachments = attachments;
 		this.variables = variables;
+		this.userSpecSers = userSpecSers;
+		this.servicerelationsForServiceId = servicerelationsForServiceId;
+		this.conditionsForSubServiceId = conditionsForSubServiceId;
+		this.conditionsForServiceId = conditionsForServiceId;
+		this.serviceresults = serviceresults;
+		this.parameters = parameters;
+		this.roleSpecSers = roleSpecSers;
+		this.permissionServices = permissionServices;
 		this.servicerelationsForSubServiceId = servicerelationsForSubServiceId;
+		this.licences = licences;
 	}
 
 	// Property accessors
@@ -241,76 +249,52 @@ public class Service implements java.io.Serializable {
 		this.failTimes = failTimes;
 	}
 
-	public Set getServiceresults() {
-		return this.serviceresults;
+	public String getCallService() {
+		return this.callService;
 	}
 
-	public void setServiceresults(Set serviceresults) {
-		this.serviceresults = serviceresults;
+	public void setCallService(String callService) {
+		this.callService = callService;
 	}
 
-	public Set getLicences() {
-		return this.licences;
+	public String getServiceProvider() {
+		return this.serviceProvider;
 	}
 
-	public void setLicences(Set licences) {
-		this.licences = licences;
+	public void setServiceProvider(String serviceProvider) {
+		this.serviceProvider = serviceProvider;
 	}
 
-	public Set getServicerelationsForServiceId() {
-		return this.servicerelationsForServiceId;
+	public String getAppRoleUrl() {
+		return this.appRoleUrl;
 	}
 
-	public void setServicerelationsForServiceId(Set servicerelationsForServiceId) {
-		this.servicerelationsForServiceId = servicerelationsForServiceId;
+	public void setAppRoleUrl(String appRoleUrl) {
+		this.appRoleUrl = appRoleUrl;
 	}
 
-	public Set getParameters() {
-		return this.parameters;
+	public String getBusinessFile() {
+		return this.businessFile;
 	}
 
-	public void setParameters(Set parameters) {
-		this.parameters = parameters;
+	public void setBusinessFile(String businessFile) {
+		this.businessFile = businessFile;
 	}
 
-	public Set getConditionsForSubServiceId() {
-		return this.conditionsForSubServiceId;
+	public String getCombineType() {
+		return this.combineType;
 	}
 
-	public void setConditionsForSubServiceId(Set conditionsForSubServiceId) {
-		this.conditionsForSubServiceId = conditionsForSubServiceId;
+	public void setCombineType(String combineType) {
+		this.combineType = combineType;
 	}
 
-	public Set getRoleSpecSers() {
-		return this.roleSpecSers;
+	public String getAttachments() {
+		return this.attachments;
 	}
 
-	public void setRoleSpecSers(Set roleSpecSers) {
-		this.roleSpecSers = roleSpecSers;
-	}
-
-	public Set getUserSpecSers() {
-		return this.userSpecSers;
-	}
-
-	public void setUserSpecSers(Set userSpecSers) {
-		this.userSpecSers = userSpecSers;
-	}
-
-	public Set getPermissionServices() {
-		return this.permissionServices;
-	}
-
-	public void setPermissionServices(Set permissionServices) {
-		this.permissionServices = permissionServices;
-	}
-
-	public Set getConditionsForServiceId() {
-		return this.conditionsForServiceId;
-	}
-
-	public void setConditionsForServiceId(Set conditionsForServiceId) {
-		this.conditionsForServiceId = conditionsForServiceId;
+	public void setAttachments(String attachments) {
+		this.attachments = attachments;
 	}
 
 	public Set getVariables() {
@@ -321,6 +305,70 @@ public class Service implements java.io.Serializable {
 		this.variables = variables;
 	}
 
+	public Set getUserSpecSers() {
+		return this.userSpecSers;
+	}
+
+	public void setUserSpecSers(Set userSpecSers) {
+		this.userSpecSers = userSpecSers;
+	}
+
+	public Set getServicerelationsForServiceId() {
+		return this.servicerelationsForServiceId;
+	}
+
+	public void setServicerelationsForServiceId(Set servicerelationsForServiceId) {
+		this.servicerelationsForServiceId = servicerelationsForServiceId;
+	}
+
+	public Set getConditionsForSubServiceId() {
+		return this.conditionsForSubServiceId;
+	}
+
+	public void setConditionsForSubServiceId(Set conditionsForSubServiceId) {
+		this.conditionsForSubServiceId = conditionsForSubServiceId;
+	}
+
+	public Set getConditionsForServiceId() {
+		return this.conditionsForServiceId;
+	}
+
+	public void setConditionsForServiceId(Set conditionsForServiceId) {
+		this.conditionsForServiceId = conditionsForServiceId;
+	}
+
+	public Set getServiceresults() {
+		return this.serviceresults;
+	}
+
+	public void setServiceresults(Set serviceresults) {
+		this.serviceresults = serviceresults;
+	}
+
+	public Set getParameters() {
+		return this.parameters;
+	}
+
+	public void setParameters(Set parameters) {
+		this.parameters = parameters;
+	}
+
+	public Set getRoleSpecSers() {
+		return this.roleSpecSers;
+	}
+
+	public void setRoleSpecSers(Set roleSpecSers) {
+		this.roleSpecSers = roleSpecSers;
+	}
+
+	public Set getPermissionServices() {
+		return this.permissionServices;
+	}
+
+	public void setPermissionServices(Set permissionServices) {
+		this.permissionServices = permissionServices;
+	}
+
 	public Set getServicerelationsForSubServiceId() {
 		return this.servicerelationsForSubServiceId;
 	}
@@ -328,6 +376,14 @@ public class Service implements java.io.Serializable {
 	public void setServicerelationsForSubServiceId(
 			Set servicerelationsForSubServiceId) {
 		this.servicerelationsForSubServiceId = servicerelationsForSubServiceId;
+	}
+
+	public Set getLicences() {
+		return this.licences;
+	}
+
+	public void setLicences(Set licences) {
+		this.licences = licences;
 	}
 
 }

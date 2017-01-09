@@ -19,7 +19,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 	<meta charset="utf-8" />
 
-	<title>企业服务管理系统 | 添加爬取站点</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="AddCrawlingSite"></s:text></title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
@@ -38,8 +38,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 	
 						<h3 class="page-title">
-							添加爬取站点
-							 <small>设置服务信息爬取的站点</small>
+							<s:text name="AddCrawlingSite"></s:text>
+							 <small><s:text name="AddCrawlingSite.Description"></s:text></small>
 						</h3>
 
 						<ul class="breadcrumb">
@@ -49,10 +49,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								<span class="icon-angle-right"></span>
 							</li>
 							<li>
-								<a href="#">服务信息爬取</a>
+								<a href="#"><s:text name="ServiceInfoCrawling"></s:text></a>
 								<span class="icon-angle-right"></span>
 							</li>
-							<li><a href="#">添加爬取站点</a></li>
+							<li><a href="#"><s:text name="AddCrawlingSite"></s:text></a></li>
 						</ul>
 
 					
@@ -66,7 +66,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						<!-- BEGIN SAMPLE FORM PORTLET-->   
 						<div class="portlet box blue">
 							<div class="portlet-title">
-								<div class="caption"><i class="icon-reorder"></i>添加爬取站点</div>
+								<div class="caption"><i class="icon-reorder"></i><s:text name="AddCrawlingSite"></s:text></div>
 								<div class="tools">
 									<a href="javascript:;" class="collapse"></a>
 									<a href="#portlet-config" data-toggle="modal" class="config"></a>
@@ -79,7 +79,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								<!-- BEGIN FORM-->
 								<form action="#" class="form-horizontal" id="form2">
 									<div class="control-group">
-										<label class="control-label">站点名称</label>
+										<label class="control-label"><s:text name="SiteName"></s:text></label>
 										<div class="controls">
 											<input type="text" class="span6 m-wrap" name="skeyword.keywordname"/>
 											<span class="help-inline">name of site</span>
@@ -89,21 +89,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									
 
 									<div class="control-group">
-										<label class="control-label">站点地址</label>
+										<label class="control-label"><s:text name="SiteAddress"></s:text></label>
 										<div class="controls">
 											<input type="text" class="span6 m-wrap popovers" name="searchsite.address" data-trigger="hover" data-content="请输入字符串." data-original-title="Popover header" />
 										</div>
 									</div>
 
 									<div class="control-group">
-										<label class="control-label">页面控制</label>
+										<label class="control-label"><s:text name="SitePageControl"></s:text></label>
 										<div class="controls">
 											<input type="text" class="span6 m-wrap tooltips" name="searchsite.pagecontrol" data-trigger="hover" data-original-title="请输入正整数" />                       
 										</div>
 									</div>
 
 									<div class="control-group">
-										<label class="control-label">供应商</label>
+										<label class="control-label"><s:text name="SiteSupplier"></s:text></label>
 										<div class="controls">
 											<input type="text" class="span6 m-wrap" name="searchsite.supplier" style="margin: 0 auto;" data-provide="typeahead" data-items="4" data-source="[&quot;Alabama&quot;,&quot;Alaska&quot;,&quot;Arizona&quot;,&quot;Arkansas&quot;,&quot;California&quot;,&quot;Colorado&quot;,&quot;Connecticut&quot;,&quot;Delaware&quot;,&quot;Florida&quot;,&quot;Georgia&quot;,&quot;Hawaii&quot;,&quot;Idaho&quot;,&quot;Illinois&quot;,&quot;Indiana&quot;,&quot;Iowa&quot;,&quot;Kansas&quot;,&quot;Kentucky&quot;,&quot;Louisiana&quot;,&quot;Maine&quot;,&quot;Maryland&quot;,&quot;Massachusetts&quot;,&quot;Michigan&quot;,&quot;Minnesota&quot;,&quot;Mississippi&quot;,&quot;Missouri&quot;,&quot;Montana&quot;,&quot;Nebraska&quot;,&quot;Nevada&quot;,&quot;New Hampshire&quot;,&quot;New Jersey&quot;,&quot;New Mexico&quot;,&quot;New York&quot;,&quot;North Dakota&quot;,&quot;North Carolina&quot;,&quot;Ohio&quot;,&quot;Oklahoma&quot;,&quot;Oregon&quot;,&quot;Pennsylvania&quot;,&quot;Rhode Island&quot;,&quot;South Carolina&quot;,&quot;South Dakota&quot;,&quot;Tennessee&quot;,&quot;Texas&quot;,&quot;Utah&quot;,&quot;Vermont&quot;,&quot;Virginia&quot;,&quot;Washington&quot;,&quot;West Virginia&quot;,&quot;Wisconsin&quot;,&quot;Wyoming&quot;]" />
 											<p class="help-block"></p>
@@ -111,7 +111,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									</div>
 									
 									<div class="control-group">
-										<label class="control-label">供应商所属地区</label>
+										<label class="control-label"><s:text name="SiteSupplierArea"></s:text></label>
 										<div class="controls">
 											<input type="text" class="span6 m-wrap" name="searchsite.area" style="margin: 0 auto;" data-provide="typeahead" data-items="4" data-source="[&quot;Alabama&quot;,&quot;Alaska&quot;,&quot;Arizona&quot;,&quot;Arkansas&quot;,&quot;California&quot;,&quot;Colorado&quot;,&quot;Connecticut&quot;,&quot;Delaware&quot;,&quot;Florida&quot;,&quot;Georgia&quot;,&quot;Hawaii&quot;,&quot;Idaho&quot;,&quot;Illinois&quot;,&quot;Indiana&quot;,&quot;Iowa&quot;,&quot;Kansas&quot;,&quot;Kentucky&quot;,&quot;Louisiana&quot;,&quot;Maine&quot;,&quot;Maryland&quot;,&quot;Massachusetts&quot;,&quot;Michigan&quot;,&quot;Minnesota&quot;,&quot;Mississippi&quot;,&quot;Missouri&quot;,&quot;Montana&quot;,&quot;Nebraska&quot;,&quot;Nevada&quot;,&quot;New Hampshire&quot;,&quot;New Jersey&quot;,&quot;New Mexico&quot;,&quot;New York&quot;,&quot;North Dakota&quot;,&quot;North Carolina&quot;,&quot;Ohio&quot;,&quot;Oklahoma&quot;,&quot;Oregon&quot;,&quot;Pennsylvania&quot;,&quot;Rhode Island&quot;,&quot;South Carolina&quot;,&quot;South Dakota&quot;,&quot;Tennessee&quot;,&quot;Texas&quot;,&quot;Utah&quot;,&quot;Vermont&quot;,&quot;Virginia&quot;,&quot;Washington&quot;,&quot;West Virginia&quot;,&quot;Wisconsin&quot;,&quot;Wyoming&quot;]" />
 											<p class="help-block"></p>
@@ -119,7 +119,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									</div>
 
 									<div class="control-group">
-										<label class="control-label">站点类型</label>
+										<label class="control-label"><s:text name="SiteType"></s:text></label>
 										<div class="controls">
 											<select class="span6 m-wrap" data-placeholder="Choose a Category" tabindex="1">
 												<option value="">Select...</option>
@@ -130,7 +130,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									</div>
 
 									<div class="control-group">
-										<label class="control-label">站点爬取方式</label>
+										<label class="control-label"><s:text name="SiteCrawlingMode"></s:text></label>
 										<div class="controls">
 											<select class="span6 chosen" data-placeholder="Choose a Category" tabindex="1">
 												<option value=""></option>
@@ -142,41 +142,41 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 
 									<div class="control-group">
-										<label class="control-label">优先策略</label>
+										<label class="control-label"><s:text name="SitePriorityStrategy"></s:text></label>
 										<div class="controls">
 											<label class="radio">
 											<input type="radio" name="optionsRadios1" value="option1" />
-											深度优先
+											<s:text name="SiteDepthFirst"></s:text>
 											</label>
 											<label class="radio">
 											<input type="radio" name="optionsRadios1" value="option2" checked />
-											广度优先
+											<s:text name="SiteBreadthFirst"></s:text>
 											</label>  
 										</div>
 									</div>
 
 									<div class="control-group">
-										<label class="control-label">语言解析</label>
+										<label class="control-label"><s:text name="SiteLanguageAnalysis"></s:text></label>
 										<div class="controls">
 											<label class="checkbox">
-											<input type="checkbox" value="" /> 中文
+											<input type="checkbox" value="" /> <s:text name="SiteChinese"></s:text>
 											</label>
 											<label class="checkbox">
-											<input type="checkbox" value="" /> 英文
+											<input type="checkbox" value="" /> <s:text name="SiteEnglish"></s:text>
 											</label>
 										</div>
 									</div>
 
 									<div class="control-group">
-										<label class="control-label">站点描述</label>
+										<label class="control-label"><s:text name="SiteDesc"></s:text></label>
 										<div class="controls">
 											<textarea class="span6 m-wrap" rows="3" name="searchsite.keyworddesc" ></textarea>
 										</div>
 									</div>
 
 									<div class="form-actions">
-										<button type="button" class="btn blue" onclick="alert('添加成功！您还可以继续添加');form2.action='addSite.action'; form2.submit()" >Submit</button>
-										<button type="button" class="btn">Cancel</button></div>
+										<button type="button" class="btn blue" onclick="alert('添加成功！您还可以继续添加');form2.action='addSite.action'; form2.submit()" ><s:text name="Submit"></s:text></button>
+										<button type="button" class="btn"><s:text name="Cancel"></s:text></button></div>
 								</form>
 								<!-- END FORM-->       
 							</div>
@@ -221,3 +221,27 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <!-- END BODY -->
 
 </html>
+
+
+
+<script>
+	jQuery(document).ready(function() {       
+alert("ss");
+		   checkuser();
+		});
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
+</script>

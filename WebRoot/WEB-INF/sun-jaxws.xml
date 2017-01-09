@@ -4,4 +4,5 @@
 	<endpoint name="GetServiceInfoPort"
 		implementation="com.server.GetServiceInfoDelegate"
 		url-pattern="/GetServiceInfoPort">
-	</endpoint></endpoints>
+	</endpoint>
+</endpoints>

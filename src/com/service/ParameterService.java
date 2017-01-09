@@ -18,6 +18,12 @@ public class ParameterService
 		this.parameterDao.save(p);
 		return p.getParameterid();
 	}
+	
+	public int deleteParamater(Parameter p)
+	{
+		this.parameterDao.delete(p);
+		return p.getParameterid();
+	}
 
 	public void setParameterDao(ParameterDAO parameterDao) {
 		this.parameterDao = parameterDao;

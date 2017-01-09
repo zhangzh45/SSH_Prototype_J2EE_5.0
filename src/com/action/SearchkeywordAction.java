@@ -17,6 +17,8 @@ public class SearchkeywordAction extends ActionSupport
 	private SearchkeywordService skeywordsr = new SearchkeywordService();
 	private SearchinfService sinfsr = new SearchinfService();
 	Searchkeyword skeyword;
+	Searchinf sinf;
+	String option1;
 	
 	List<Searchkeyword> keywords = new ArrayList<Searchkeyword>();
 	List<Searchinf> infs = new ArrayList<Searchinf>();
@@ -43,6 +45,22 @@ public class SearchkeywordAction extends ActionSupport
 
 	public void setKeywords(List<Searchkeyword> keywords) {
 		this.keywords = keywords;
+	}
+	
+	public Searchinf getSinf() {
+		return sinf;
+	}
+
+	public void setSinf(Searchinf sinf) {
+		this.sinf = sinf;
+	}
+
+	public String getOption1() {
+		return option1;
+	}
+
+	public void setOption1(String option1) {
+		this.option1 = option1;
 	}
 
 	public SearchkeywordService getSkeywordsr() {
@@ -90,6 +108,24 @@ public class SearchkeywordAction extends ActionSupport
 		}
 	}
 	
+	public String deleteKeyword(){
+		try
+		{
+			skeyword = skeywordsr.getSkeywordDao().findById(Integer.valueOf(option1));
+			if(skeyword != null){
+				skeywordsr.getSkeywordDao().delete(skeyword);
+			}
+			 
+			listKey();
+			return SUCCESS;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return ERROR;
+		}
+	}
+	
 	public String listResult()
 	{
 		try
@@ -104,5 +140,21 @@ public class SearchkeywordAction extends ActionSupport
 		}
 	}
 	
-	
+	public String deleteResult(){
+		try
+		{
+			sinf = sinfsr.getSinfDao().findById(Integer.valueOf(option1));
+			if(sinf != null){
+				sinfsr.getSinfDao().delete(sinf);
+			}
+			 
+			listResult();
+			return SUCCESS;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return ERROR;
+		}
+	}
 }

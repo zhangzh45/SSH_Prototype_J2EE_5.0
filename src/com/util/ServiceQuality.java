@@ -7,6 +7,8 @@ public class ServiceQuality
 	// Fields
 
 	private Integer serviceId;
+	private String serviceName;
+	private String serviceAddress;
 	private Integer runTime;
 	private Integer failTime;
 	private Double Qos;
@@ -19,6 +21,18 @@ public class ServiceQuality
 	}
 	public void setServiceId(Integer serviceId) {
 		this.serviceId = serviceId;
+	}
+	public String getServiceName() {
+		return serviceName;
+	}
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
+	}
+	public String getServiceAddress() {
+		return serviceAddress;
+	}
+	public void setServiceAddress(String serviceAddress) {
+		this.serviceAddress = serviceAddress;
 	}
 	public Integer getRunTime() {
 		return runTime;

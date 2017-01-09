@@ -13,7 +13,7 @@
 
 	<meta charset="utf-8" />
 
-	<title>企业服务管理系统 | 查看角色</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="ViewRole"></s:text></title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
@@ -37,7 +37,7 @@
 
 						<h3 class="page-title">
 
-							角色管理 <small>查看并且管理角色</small>
+							<s:text name="ViewRole"></s:text> <small><s:text name="ViewRole.Description"></s:text></small>
 
 						</h3>
 
@@ -55,13 +55,13 @@
 
 							<li>
 
-								<a href="#">权限配置</a>
+								<a href="#"><s:text name="PermissionConfiguration"></s:text></a>
 
 								<i class="icon-angle-right"></i>
 
 							</li>
 
-							<li><a href="#">查看角色</a></li>
+							<li><a href="#"><s:text name="ViewRole"></s:text></a></li>
 
 						</ul>
 
@@ -84,7 +84,7 @@
 
 								<div class="portlet-title">
 	
-									<div class="caption"><i class="icon-globe"></i>角色列表</div>
+									<div class="caption"><i class="icon-globe"></i><s:text name="RoleList"></s:text></div>
 	
 									<div class="actions">
 	
@@ -99,9 +99,9 @@
 											</a>
 	
 											<div id="sample_2_column_toggler" class="dropdown-menu hold-on-click dropdown-checkboxes pull-right">
-												<label><input type="checkbox" checked data-column="0">角色编号</label>
-												<label><input type="checkbox" checked data-column="1">角色名称</label>
-												<label><input type="checkbox" checked data-column="2">角色描述</label>
+												<label><input type="checkbox" checked data-column="0">Role Id</label>
+												<label><input type="checkbox" checked data-column="1">Role Name</label>
+												<label><input type="checkbox" checked data-column="2">Role Desc</label>
 											</div>
 										</div>
 	
@@ -115,9 +115,9 @@
 	
 										<thead>
 											<tr>
-												<th>角色编号</th>
-												<th>角色名称</th>
-												<th>角色描述</th>
+												<th>Role Id</th>
+												<th>Role Name</th>
+												<th>Role Desc</th>
 								
 				
 											</tr>
@@ -138,22 +138,22 @@
 						
 							<div class="portlet box blue">
 								<div class="portlet-title">
-									角色管理
+									<s:text name="ViewRole.Management"></s:text>
 								</div>
 								<div class="portlet-body">
 									<div class="container-fluid">
 									  <div class="row-fluid">
 										
 										<div class="span9">
-											<br>选择角色ID
+											<br><s:text name="RoleId"></s:text>
 											<select class="form-control" name="opt1" id="opt1">
 												<s:iterator value="roles" status="L2">
 													<option><s:property value="roleId"/></option>
 												</s:iterator>
 											</select>
 											<br>
-											<br>删除角色
-											<button type="button" class="btn" onclick="changeValue(); form2.action='deleteRole.action'; form2.submit();">删除&raquo; </button>
+											<br><s:text name="ViewRole.Delete"></s:text>
+											<button type="button" class="btn" onclick="changeValue(); form2.action='deleteRole.action'; form2.submit();"><s:text name="Delete"></s:text>&raquo; </button>
 											<input name="option1" type="hidden" value="" id="option1">
 											<input name="option2" type="hidden" value="" id="option2">	
 										</div><!--/span-->
@@ -175,6 +175,24 @@
 	    
 
 	<script>
+		jQuery(document).ready(function() {       
+		   checkuser();
+		});
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
 		
 		function getRole()
 		{

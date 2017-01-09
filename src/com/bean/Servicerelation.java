@@ -26,6 +26,13 @@ public class Servicerelation implements java.io.Serializable {
 	}
 
 	/** full constructor */
+	public Servicerelation(Service serviceByServiceId, Service serviceBySubServiceId) {
+		this.serviceByServiceId = serviceByServiceId;
+		this.serviceBySubServiceId = serviceBySubServiceId;
+	}
+	
+	
+	/** full constructor */
 	public Servicerelation(Integer relationId, Condition condition,
 			Service serviceByServiceId, Service serviceBySubServiceId,
 			Integer seqNum) {

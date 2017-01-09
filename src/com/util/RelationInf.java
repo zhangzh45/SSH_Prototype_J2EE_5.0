@@ -4,6 +4,7 @@ public class RelationInf {
 	String sonid;
 	String condition;
 	String type;
+	String address;
 	String parameter;
 	String desc;
 	
@@ -24,6 +25,12 @@ public class RelationInf {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
 	}
 	public String getParameter() {
 		return parameter;

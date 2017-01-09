@@ -102,8 +102,15 @@ public class UserSpecSerDAO extends HibernateDaoSupport {
 	public List<UserSpecSer> findSpecSerByUserId(int userId){
 		//String hql="select u from User u inner join fetch u.userRoles r inner join fetch r.role ro inner join fetch ro.rolePermissions where u.userId=?";
 		String hql="select distinct uss from UserSpecSer uss inner join fetch uss.service s left join fetch s.parameters where uss.user.userId=?";
+		//System.out.print("hql:"+getHibernateTemplate().find(hql, userId));
 		return getHibernateTemplate().find(hql, userId);
-		
+	}
+	
+	public List<UserSpecSer> findSpecSerByServiceId(int serviceId){
+		//String hql="select u from User u inner join fetch u.userRoles r inner join fetch r.role ro inner join fetch ro.rolePermissions where u.userId=?";
+		String hql="select distinct uss from UserSpecSer uss inner join fetch uss.service s where uss.service.serviceId=?";
+		//System.out.print("hql:"+getHibernateTemplate().find(hql, userId));
+		return getHibernateTemplate().find(hql, serviceId);
 	}
 	
 	public List findByOperaterName(Object operaterName) {

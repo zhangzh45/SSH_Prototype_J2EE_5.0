@@ -13,7 +13,7 @@
 
 	<meta charset="utf-8" />
 
-	<title>企业服务管理系统 | 解析配置</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="ResultConfiguration"></s:text></title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
@@ -23,7 +23,7 @@
 
 	<!-- BEGIN GLOBAL MANDATORY STYLES -->
 
-	
+	<script src="media/js/jquery-1.10.2.js" type="text/javascript"></script>
 
 </head>
 
@@ -38,7 +38,7 @@
 
 						<h3 class="page-title">
 
-							解析配置 <small>为服务配置输出的解析</small>
+							<s:text name="ResultConfiguration"></s:text> <small><s:text name="ResultConfiguration.Description"></s:text></small>
 
 						</h3>
 
@@ -56,13 +56,13 @@
 
 							<li>
 
-								<a href="#">服务配置</a>
+								<a href="#"><s:text name="ServiceConfiguration"></s:text></a>
 
 								<i class="icon-angle-right"></i>
 
 							</li>
 
-							<li><a href="#">解析配置</a></li>
+							<li><a href="#"><s:text name="ResultConfiguration"></s:text></a></li>
 
 						</ul>
 
@@ -83,37 +83,42 @@
 						<form name="form2" action="addOutput.action" method="post">
 							<div class="portlet box blue">
 								<div class="portlet-title">
-									解析配置
+									<s:text name="ResultConfiguration"></s:text>
 								</div>
 								<div class="portlet-body">
 									<div class="container-fluid">
 										<div class="control-group">
-										    <label class="control-label" for="inputresultname">输出名称</label>
+										    <label class="control-label" for="inputresultname"><s:text name="ResultName"></s:text></label>
 										    <div class="controls">
 										      <input type="text" id="resultname" name="srt.resultName" placeholder="resultname">
 										    </div>
 										  </div>
 										  <div class="control-group">
-										    <label class="control-label" for="inputserviceid">服务编号</label>
+										    <label class="control-label" for="inputserviceid"><s:text name="ServiceId"></s:text></label>
 										    <div class="controls">
-										      <input type="text" id="serviceid" name="srt.serviceid" placeholder="serviceid">
+										      <select id="providedservices">  <!-- 审核通过的服务 -->
+												<s:iterator value="providedservices" status="L" var="providedservices">
+													<option><s:property value="serviceId"/></option>
+												</s:iterator>
+											  </select>
+										      <input type="hidden" id="serviceid" name="serviceid" value="">
 										    </div>
 										  </div>
 										  <div class="control-group">
-										    <label class="control-label" for="inputresulttype">输出类型</label>
+										    <label class="control-label" for="inputresulttype"><s:text name="ResultType"></s:text></label>
 										    <div class="controls">
 										      <input type="text" id="inputresulttype" name="srt.resultType" placeholder="resulttype">
 										    </div>
 										  </div>
 										  <div class="control-group">
-										    <label class="control-label" for="inputparameterdesc">输出描述</label>
+										    <label class="control-label" for="inputparameterdesc"><s:text name="ResultDesc"></s:text></label>
 										    <div class="controls">
 										      <input type="text" id="inputresultdesc" name="srt.resultDesc" placeholder="resultdesc">
 										    </div>
 										  </div>
 										  <div class="form-actions">
-											  <button type="button" class="btn btn-primary" onclick="alert('解析配置添加成功,你可以继续添加'); form2.submit();">提交</button>
-											  <button type="button" class="btn">清空</button>
+											  <button type="button" class="btn btn-primary" onclick="changeValue();form2.submit()"><s:text name="Submit"></s:text></button>
+											  <button type="button" class="btn"><s:text name="Cancel"></s:text></button>
 										  </div>
 									</div>
 								</div>
@@ -135,7 +140,28 @@
 
 		jQuery(document).ready(function() {       
 		   TableAdvanced.init();
+		   
+		   
+		   checkuser();
 		});
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
+		
+		
+		
 		
 		function showModal()
 		{
@@ -256,10 +282,9 @@
 		
 		function changeValue()
 		{
-			var selectIndex1 = document.getElementById("opt1").selectedIndex;
-			document.getElementById("option1").value = document.getElementById("opt1").options[selectIndex1].text;
-			var selectIndex2 = document.getElementById("opt2").selectedIndex;
-			document.getElementById("option2").value = document.getElementById("opt2").options[selectIndex2].text;
+			var selectIndex1 = document.getElementById("providedservices").selectedIndex;
+			document.getElementById("serviceid").value = document.getElementById("providedservices").options[selectIndex1].text;
+			//alert(document.getElementById("serviceid").value);
 		}
 
 	</script>

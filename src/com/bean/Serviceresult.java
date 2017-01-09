@@ -9,6 +9,7 @@ public class Serviceresult implements java.io.Serializable {
 	// Fields
 
 	private Integer resultid;
+	private Integer serviceid;
 	private Service service;
 	private String resultDesc;
 	private String resultType;
@@ -45,6 +46,14 @@ public class Serviceresult implements java.io.Serializable {
 		this.resultid = resultid;
 	}
 
+	public Integer getServiceid() {
+		return this.serviceid;
+	}
+
+	public void setServiceid(Integer serviceid) {
+		this.serviceid = serviceid;
+	}
+	
 	public Service getService() {
 		return this.service;
 	}

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.bean.Service;
 import com.bean.ServiceDAO;
+import com.bean.ServicerelationDAO;
 import com.util.MoneyUtil;
 import com.util.WeatherUtil;
 
@@ -27,6 +28,16 @@ public class SerService
 		return sr.getServiceId();
 	}
 	
+	public int unregister(Service sr)
+	{
+		//MoneyUtil.main();
+		//WeatherUtil.main(271);
+		this.srDAO.delete(sr);
+		return sr.getServiceId();
+	}
+	
+	
+	
 	public void update(Service sr)
 	{
 		this.srDAO.attachDirty(sr);
@@ -34,7 +45,16 @@ public class SerService
 	
 	public List<Service> getAllService()
 	{
-		return (List<Service>)this.srDAO.findAll();
+		//return (List<Service>)this.srDAO.findAll();    //暂时不考虑流程和本地应用
+		List<Service> re = new ArrayList<Service>();
+		re.addAll(this.srDAO.findByServiceType("APPLICATION"));
+		re.addAll(this.srDAO.findByServiceType("SERVICE"));
+		return re;
+	}
+	
+	public List<Service> getAll()   //获取所有的服务。包括流程
+	{
+		return (List<Service>)this.srDAO.findAll();  
 	}
 	
 	public List<Service> getUnService()
@@ -47,6 +67,11 @@ public class SerService
 		return (List<Service>)this.srDAO.findByServiceState("YES");
 	}
 	
+	public List<Service> getProvidedService(String userId)
+	{
+		return (List<Service>)this.srDAO.findByServiceProvider(userId);
+	}
+	
 	public Service getUniqueService(String id)
 	{
 		return (Service)this.srDAO.findById(Integer.valueOf(id));
@@ -55,10 +80,17 @@ public class SerService
 	public Service getParmById(int id){
 		return this.srDAO.findParmById(id);
 	}
+	
 	//根据服务的技术类型返回服务
 	public List<Service> getServiceByType(String type)
 	{
-		return null;
+		return this.srDAO.findByServiceType(type);
+	}
+	
+	//根据服务的业务类型返回服务
+	public List<Service> getServiceByBusiness(String business)
+	{
+		return this.srDAO.findByRelateBusiness(business);
 	}
 	
 	public void deleteService(int id)
@@ -66,19 +98,33 @@ public class SerService
 		return;
 	}
 	
-	public List<Service> getWebService()
+	public List<Service> getApplicationService()
 	{
-		return (List<Service>)this.srDAO.findByServiceType("Web");
+		return (List<Service>)this.srDAO.findByServiceType("APPLICATION");
 	}
 	
-	public List<Service> getURLService()
+	public List<Service> getServiceService()
 	{
-		return (List<Service>)this.srDAO.findByServiceType("url");
+		return (List<Service>)this.srDAO.findByServiceType("SERVICE");
+	}
+	
+	public List<Service> getBusinessService()
+	{
+		return (List<Service>)this.srDAO.findByServiceType("BUSINESS");
+	}
+	
+	public List<Service> getLocalService()
+	{
+		return (List<Service>)this.srDAO.findByServiceType("LOCAL");
 	}
 	
 	public List<Service> getCombinedService()
 	{
-		return (List<Service>)this.srDAO.findByServiceType("Combine");
+		List<Service> re = new ArrayList<Service>();
+		re.addAll(this.srDAO.findByCombineType("Combine"));
+		re.addAll(this.srDAO.findByCombineType("CombineA"));
+		re.addAll(this.srDAO.findByCombineType("CombineB"));
+		return re;
 	}
 	
 	public List<Service> getSearchService(String sch)
@@ -99,10 +145,16 @@ public class SerService
 		return this.srDAO.findById(sid).getServiceType();
 		
 	}
+	
+	public String getCombineType(int sid)
+	{
+		return this.srDAO.findById(sid).getCombineType();
+		
+	}
 	 
 	public int getServiceNum()
 	{
-		return this.getAllService().size();
+		return this.getAll().size();
 	}
 	
 	public int getRunTime()
@@ -112,6 +164,9 @@ public class SerService
 		int sum = 0;
 		for(int i = 0; i < all.size(); i++)
 		{
+			if(all.get(i).getRunTimes() == null){
+				all.get(i).setRunTimes(0);
+			}
 			sum = sum + all.get(i).getRunTimes();
 		}
 		
@@ -124,5 +179,13 @@ public class SerService
 	
 	public List<Service> findByProperty(String name,String value){
 		return srDAO.findByProperty(name, value);
+	}
+	
+	public List<String> getServiceType(){
+		return srDAO.findServiceType();
+	}
+	
+	public List<String> getRelateBusiness(){
+		return srDAO.findRelateBusiness();
 	}
 }

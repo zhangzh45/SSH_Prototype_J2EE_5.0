@@ -13,7 +13,7 @@
 
 	<meta charset="utf-8" />
 
-	<title>企业服务管理系统 | 运行服务</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="ServiceOperation"></s:text></title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
@@ -37,7 +37,7 @@
 
 						<h3 class="page-title">
 
-							服务运行<small>输入服务运行需要的参数和控制变量</small>
+							<s:text name="ServiceOperation"></s:text><small><s:text name="ServiceOperation.Operation.Description"></s:text></small>
 
 						</h3>
 
@@ -55,13 +55,13 @@
 
 							<li>
 
-								<a href="#">服务管理</a>
+								<a href="#"><s:text name="ServiceManagement"></s:text></a>
 
 								<i class="icon-angle-right"></i>
 
 							</li>
 
-							<li><a href="#">服务运行</a></li>
+							<li><a href="#"><s:text name="ServiceOperation"></s:text></a></li>
 
 						</ul>
 
@@ -85,17 +85,17 @@
 							
 							<div class="portlet box blue">
 								<div class="portlet-title">
-									参数列表
+									<s:text name="ParameterList"></s:text>
 								</div>
 								<div class="portlet-body">
 									<table class="table table-condensed">
 										<thead>
 											<tr>
-												<th>参数ID</th>
-												<th>服务ID</th>
-												<th>参数类型</th>
-												<th>参数名称</th>
-												<th>输入</th>
+												<th>Parameter Id</th>
+												<th>Service Id</th>
+												<th>Parameter Type</th>
+												<th>Parameter Name</th>
+												<th>Input</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -115,16 +115,16 @@
 							
 							<div class="portlet box blue">
 								<div class="portlet-title">
-									变量列表
+									<s:text name="VariableList"></s:text>
 								</div>
 								<div class="portlet-body">
 									<table class="table table-condensed" id="vartable">
 										<thead>
 											<tr>
-												<th>变量ID</th>
-												<th>变量名</th>
-												<th>变量描述</th>
-												<th>输入</th>
+												<th>Variable Id</th>
+												<th>Variable Name</th>
+												<th>Variable Desc</th>
+												<th>Input</th>
 											</tr>
 										</thead>
 										<s:iterator var="vars" value="vars" status="L">
@@ -141,14 +141,13 @@
 								
 							<div class="portlet box blue">
 								<div class="portlet-title">
-									运行确认
+									<s:text name="ServiceOperation"></s:text>
 								</div>
 								<div class="portlet-body">
-									<h5>服务编号
+									<h5><s:text name="ServiceId"></s:text>
 										<input type="text" name="serviceid" id="serviceid" value=<s:property value="option1"/> Readonly>
 									<br>
-									服务运行
-									<button type="button" class="btn" onclick="getNumber(); form2.action='runService.action'; form2.submit()">运行&raquo; </button>
+									<button type="button" class="btn" onclick="getNumber(); form2.action='runService.action'; form2.submit()"><s:text name="Run"></s:text>&raquo; </button>
 									</h5>
 									<input name="pts" type="hidden" value="" id="pts">
 									<input name="vrs" type="hidden" value="" id="vrs">
@@ -156,6 +155,7 @@
 									<input name="sid" type="hidden" value=<s:property value="option1"/> id="sid">
 									<input name="url" type="hidden" value="" id="url">
 									<input name="isCombinedB" type="hidden" value=<s:property value="isCombinedB"/> id="url">
+									<input name="userid" type="hidden" value=<%=request.getSession().getAttribute("user")%> id="userid">
 									<!--  value="<%=request.getParameter("option1")%>" -->
 								</div>
 							</div>
@@ -181,7 +181,24 @@
 		jQuery(document).ready(function() {       
 		   App.init();
 		   TableAdvanced.init();
+		   
+		   checkuser();
 		});
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
 		
 		function getNumber()
 			{

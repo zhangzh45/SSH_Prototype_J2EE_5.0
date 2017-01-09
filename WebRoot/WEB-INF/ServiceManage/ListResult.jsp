@@ -13,7 +13,7 @@
 
 	<meta charset="utf-8" />
 
-	<title>企业服务管理系统 | 查看结果</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="ViewCrawlingResult"></s:text></title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
@@ -36,7 +36,7 @@
 
 						<h3 class="page-title">
 
-							查看爬取结果 <small>查看服务信息爬取的结果</small>
+							<s:text name="ViewCrawlingResult"></s:text> <small><s:text name="ViewCrawlingResult.Description"></s:text></small>
 
 						</h3>
 
@@ -54,13 +54,13 @@
 
 							<li>
 
-								<a href="#">服务信息爬取</a>
+								<a href="#"><s:text name="ServiceInfoCrawling"></s:text></a>
 
 								<i class="icon-angle-right"></i>
 
 							</li>
 
-							<li><a href="#">查看爬取结果</a></li>
+							<li><a href="#"><s:text name="ViewCrawlingResult"></s:text></a></li>
 
 						</ul>
 
@@ -80,12 +80,13 @@
 						<!-- END EXAMPLE TABLE PORTLET-->
 
 						<!-- BEGIN EXAMPLE TABLE PORTLET-->
-
+					<form name="form2" action="" method="post">
+					
 						<div class="portlet box blue">
 
 							<div class="portlet-title">
 
-								<div class="caption"><i class="icon-globe"></i>爬取结果列表</div>
+								<div class="caption"><i class="icon-globe"></i><s:text name="ViewCrawlingResult.List"></s:text></div>
 
 								<div class="actions">
 
@@ -100,9 +101,9 @@
 										</a>
 
 										<div id="sample_2_column_toggler" class="dropdown-menu hold-on-click dropdown-checkboxes pull-right">
-											<label><input type="checkbox" checked data-column="0">编号</label>
-											<label><input type="checkbox" checked data-column="1">服务信息</label>
-											<label><input type="checkbox" checked data-column="2">相关关键字</label>
+											<label><input type="checkbox" checked data-column="0">Id</label>
+											<label><input type="checkbox" checked data-column="1">Info</label>
+											<label><input type="checkbox" checked data-column="2">Value</label>
 										</div>
 									</div>
 
@@ -116,9 +117,9 @@
 
 									<thead>
 										<tr>
-											<th>编号</th>
-											<th>服务信息</th>
-											<th class="hidden-480">相关关键字</th>
+											<th>Id</th>
+											<th>Info</th>
+											<th class="hidden-480">Value</th>
 										</tr>
 									</thead>
 
@@ -138,7 +139,32 @@
 
 						</div>
 						
-
+						<div name="byadmin" class="portlet box blue">
+								<div class="portlet-title">
+									<s:text name="ViewCrawlingResult.Management"></s:text>
+								</div>
+								<div class="portlet-body">
+									<div class="container-fluid">
+									  <div class="row-fluid">
+										
+										<div class="span9">
+											<br><s:text name="ViewCrawlingResult.CrawlingResultId"></s:text>
+											<select class="form-control" name="opt1" id="opt1">
+												<s:iterator value="infs" status="L2">
+													<option><s:property value="id"/></option>
+												</s:iterator>
+											</select>
+											<br>
+											<br><s:text name="ViewCrawlingResult.Delete"></s:text>
+											<button type="button" class="btn" onclick="changeValue(); form2.action='deleteResult.action'; form2.submit();"><s:text name="Delete"></s:text>&raquo; </button>
+											<input name="option1" type="hidden" value="" id="option1">
+											<input name="option2" type="hidden" value="" id="option2">	
+										</div><!--/span-->
+									  </div><!--/row-->
+									</div><!--/.fluid-container-->
+								</div>
+							</div>
+						</form>
 						<!-- END EXAMPLE TABLE PORTLET-->
 
 					</div>
@@ -154,13 +180,30 @@
 	   
 
 	<script>
+		jQuery(document).ready(function() {       
+		   checkuser();
+		});
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
+		
 		
 		function changeValue()
 		{
 			var selectIndex1 = document.getElementById("opt1").selectedIndex;
 			document.getElementById("option1").value = document.getElementById("opt1").options[selectIndex1].text;
-			var selectIndex2 = document.getElementById("opt2").selectedIndex;
-			document.getElementById("option2").value = document.getElementById("opt2").options[selectIndex2].text;
 		}
 
 	</script>

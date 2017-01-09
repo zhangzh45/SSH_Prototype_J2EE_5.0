@@ -120,10 +120,19 @@
 			el to that parent's list of elements to update on drag (if it is not there already)
 		*/
 		this.endpointAdded = function(el) {
+			
 			var jpcl = jsPlumb.CurrentLibrary, b = document.body, id = _currentInstance.getId(el), 
 				c = jpcl.getElementObject(el), 
 				cLoc = jsPlumb.CurrentLibrary.getOffset(c),
 				p = el.parentNode, done = p == b;
+				/*p, done;
+			if(el == null){
+				alert(el);
+				p = null;
+			}else{
+				p = el.parentNode;
+				done = p == b;
+			}*/
 
 			_elementsWithEndpoints[id] = _elementsWithEndpoints[id] ? _elementsWithEndpoints[id] + 1 : 1;
 

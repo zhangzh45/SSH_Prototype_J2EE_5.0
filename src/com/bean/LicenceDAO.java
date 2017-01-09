@@ -91,6 +91,12 @@ public class LicenceDAO extends HibernateDaoSupport {
 		}
 	}
 
+	public List findByServiceId(Object serviceId) {
+		String sql = "select distinct lic from Licence lic where lic.service.serviceId =?";
+		System.out.print("hql:"+getHibernateTemplate().find(sql, serviceId));
+		return getHibernateTemplate().find(sql, serviceId);
+	}
+	
 	public List findByLicenceType(Object licenceType) {
 		return findByProperty(LICENCE_TYPE, licenceType);
 	}

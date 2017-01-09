@@ -13,7 +13,7 @@
 
 	<meta charset="utf-8" />
 
-	<title>企业服务管理系统 | 添加参数</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="ParameterConfiguration"></s:text></title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
@@ -33,7 +33,7 @@
 	
 						<h3 class="page-title">
 
-							参数配置 <small>为服务配置参数</small>
+							<s:text name="ParameterConfiguration"></s:text> <small><s:text name="ParameterConfiguration.Description"></s:text></small>
 
 						</h3>
 
@@ -51,13 +51,13 @@
 
 							<li>
 
-								<a href="#">服务配置</a>
+								<a href="#"><s:text name="ServiceConfiguration"></s:text></a>
 
 								<i class="icon-angle-right"></i>
 
 							</li>
 
-							<li><a href="#">参数配置</a></li>
+							<li><a href="#"><s:text name="ParameterConfiguration"></s:text></a></li>
 
 						</ul>
 
@@ -77,39 +77,46 @@
 
 						<!-- BEGIN EXAMPLE TABLE PORTLET-->
 						<form name="form2" action="addParameter.action" method="post">
+							<input name="nowuser" type="hidden" value=<%=request.getSession().getAttribute("user")%> id="nowuser">
+							
 							<div class="portlet box blue">
 								<div class="portlet-title">
-									参数配置
+									<s:text name="ParameterConfiguration"></s:text>
 								</div>
 								<div class="portlet-body">
 									<div class="container-fluid">
 										<div class="control-group">
-										    <label class="control-label" for="inputparametername">参数名称</label>
+										    <label class="control-label" for="inputparametername"><s:text name="ParameterName"></s:text></label>
 										    <div class="controls">
 										      <input type="text" id="parametername" name="pr.parametername" placeholder="parametername">
 										    </div>
 										  </div>
 										  <div class="control-group">
-										    <label class="control-label" for="inputserviceid">服务编号</label>
+										    <label class="control-label" for="inputserviceid"><s:text name="ServiceId"></s:text></label>
 										    <div class="controls">
-										      <input type="text" id="serviceid" name="serviceid" placeholder="serviceid">
+										      <select id="providedservices">  <!-- 审核通过的服务 -->
+												<s:iterator value="providedservices" status="L" var="providedservices">
+													<option><s:property value="serviceId"/></option>
+												</s:iterator>
+											  </select>
+										      <input type="hidden" id="serviceid" name="serviceid" value="">
 										    </div>
 										  </div>
 										  <div class="control-group">
-										    <label class="control-label" for="inputparametertype">参数类型</label>
+										    <label class="control-label" for="inputparametertype"><s:text name="ParameterType"></s:text></label>
 										    <div class="controls">
 										      <input type="text" id="inputparametertype" name="pr.parametertype" placeholder="parametertype">
 										    </div>
 										  </div>
 										  <div class="control-group">
-										    <label class="control-label" for="inputparameterdesc">参数描述</label>
+										    <label class="control-label" for="inputparameterdesc"><s:text name="ParameterDesc"></s:text></label>
 										    <div class="controls">
 										      <input type="text" id="inputparameterdesc" name="pr.parameterdesc" placeholder="parameterdesc">
 										    </div>
 										  </div>
 										  <div class="form-actions">
-											  <button type="submit" class="btn btn-primary">提交</button>
-											  <button type="button" class="btn">清空</button>
+											  <button type="button" class="btn btn-primary" onclick="changeValue();form2.submit()"><s:text name="Submit"></s:text></button>
+											  <button type="button" class="btn"><s:text name="Cancel"></s:text></button>
 										  </div>
 									</div>
 								</div>
@@ -131,7 +138,25 @@
 
 		jQuery(document).ready(function() {       
 		   TableAdvanced.init();
+		   
+		   checkuser();
 		});
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
+		
 		
 		function showModal()
 		{
@@ -252,10 +277,9 @@
 		
 		function changeValue()
 		{
-			var selectIndex1 = document.getElementById("opt1").selectedIndex;
-			document.getElementById("option1").value = document.getElementById("opt1").options[selectIndex1].text;
-			var selectIndex2 = document.getElementById("opt2").selectedIndex;
-			document.getElementById("option2").value = document.getElementById("opt2").options[selectIndex2].text;
+			var selectIndex1 = document.getElementById("providedservices").selectedIndex;
+			document.getElementById("serviceid").value = document.getElementById("providedservices").options[selectIndex1].text;
+			
 		}
 
 	</script>

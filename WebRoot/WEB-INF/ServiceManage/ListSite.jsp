@@ -21,7 +21,7 @@ request.getSession().setAttribute("username", user);     //用Session保存用�
 
 	<meta charset="utf-8" />
 
-	<title> 企业服务管理系统 | 查看爬取站点</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="ViewCrawlingSite"></s:text></title>
 
 	<meta content="width=device-width, height=device-height, initial-scale=1.0" name="viewport" />
 
@@ -43,7 +43,7 @@ request.getSession().setAttribute("username", user);     //用Session保存用�
 
 						<h3 class="page-title">
 
-							查看爬取站点 <small>查看服务信息爬取的来源站点</small>
+							<s:text name="ViewCrawlingSite"></s:text> <small><s:text name="ViewCrawlingSite.Description"></s:text></small>
 
 						</h3>
 
@@ -61,13 +61,13 @@ request.getSession().setAttribute("username", user);     //用Session保存用�
 
 							<li>
 
-								<a href="#">服务信息爬取</a>
+								<a href="#"><s:text name="ServiceInfoCrawling"></s:text></a>
 
 								<i class="icon-angle-right"></i>
 
 							</li>
 
-							<li><a href="#">查看爬取站点</a></li>
+							<li><a href="#"><s:text name="ViewCrawlingSite"></s:text></a></li>
 
 						</ul>
 
@@ -93,12 +93,13 @@ request.getSession().setAttribute("username", user);     //用Session保存用�
 						</div>
 
 						<!-- BEGIN SAMPLE TABLE PORTLET-->
-
+					<form name="form2" action="" method="post">
+					
 						<div class="portlet box green">
 
 							<div class="portlet-title">
 
-								<div class="caption"><i class="icon-cogs"></i>源站点信息</div>
+								<div class="caption"><i class="icon-cogs"></i><s:text name="SiteInfo"></s:text></div>
 
 								<div class="tools">
 
@@ -119,11 +120,11 @@ request.getSession().setAttribute("username", user);     //用Session保存用�
 								<table class="table-bordered table-striped table-condensed flip-content">
 									<thead class="flip-content">
 										<tr>
-											<th>站点id</th>
-											<th>站点地址</th>
-											<th>页面控制</th>
-											<th>供应商名称</th>
-											<th>供应商地址</th>
+											<th>Site Id</th>
+											<th>Site Address</th>
+											<th>Page Control</th>
+											<th>Site Supplier</th>
+											<th>Supplier Area</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -140,7 +141,34 @@ request.getSession().setAttribute("username", user);     //用Session保存用�
 								</table>
 							</div>
 						</div>
-
+						
+						
+						<div name="byadmin" class="portlet box green">
+								<div class="portlet-title">
+									<s:text name="ViewCrawlingSite.Management"></s:text>
+								</div>
+								<div class="portlet-body">
+									<div class="container-fluid">
+									  <div class="row-fluid">
+										
+										<div class="span9">
+											<br><s:text name="ViewCrawlingSite.SiteId"></s:text>
+											<select class="form-control" name="opt1" id="opt1">
+												<s:iterator value="searchsites" status="L2">
+													<option><s:property value="siteid"/></option>
+												</s:iterator>
+											</select>
+											<br>
+											<br><s:text name="ViewCrawlingSite.Delete"></s:text>
+											<button type="button" class="btn" onclick="changeValue(); form2.action='deleteSite.action'; form2.submit();"><s:text name="Delete"></s:text>&raquo; </button>
+											<input name="option1" type="hidden" value="" id="option1">
+											<input name="option2" type="hidden" value="" id="option2">	
+										</div><!--/span-->
+									  </div><!--/row-->
+									</div><!--/.fluid-container-->
+								</div>
+							</div>
+						</form>
 						<!-- END SAMPLE TABLE PORTLET-->
 						<!-- BEGIN SAMPLE TABLE PORTLET-->
 						<!-- END SAMPLE TABLE PORTLET-->
@@ -161,12 +189,31 @@ request.getSession().setAttribute("username", user);     //用Session保存用�
 	<script>
 
 		jQuery(document).ready(function() {       
-
-		   // initiate layout and plugins
-
-		   App.init();
-
+		   //App.init();
+		   
+		   checkuser();
 		});
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
+		
+		function changeValue()
+		{
+			var selectIndex1 = document.getElementById("opt1").selectedIndex;
+			document.getElementById("option1").value = document.getElementById("opt1").options[selectIndex1].text;
+		}
 
 	</script>
 

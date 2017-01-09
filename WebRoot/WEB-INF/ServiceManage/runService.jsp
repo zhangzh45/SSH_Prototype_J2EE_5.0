@@ -13,7 +13,7 @@
 
 	<meta charset="utf-8" />
 
-	<title>企业服务管理系统 | 运行服务</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="ServiceOperation"></s:text></title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
@@ -32,6 +32,8 @@
 	<!-- END PAGE LEVEL STYLES -->
 
 	<link rel="shortcut icon" href="media/image/favicon.ico" />
+	
+	<script type="text/javascript" src="media/js/form-components.js"></script>
 
 </head>
 
@@ -39,14 +41,14 @@
 
 <!-- BEGIN BODY -->
 
-<body onload="showURL()">
+<body >
 
 	
 						<!-- BEGIN PAGE TITLE & BREADCRUMB-->
 
 						<h3 class="page-title">
 
-							运行结果 <small>显示服务运行的结果</small>
+							<s:text name="ServiceOperation.Result"></s:text> <small><s:text name="ServiceOperation.Result.Description"></s:text></small>
 
 						</h3>
 
@@ -64,13 +66,13 @@
 
 							<li>
 
-								<a href="#">服务管理</a>
+								<a href="#"><s:text name="ServiceManagement"></s:text></a>
 
 								<i class="icon-angle-right"></i>
 
 							</li>
 
-							<li><a href="#">运行结果</a></li>
+							<li><a href="#"><s:text name="ServiceOperation.Result"></s:text></a></li>
 
 						</ul>
 
@@ -95,7 +97,7 @@
 							
 							<div class="portlet box blue">
 								<div class="portlet-title">
-									结果URL
+									<s:text name="ServiceOperation.Result"></s:text>URL
 								</div>
 								<div class="portlet-body">
 									<iframe src="" name="iframe" id="IF" width="100%" height="300" id="ifrid"></iframe>
@@ -104,7 +106,7 @@
 							
 							<div class="portlet box blue">
 								<div class="portlet-title">
-									结果文字描述
+									<s:text name="ServiceOperation.Result.LanguageDescription"></s:text>
 								</div>
 								<div class="portlet-body">
 									<table class="table table-bordered">
@@ -123,13 +125,13 @@
 								</div>
 							</div>
 								
-							<div class="portlet box blue">
+							<!-- <div class="portlet box blue">
 								<div class="portlet-title">
 									运行确认
 								</div>
 								<div class="portlet-body">
 								</div>
-							</div>
+							</div> -->
 						</form>
 
 						<!-- END EXAMPLE TABLE PORTLET-->
@@ -149,13 +151,35 @@
 		jQuery(document).ready(function() {       
 		   App.init();
 		   TableAdvanced.init();
+		   
+		   checkuser();
 		});
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
+		
+		$(window).load(function() {
+            showURL();
+        });
 		
 		function showURL()
 		{
 			//alert("nimei");
 			//alert(document.getElementById("url").value);
 			document.getElementById("IF").src= document.getElementById("url").value;
+			//alert(document.getElementById("url").value);
 		}
 	</script>
 

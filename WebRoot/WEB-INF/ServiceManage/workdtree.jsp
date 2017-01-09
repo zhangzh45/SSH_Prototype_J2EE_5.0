@@ -13,13 +13,17 @@
 
 	<meta charset="utf-8" />
 
-	<title>企业服务管理系统 | 服务关系</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="ServiceCompositionRelation"></s:text></title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
 	<meta content="" name="description" />
 
 	<meta content="" name="author" />
+	
+	<script src="js/dtree.js"></script>
+	
+	<script src="media/js/form-components.js"></script>
 
 	
 </head>
@@ -36,7 +40,7 @@
 
 						<h3 class="page-title">
 
-							服务关系<small>显示组合服务与子服务之间的关系</small>
+							<s:text name="ServiceCompositionRelation"></s:text><small><s:text name="ServiceCompositionRelation.Description"></s:text></small>
 
 						</h3>
 
@@ -54,13 +58,13 @@
 
 							<li>
 
-								<a href="#">服务管理</a>
+								<a href="#"><s:text name="ServiceComposition"></s:text></a>
 
 								<i class="icon-angle-right"></i>
 
 							</li>
 
-							<li><a href="#">服务关系</a></li>
+							<li><a href="#"><s:text name="ServiceCompositionRelation"></s:text></a></li>
 
 						</ul>
 
@@ -86,10 +90,9 @@
 			  	<div class="navbar-inner">
 			  		<!--  <a class="brand" href="#">Title</a> -->
 			  		<ul class="nav">
-			  			<li ><a href="chart.jsp">服务概况</a></li>
-			  			<li><a onclick="form2.action='busyClass.action';form2.submit()">技术分类</a></li>
-			  			<li  class="active"><a onclick="form2.action='workClass.action';form2.submit()">业务分类</a></li>
-			  			<li><a href="#">其他</a></li>
+			  			<li><a onclick="form2.action='busyClass.action';form2.submit()"><s:text name="ServiceCompositionRelation.TechnicalClassification"></s:text></a></li>
+			  			<li class="active"><a onclick="form2.action='workClass.action';form2.submit()"><s:text name="ServiceCompositionRelation.BusinessClassification"></s:text></a></li>
+			  			<li><a ><s:text name="Other"></s:text></a></li>
 			  		</ul>
 			  	</div>
 			  </div>
@@ -98,28 +101,37 @@
 					<div>
 						<s:iterator value="conditions" status="L" var="conditions">
 							<input name="ce" type="hidden" value="<s:property value="condtionExpression"/>">
-							<input name="csub" type="hidden" value="<s:property value="subServiceId"/>">
-							<input name="csid" type="hidden" value="<s:property value="serviceId"/>">
+							<input name="csub" type="hidden" value="<s:property value="serviceBySubServiceId.serviceId"/>">
+							<input name="csid" type="hidden" value="<s:property value="serviceByServiceId.serviceId"/>">
 							<input name="cid" type="hidden" value="<s:property value="conditionId"/>">
 						</s:iterator>
 					</div> 
+					
+					<div>
+						<s:iterator value="dtnodes" status="L" var="dtnodes">
+							<input name="nself" type="hidden" value="<s:property value="self"/>">
+							<input name="nfather" type="hidden" value="<s:property value="father"/>">
+							<input name="ncontent" type="hidden" value="<s:property value="content"/>">
+						</s:iterator>
+					</div>
+					
 					<div class="dtree">
-					<p><a href="javascript: d.openAll();">展开全部</a> | <a href="javascript: d.closeAll();">关闭全部</a></p>
+					<p><a href="javascript: d.openAll();"><s:text name="OpenAll"></s:text></a> | <a href="javascript: d.closeAll();"><s:text name="CloseAll"></s:text></a></p>
 					
 					<script type="text/javascript">
-						<!--
-							
-						d = new dTree('d');
+						
+						/*d = new dTree('d');
 						var fatherid = document.getElementsByName("csid");
 						var sonid = document.getElementsByName("csub");
 						var busyclass = 1;
-						
+						//alert(fatherid.length+"sss"+sonid.length);
 						d.add(0,-1,'企业组合服务');
 						d.add(1, 0,'BaseService');
 						//alert(fatherid.length);
+						//alert(fatherid.item(0).value);
 						for(var i = 1 + busyclass; i <= fatherid.length + busyclass; i++)
 						{
-							d.add(i, fatherid.item(i - busyclass - 1).value, sonid.item(i - busyclass - 1).value, 'example01.html');
+							d.add(i, fatherid.item(i - busyclass - 1).value, sonid.item(i - busyclass - 1).value);
 						}
 						d.add(fatherid.length + busyclass + 2, 0,'Financial');
 						d.add(fatherid.length + busyclass + 3, 0,'Social');
@@ -127,31 +139,25 @@
 						//d.add(fatherid.length + busyclass + 6, fatherid.length + busyclass + 3,'XXX');
 						//d.add(fatherid.length + busyclass + 7, fatherid.length + busyclass + 4,'XXX');
 						//d.add(fatherid.length + 1, 2, 'aa', 'example01.html');
-						/*
-						d.add(0,-1,'企业组合服务');
-						d.add(1,0,'WebService','example01.html');
-						d.add(2,0,'HTTP','example01.html');
-						d.add(3,1,'可靠组合服务1','example01.html');
-						d.add(4,0,'URL','example01.html');
-						d.add(5,3,'服务2','example01.html');
-						d.add(6,5,'服务3','example01.html');
-						d.add(7,0,'Ajax','example01.html');
-						d.add(8,1,'服务4','example01.html');
-						d.add(9,0,'本地应用','example01.html','Pictures I\'ve taken over the years','','','img/imgfolder.gif');
-						d.add(10,9,'服务5','example01.html','Pictures of Gullfoss and Geysir');
-						d.add(11,9,'服务6','example01.html');
-						d.add(12,0,'其他','example01.html','','','img/trash.gif');
-						d.add(13,5,'服务7','example01.html');
-						*/
-						document.write(d);
+						document.write(d);*/
 					
-						//-->
+						d = new dTree('d');
+						var nfather = document.getElementsByName("nfather");
+						var ncontent= document.getElementsByName("ncontent");
+						
+						d.add(0,-1,'Combination Service');
+						//alert(nfather.length);
+						for(var i = 0; i < nfather.length; i++)
+						{
+							d.add(i + 1, nfather.item(i).value, ncontent.item(i).value, 'example01.html');
+						}
+						document.write(d);
 					</script>
 					
 					</div>
 				</div>
 				<div class="span9">
-					<IFRAME name="topo" frameborder="0" width="100%" height="600" src="topodemo.jsp"></IFRAME>”
+					<IFRAME name="topo" frameborder="0" width="100%" height="600" src="topodemo.action"></IFRAME>
 				</div>	
 			  </div><!--/row-->
 			 
@@ -176,7 +182,24 @@
 		jQuery(document).ready(function() {       
 		   App.init();
 		   TableAdvanced.init();
+		   
+		   checkuser();
 		});
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
 		
 		
 

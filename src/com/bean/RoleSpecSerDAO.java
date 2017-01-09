@@ -93,8 +93,14 @@ public class RoleSpecSerDAO extends HibernateDaoSupport {
 	}
 	
 	public List<RoleSpecSer> findSpecSerByRoleId(int roleId){
-		String sql="select rss from RoleSpecSer rss inner join fetch rss.service r left join fetch r.parameters where rss.rssId=?";
+		String sql="select rss from RoleSpecSer rss inner join fetch rss.service r left join fetch r.parameters where rss.role.roleId=?";
 		return  getHibernateTemplate().find(sql, roleId);
+	
+	}
+	
+	public List<RoleSpecSer> findSpecSerByServiceId(int serviceId){
+		String sql="select rss from RoleSpecSer rss inner join fetch rss.service r where rss.service.serviceId=?";
+		return  getHibernateTemplate().find(sql, serviceId);
 	
 	}
 

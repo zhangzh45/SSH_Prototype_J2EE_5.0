@@ -40,6 +40,12 @@ public class ServiceDAO extends HibernateDaoSupport {
 	public static final String SERVICE_QUERY = "serviceQuery";
 	public static final String RUN_TIMES = "runTimes";
 	public static final String FAIL_TIMES = "failTimes";
+	public static final String CALL_SERVICE = "callService";
+	public static final String SERVICE_PROVIDER = "serviceProvider";
+	public static final String APP_ROLE_URL = "appRoleUrl";
+	public static final String BUSINESS_FILE = "businessFile";
+	public static final String COMBINE_TYPE = "combineType";
+	public static final String ATTACHMENTS = "attachments";
 
 	protected void initDao() {
 		// do nothing
@@ -78,20 +84,7 @@ public class ServiceDAO extends HibernateDaoSupport {
 			throw re;
 		}
 	}
-/*
- * @method findParmById
- * function:at the time  find the service by serviceId that can load the service's parameter information
- * */
-	public Service findParmById(int id){
-		try{
-		String sql="select sr from Service sr left join fetch sr.parameters where sr.serviceId=?";
-		List<Service> list=getHibernateTemplate().find(sql, id);
-		return list.get(0);
-		}catch(RuntimeException re) {
-			log.error("get failed", re);
-			throw re;
-		}
-	}
+
 	public List findByExample(Service instance) {
 		log.debug("finding Service instance by example");
 		try {
@@ -186,6 +179,30 @@ public class ServiceDAO extends HibernateDaoSupport {
 		return findByProperty(FAIL_TIMES, failTimes);
 	}
 
+	public List findByCallService(Object callService) {
+		return findByProperty(CALL_SERVICE, callService);
+	}
+
+	public List findByServiceProvider(Object serviceProvider) {
+		return findByProperty(SERVICE_PROVIDER, serviceProvider);
+	}
+
+	public List findByAppRoleUrl(Object appRoleUrl) {
+		return findByProperty(APP_ROLE_URL, appRoleUrl);
+	}
+
+	public List findByBusinessFile(Object businessFile) {
+		return findByProperty(BUSINESS_FILE, businessFile);
+	}
+
+	public List findByCombineType(Object combineType) {
+		return findByProperty(COMBINE_TYPE, combineType);
+	}
+
+	public List findByAttachments(Object attachments) {
+		return findByProperty(ATTACHMENTS, attachments);
+	}
+
 	public List findAll() {
 		log.debug("finding all Service instances");
 		try {
@@ -232,7 +249,38 @@ public class ServiceDAO extends HibernateDaoSupport {
 		}
 	}
 
+	/*
+	 * @method findParmById
+	 * function:at the time  find the service by serviceId that can load the service's parameter information
+	 * */
+		public Service findParmById(int id){
+			try{
+			String sql="select sr from Service sr left join fetch sr.parameters where sr.serviceId=?";
+			List<Service> list=getHibernateTemplate().find(sql, id);
+			return list.get(0);
+			}catch(RuntimeException re) {
+				log.error("get failed", re);
+				throw re;
+			}
+		}
+	
 	public static ServiceDAO getFromApplicationContext(ApplicationContext ctx) {
 		return (ServiceDAO) ctx.getBean("ServiceDAO");
+	}
+	
+	public List<Service> orderByRuntimes() {
+		String hql="select distinct ser from Service ser order by ser.runTimes desc, ser.serviceId asc";
+		System.out.print("hql:");
+		return getHibernateTemplate().find(hql);
+	}
+	
+	public List<String> findServiceType() {
+		String hql="select distinct serviceType from Service";
+		return getHibernateTemplate().find(hql);
+	}
+	
+	public List<String> findRelateBusiness() {
+		String hql="select distinct relateBusiness from Service";
+		return getHibernateTemplate().find(hql);
 	}
 }

@@ -4,14 +4,14 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 
-	String user = request.getParameter("user.userId");
+	/*String user = request.getParameter("user.userId");
 	if(user == null)
 	{
 	}
 	else
 	{
 		request.getSession().setAttribute("user", user);     //用Session保存用户名
-	}
+	}*/
 
 //String username = request.getParameter("user.userName");
 //request.getSession().setAttribute("username",username);     //用Session保存用户名
@@ -31,7 +31,7 @@
 
 	<meta charset="utf-8" />
 
-	<title>企业服务管理系统 | 主页</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="HomePage"></s:text></title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
@@ -98,7 +98,7 @@
 				<a class="brand" href="login.html">
 
 				<!-- <img src="media/image/logo.png" alt="logo"/> -->
-				企业服务管理系统
+				<s:text name="SystemName"></s:text>
 
 				</a>
 				<input type="hidden" name="uname" value=<s:property value="username"/>>
@@ -536,7 +536,7 @@
 
 							<li><a href="extra_lock.html"><i class="icon-lock"></i> Lock Screen</a></li>
 
-							<li><a href="login.html"><i class="icon-key"></i> Log Out</a></li>
+							<li><a onclick="logout()"><i class="icon-key"></i> Log Out</a></li>
 
 						</ul>
 
@@ -557,7 +557,7 @@
 	</div>
 
 	<!-- END HEADER -->
-    <div class="copyrights">Collect from <a href="http://www.cssmoban.com/" >网页模板</a></div>
+    <div class="copyrights">Collect from <a href="http://www.cssmoban.com/" ><s:text name="WebpageTemplate"></s:text></a></div>
 
 	<!-- BEGIN CONTAINER -->
 
@@ -591,44 +591,48 @@
 				<li class="start ">
 					<a onclick="form1.action='dashboard.action'; form1.submit();">
 					<i class="icon-home"></i> 
-					<span class="title">主页</span>
+					<span class="title"><s:text name="HomePage"></s:text></span>
 					<span class="selected"></span>
 					</a>
 				</li>
 				<li class="active">
 					<a href="javascript:;">
 					<i class="icon-cogs"></i> 
-					<span class="title">服务管理</span>
+					<span class="title"><s:text name="ServiceManagement"></s:text></span>
 					<span class="arrow "></span>
 					</a>
 					<ul class="sub-menu">
 						<li >
-							<a onclick="form1.action='quality.action'; form1.submit();">
-							服务统计</a>
+							<a onclick="form1.action='getPicture.action'; form1.submit()"><s:text name="ServiceStatistics"></s:text></a>
 						</li>
-						<li >
+						<!-- <li >
 							<a onclick="form1.action='getPicture.action';form1.submit()">
 							服务关系</a>
+						</li> -->
+						<li >
+							<a onclick="form1.action='serviceByType.action';form1.submit()"> 
+							<s:text name="ServiceClassification"></s:text></a>
 						</li>
 						<li >
-							<a onclick="form1.action='auditService.action'; form1.submit();">
-							服务审核</a>
+							<a onclick="form1.action='callRelation.action';form1.submit()"><s:text name="ServiceCallRelations"></s:text></a>
 						</li>
 						<li >
-							<a onclick="form1.action='myService.action'; form1.submit();">
-							服务运行</a>
+							<a name="byadmin" onclick="form1.action='auditService.action'; form1.submit();"><s:text name="ServiceAudit"></s:text></a>
 						</li>
 						<li >
-							<a onclick="form1.action='appService.action'; form1.submit();">
-							服务申请审批</a>
+							<a onclick="form1.action='myService.action'; form1.submit();"><s:text name="ServiceOperation"></s:text></a>
 						</li>
 						<li >
-							<a onclick="form1.action='evaluateService.action'; form1.submit();">
-							服务评价</a>
+							<a name="byadmin" onclick="form1.action='appService.action'; form1.submit();"><s:text name="ServiceApplyApproval"></s:text></a>
 						</li>
 						<li >
-							<a onclick="form1.action='ServiceRequest.action'; form1.submit();">
-							服务注册</a>
+							<a onclick="form1.action='evaluateService.action'; form1.submit();"><s:text name="ServiceEvaluation"></s:text></a>
+						</li>
+						<li >
+							<a onclick="form1.action='ServiceRequest.action'; form1.submit();"><s:text name="ServiceRegistration"></s:text></a>
+						</li>
+						<li >
+							<a onclick="form1.action='removeService.action'; form1.submit();"><s:text name="ServiceRemoval"></s:text></a>
 						</li>
 					</ul>
 				</li>
@@ -636,21 +640,21 @@
 				<li class="">
 					<a href="javascript:;">
 					<i class="icon-bookmark-empty"></i> 
-					<span class="title">服务配置</span>
+					<span class="title"><s:text name="ServiceConfiguration"></s:text></span>
 					<span class="arrow "></span>
 					</a>
 					<ul class="sub-menu">
 						<li>
-							<a onclick="form1.action='AddLocalConfig.action'; form1.submit();">
-							许可证配置</a>
+							<a onclick="form1.action='AddLocalConfig.action'; form1.submit();"><s:text name="LicenseConfiguration"></s:text></a>
 						</li>
 						<li >
-							<a onclick="form1.action='AddParameterJSP.action'; form1.submit();">
-							参数配置</a>
+							<a onclick="form1.action='AddParameterJSP.action'; form1.submit();"><s:text name="ParameterConfiguration"></s:text></a>
 						</li>
 						<li >
-							<a onclick="form1.action='AddOutputJSP.action'; form1.submit();">
-							解析配置</a>
+							<a onclick="form1.action='AddOutputJSP.action'; form1.submit();"><s:text name="ResultConfiguration"></s:text></a>
+						</li>
+						<li >
+							<a onclick="form1.action='ListConfigJSP.action'; form1.submit();"><s:text name="ViewConfiguration"></s:text></a>
 						</li>
 					</ul>
 				</li>
@@ -658,91 +662,85 @@
 				<li class="">
 					<a href="javascript:;">
 					<i class="icon-table"></i> 
-					<span class="title">服务信息爬取</span>
+					<span class="title"><s:text name="ServiceInfoCrawling"></s:text></span>
 					<span class="arrow "></span>
 					</a>
 					<ul class="sub-menu">
 						<li >
-							<a onclick="form1.action='AddSiteJSP.action'; form1.submit();">
-							添加爬取站点</a>
+							<a onclick="form1.action='AddSiteJSP.action'; form1.submit();"><s:text name="AddCrawlingSite"></s:text></a>
 						</li>
 						<li >
-							<a onclick="form1.action='listSite.action'; form1.submit();">
-							查看爬取站点</a>
+							<a onclick="form1.action='listSite.action'; form1.submit();"><s:text name="ViewCrawlingSite"></s:text></a>
 						</li>
 						<li >
-							<a onclick="form1.action='AddKeywordJSP.action'; form1.submit();">
-							添加关键字</a>
+							<a onclick="form1.action='AddKeywordJSP.action'; form1.submit();"><s:text name="AddKeyword"></s:text></a>
 						</li>
 						<li >
-							<a onclick="form1.action='listKey.action'; form1.submit();">
-							查看关键字</a>
+							<a onclick="form1.action='listKey.action'; form1.submit();"><s:text name="ViewKeyword"></s:text></a>
 						</li>
 						<li >
-							<a onclick="form1.action='listResult.action'; form1.submit();">
-							查看爬取结果</a>
+							<a onclick="form1.action='listResult.action'; form1.submit();"><s:text name="ViewCrawlingResult"></s:text></a>
 						</li>
 					</ul>
 				</li>
 				
-				<li class="">
-					<a href="javascript:;">
-					<i class="icon-gift"></i> 
-					<span class="title">权限配置</span>
-					<span class="arrow "></span>
-					</a>
-					<ul class="sub-menu">
-						<li >
-							<a onclick="form1.action='userAndRole.action'; form1.submit();">
-							用户角色配置</a>
-						</li>
-						<li >
-							<a onclick="form1.action='choosePermissionRole.action'; form1.submit();">
-							角色权限配置</a>
-						</li>
-						<li >
-							<a onclick="form1.action='choosePermissionService.action'; form1.submit();">
-							权限服务配置</a>
-						</li>
-						<li>
-						<a onclick="form1.action='chooseRoleService.action'; form1.submit();">
-							角色服务配置</a>
-						</li>
-						<li >
-							<a onclick="form1.action='AddPermissionJSP.action'; form1.submit();">
-							添加权限</a>
-						</li>
-						<li >
-							<a onclick="form1.action='listPermission.action'; form1.submit();">
-							查看权限</a>
-						</li>
-					</ul>
-				</li>
 
 				<li>
 					<a class="active" href="javascript:;">
 					<i class="icon-sitemap"></i> 
-					<span class="title">服务组合</span>
+					<span class="title"><s:text name="ServiceComposition"></s:text></span>
 					<span class="arrow "></span>
 					</a>
 					<ul class="sub-menu">
+					    <li >
+							<a onclick="form1.action='busyClass.action';form1.submit()"><s:text name="ServiceCompositionRelation"></s:text></a>
+						</li>
 						<li>
-							<a onclick="form1.action='combineAService.action'; form1.submit();">
-							可靠性组合
-							<span class="arrow"></span>
-							</a>
+							<a onclick="form1.action='combineAService.action'; form1.submit();"><s:text name="ReliabilityCombination"></s:text></a>
 						</li>
 
 						<li>
-							<a onclick="form1.action='combineBService.action'; form1.submit();">
-							适用性组合
-							<span class="arrow"></span>
-							</a>
+							<a onclick="form1.action='combineBService.action'; form1.submit();"><s:text name="ApplicabilityCombination"></s:text></a>
 						</li>
 					</ul>
 				</li>
 
-				<li class="last ">
+				<li name="byadmin" class="">
+					<a href="javascript:;">
+					<i class="icon-gift"></i> 
+					<span class="title"><s:text name="PermissionConfiguration"></s:text></span>
+					<span class="arrow "></span>
+					</a>
+					<ul class="sub-menu">
+						<!-- <li >
+							<a onclick="form1.action='userAndRole.action'; form1.submit();">
+							用户角色配置</a>
+						</li> -->
+						<li >
+							<a onclick="form1.action='choosePermissionRole.action'; form1.submit();"><s:text name="RolePermissionConfiguration"></s:text></a>
+						</li>
+						<li >
+							<a onclick="form1.action='choosePermissionService.action'; form1.submit();"><s:text name="PermissionServiceConfiguration"></s:text></a>
+						</li>
+						<li>
+							<a onclick="form1.action='chooseRoleService.action'; form1.submit();"><s:text name="RoleServiceConfiguration"></s:text></a>
+						</li>
+						<li >
+							<a onclick="form1.action='AddPermissionJSP.action'; form1.submit();"><s:text name="AddPermission"></s:text></a>
+						</li>
+						<li >
+							<a onclick="form1.action='listPermission.action'; form1.submit();"><s:text name="ViewPermission"></s:text></a>
+						</li>
+						<li >
+							<a onclick="form1.action='freRole.action'; form1.submit();"><s:text name="AddRole"></s:text></a>
+						</li>
+						<li >
+							<a onclick="form1.action='listRole.action'; form1.submit();"><s:text name="ViewRole"></s:text></a>
+						</li>
+					</ul>
+				</li>
+
+				<!--<li name="byadmin" class="last ">
 					<a href="javascript:;">
 					<i class="icon-user"></i> 
 					<span class="title">组织管理</span>
@@ -766,7 +764,7 @@
 							查看角色</a>
 						</li>
 					</ul>
-				</li>
+				</li>-->
 			</ul>
 			<!-- END SIDEBAR MENU -->
 		</div>
@@ -812,13 +810,15 @@
 						<!-- BEGIN STYLE CUSTOMIZER -->
 
 						<div class="color-panel hidden-phone">
-
+							
 							<div class="color-mode-icons icon-color"></div>
 
 							<div class="color-mode-icons icon-color-close"></div>
 
 							<div class="color-mode">
 
+								
+								
 								<p>THEME COLOR</p>
 
 								<ul class="inline">
@@ -838,7 +838,21 @@
 								</ul>
 
 								<label>
+								
+									<span>Language</span>
 
+									<select class="layout-option m-wrap small" id="language" onchange="changeLanguage()">
+
+										<option >chinese</option>
+
+										<option >english</option>
+
+									</select>
+
+								</label>
+								
+								<label>
+								
 									<span>Layout</span>
 
 									<select class="layout-option m-wrap small">
@@ -903,7 +917,7 @@
 
 						<h3 class="page-title">
 
-							仪表盘 <small>关键统计数据和可视化图表</small>
+							<s:text name="Dashboard"></s:text><small><s:text name="DashboardDescription"></s:text></small>
 
 						</h3>
 
@@ -919,7 +933,7 @@
 
 							</li>
 
-							<li><a href="#">仪表盘</a></li>
+							<li><a href="#"><s:text name="Dashboard"></s:text></a></li>
 
 							<li class="pull-right no-text-shadow">
 
@@ -3268,7 +3282,7 @@
 
 		<div class="footer-inner">
 
-			2013 &copy;  中山大学软件学院A304
+			2013 &copy;  <s:text name="SchoolName"></s:text>
 
 		</div>
 
@@ -3281,7 +3295,10 @@
 			</span>
 
 		</div>
-
+		
+		<input name="userid" type="hidden" value=<%=request.getSession().getAttribute("user")%> id="userid">
+		<input name="admin" type="hidden" value=<%=request.getSession().getAttribute("admin")%> id="admin">
+		<input name="language" type="hidden" value=<%=request.getSession().getAttribute("language")%> id="getLanguage">
 	</div>
 
 	<!-- END FOOTER -->
@@ -3383,8 +3400,139 @@
 		   Index.initDashboardDaterange();
 
 		   Index.initIntro();
+		   
+		   checkuser();
+		   
+		   if(document.getElementById("getLanguage").value != "null"){
+		  	    var language = document.getElementById("getLanguage").value;
+		   		document.getElementById("language").value = language.toLowerCase();
+		   }
+		   else{
+		   	   document.getElementById("language").value = "chinese";
+		   }
+		   
+		   if(getCookie("item") != null){
+		   	   var menu = $(".sub-menu").parent();
+				for(var i=0;i<menu.size();i++)
+				{
+					menu.eq(i).removeClass("active");
+				}
+				
+			   $(".sub-menu li a").each(function(){
+			       if($(this).text() == getCookie("item")){
+			       		var li = $(this).parent();
+			       		li.parent().parent().addClass("active");
+			       		li.addClass("active");
+			       		return;
+			       }
+			   });
+		   }
 
 		});
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			var admin = document.getElementById("admin").value;
+			
+			//alert(userid);
+			if(userid == "null"){    //没有登录
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(admin != "true"){
+			//if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
+		
+		function logout(){
+			delCookie("item");
+		
+			$.ajax({
+				url		:	"logout.action",
+				type	:	"post",
+				dataType:	"json",
+				async:  false,
+				success	: function(result){
+					//alert(result);
+					if(result == "success"){
+						window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/login.jsp";
+					}else if(result == "error"){
+						window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+					}
+				
+				},
+				error : function (XMLHttpRequest, textStatus, errorThrown) {
+					 // 通常情况下textStatus和errorThown只有其中一个有值 
+			        alert(errorThrown);
+	         	}
+			});
+		}
+		
+		
+		function changeLanguage(){
+			var languageobj = document.getElementById("language");
+			var languageindex = languageobj.selectedIndex;
+			var language = languageobj.options[languageindex].value;
+			 $.ajax({
+			 	url: "language.action",
+			 	type: "post",
+			 	async: false,
+			 	dataType: "json",
+			 	data: {"language":language},
+			 	success: function(result){
+			 		if(result == "error"){
+			 			alert(result);
+			 		}
+			 		location.reload(true);
+			 	},
+			 	error : function (XMLHttpRequest, textStatus, errorThrown) {
+			         // 通常情况下textStatus和errorThown只有其中一个有值 
+			         
+			        var error=errorThrown;
+			        alert(XMLHttpRequest+textStatus+error);
+		         }
+			 });
+		}
+		
+		var menu = $(".sub-menu").parent();
+		menu.click(function(){
+			for(var i=0;i<menu.size();i++)
+			{
+				menu.eq(i).removeClass("active");
+			}
+			$(this).addClass("active");
+			$(this).children("ul").toggle();
+		});
+		
+		$(".sub-menu li a").click(function(){
+			var item = $(this).text();
+			document.cookie="item=" + item;
+		});
+		
+		
+		function getCookie(objname){//获取指定名称的cookie的值
+			var arrstr = document.cookie.split("; ");
+			for(var i = 0; i < arrstr.length; i++){
+				var temp = arrstr[i].split("=");
+				if(temp[0] == objname){
+					return unescape(temp[1]);
+				}
+			}
+		}
+		
+		///删除cookie
+		function delCookie (NameOfCookie)
+		{
+			 // 该函数检查下cookie是否设置，如果设置了则将过期时间调到过去的时间;
+			 //剩下就交给操作系统适当时间清理cookie啦
+			 if (getCookie(NameOfCookie))
+			 {
+			 	document.cookie = NameOfCookie + "=" + "; expires=Thu, 01-Jan-70 00:00:01 GMT";
+			 }
+		}
 
 	</script>
 

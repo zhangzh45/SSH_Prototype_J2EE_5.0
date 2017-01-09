@@ -82,6 +82,8 @@ public class ServiceresultDAO extends HibernateDaoSupport {
 	public List findByProperty(String propertyName, Object value) {
 		log.debug("finding Serviceresult instance with property: "
 				+ propertyName + ", value: " + value);
+		System.out.print("\n"+"finding Serviceresult instance with property: "
+				+ propertyName + ", value: " + value+"\n");
 		try {
 			String queryString = "from Serviceresult as model where model."
 					+ propertyName + "= ?";

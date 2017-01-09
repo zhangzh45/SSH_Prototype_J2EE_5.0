@@ -13,7 +13,7 @@
 
 	<meta charset="utf-8" />
 
-	<title>企业服务管理系统 | 权限配置</title>
+	<title><s:text name="SystemName"></s:text> | <s:text name="ViewPermission"></s:text></title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
@@ -37,7 +37,7 @@
 
 						<h3 class="page-title">
 
-							权限管理 <small>查看并且管理权限</small>
+							<s:text name="ViewPermission"></s:text> <small><s:text name="ViewPermission.Description"></s:text></small>
 
 						</h3>
 
@@ -55,13 +55,13 @@
 
 							<li>
 
-								<a href="#">权限配置</a>
+								<a href="#"><s:text name="PermissionConfiguration"></s:text></a>
 
 								<i class="icon-angle-right"></i>
 
 							</li>
 
-							<li><a href="#">查看权限</a></li>
+							<li><a href="#"><s:text name="ViewPermission"></s:text></a></li>
 
 						</ul>
 
@@ -86,7 +86,7 @@
 
 								<div class="portlet-title">
 	
-									<div class="caption"><i class="icon-globe"></i>权限列表</div>
+									<div class="caption"><i class="icon-globe"></i><s:text name="PermissionList"></s:text></div>
 	
 									<div class="actions">
 	
@@ -101,9 +101,9 @@
 											</a>
 	
 											<div id="sample_2_column_toggler" class="dropdown-menu hold-on-click dropdown-checkboxes pull-right">
-												<label><input type="checkbox" checked data-column="0">权限编号</label>
-												<label><input type="checkbox" checked data-column="1">权限名称</label>
-												<label><input type="checkbox" checked data-column="2">权限描述</label>
+												<label><input type="checkbox" checked data-column="0">Permission Id</label>
+												<label><input type="checkbox" checked data-column="1">Permission Name</label>
+												<label><input type="checkbox" checked data-column="2">Permission Desc</label>
 											</div>
 										</div>
 	
@@ -117,9 +117,9 @@
 	
 										<thead>
 											<tr>
-												<th>权限编号</th>
-												<th>权限名称</th>
-												<th>权限描述</th>
+												<th>Permission Id</th>
+												<th>Permission Name</th>
+												<th>Permission Desc</th>
 								
 				
 											</tr>
@@ -140,22 +140,22 @@
 						
 							<div class="portlet box blue">
 								<div class="portlet-title">
-									权限管理
+									<s:text name="ViewPermission.Management"></s:text>
 								</div>
 								<div class="portlet-body">
 									<div class="container-fluid">
 									  <div class="row-fluid">
 										
 										<div class="span9">
-											<br>选择权限ID
+											<br><s:text name="PermissionId"></s:text>
 											<select class="form-control" name="opt1" id="opt1">
 												<s:iterator value="permissions" status="L2">
 													<option><s:property value="permissionId"/></option>
 												</s:iterator>
 											</select>
 											<br>
-											<br>删除权限
-											<button type="button" class="btn" onclick="changeValue(); form2.action='deletePermission.action'; form2.submit();">删除&raquo; </button>
+											<br><s:text name="ViewPermission.Delete"></s:text>
+											<button type="button" class="btn" onclick="changeValue(); form2.action='deletePermission.action'; form2.submit();"><s:text name="Delete"></s:text>&raquo; </button>
 											<input name="option1" type="hidden" value="" id="option1">
 											<input name="option2" type="hidden" value="" id="option2">	
 										</div><!--/span-->
@@ -182,7 +182,24 @@
 	
 
 	<script>
-
+		jQuery(document).ready(function() {       
+		   checkuser();
+		});
+		
+		
+		function checkuser(){
+			var userid = document.getElementById("userid").value;
+			//alert(userid);
+			if(userid == "null"){    //不是管理员
+				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			}
+			if(userid != "0"){    //不是管理员
+				var hideobjs = document.getElementsByName("byadmin");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
+		}
 	
 		
 		function getRole()
