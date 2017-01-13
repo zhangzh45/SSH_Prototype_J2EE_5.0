@@ -32,7 +32,7 @@
             <value>root</value>
         </property>
         <property name="password">
-            <value>3330428190</value>
+            <value>mysql</value>
         </property>
     </bean>
     <!-- 事务管理器的配置 -->
@@ -735,9 +735,14 @@
 			<ref bean="attachmentDAO" />
 		</property>
 	</bean>
-	<bean id="PermissionserviceDAO"
-		class="com.bean.PermissionserviceDAO">
+	<bean id="PermissionserviceDAO" class="com.bean.PermissionserviceDAO">
 		<property name="sessionFactory">
 			<ref bean="sessionFactory" />
 		</property>
-	</bean></beans>
+	</bean>
+	<bean id = "ServiceInterface" class="com.service.interfce.ServiceInterface">
+		<property name="serviceAction">
+			<ref bean="srAction"/>
+		</property>
+	</bean>
+	</beans>

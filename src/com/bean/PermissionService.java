@@ -8,6 +8,10 @@ public class Permissionservice implements java.io.Serializable {
 
 	// Fields
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer permissionServiceId;
 	private Service service;
 	private Permission permission;

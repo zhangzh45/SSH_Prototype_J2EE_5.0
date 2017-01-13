@@ -62,6 +62,7 @@ import com.bean.Service;
 import com.bean.ServiceDAO;
 import com.bean.Servicerelation;
 import com.bean.Serviceresult;
+import com.bean.SimpleService;
 import com.bean.SpecTaskRoleUser;
 import com.bean.Specification;
 import com.bean.Temp;
@@ -118,54 +119,7 @@ public class ServiceAction extends ActionSupport{
 	
 	String default_maxload = "100";
 	
-	public String getApplyString() {
-		return applyString;
-	}
-
-	public void setApplyString(String applyString) {
-		this.applyString = applyString;
-	}
-
-	public UserService getUserSr() {
-		return userSr;
-	}
-
-	public void setUserSr(UserService userSr) {
-		this.userSr = userSr;
-	}
 	
-	public RoleService getRolesr() {
-		return rolesr;
-	}
-
-	public void setRolesr(RoleService rolesr) {
-		this.rolesr = rolesr;
-	}
-
-	public TempService getTempSr() {
-		return tempSr;
-	}
-
-	public void setTempSr(TempService tempSr) {
-		this.tempSr = tempSr;
-	}
-
-	public UserSpecSerService getUserSpecSr() {
-		return userSpecSr;
-	}
-
-	public void setUserSpecSr(UserSpecSerService userSpecSr) {
-		this.userSpecSr = userSpecSr;
-	}
-
-	
-	public RoleSpecSerService getRoleSpecSr() {
-		return roleSpecSr;
-	}
-
-	public void setRoleSpecSr(RoleSpecSerService roleSpecSr) {
-		this.roleSpecSr = roleSpecSr;
-	}
 
 	private UserRoleService userrolesr;
 	private RolePermissionService rolepermissionsr;
@@ -220,407 +174,11 @@ public class ServiceAction extends ActionSupport{
     private String inctns;
     private String invars;
     
-	public Serviceresult getSrt() {
-		return srt;
-	}
-
-	public void setSrt(Serviceresult srt) {
-		this.srt = srt;
-	}
-
-	public ServiceresultService getSrresultsr() {
-		return srresultsr;
-	}
-
-	public void setSrresultsr(ServiceresultService srresultsr) {
-		this.srresultsr = srresultsr;
-	}
-
-	public String getNowuser() {
-		return nowuser;
-	}
-
-	public void setNowuser(String nowuser) {
-		this.nowuser = nowuser;
-	}
-
-	public PermissionServiceService getPermissionservicesr() {
-		return permissionservicesr;
-	}
-
-	public void setPermissionservicesr(PermissionServiceService permissionservicesr) {
-		this.permissionservicesr = permissionservicesr;
-	}
-
-	public UserRoleService getUserrolesr() {
-		return userrolesr;
-	}
-
-	public void setUserrolesr(UserRoleService userrolesr) {
-		this.userrolesr = userrolesr;
-	}
-
-	public RolePermissionService getRolepermissionsr() {
-		return rolepermissionsr;
-	}
-
-	public void setRolepermissionsr(RolePermissionService rolepermissionsr) {
-		this.rolepermissionsr = rolepermissionsr;
-	}
-
-	public String getInctns() {
-		return inctns;
-	}
-
-	public void setInctns(String inctns) {
-		this.inctns = inctns;
-	}
-
-	public String getInvars() {
-		return invars;
-	}
-
-	public void setInvars(String invars) {
-		this.invars = invars;
-	}
-
-	public String getInrange() {
-		return inrange;
-	}
-
-	public void setInrange(String inrange) {
-		this.inrange = inrange;
-	}
-	
-
-	public String getInbusiness() {
-		return inbusiness;
-	}
-
-	public void setInbusiness(String inbusiness) {
-		this.inbusiness = inbusiness;
-	}
-
-	public String getInpts() {
-		return inpts;
-	}
-
-	public void setInpts(String inpts) {
-		this.inpts = inpts;
-	}
-
-	public String getIntype() {
-		return intype;
-	}
-
-	public void setIntype(String intype) {
-		this.intype = intype;
-	}
-	
-	public String getInlevel() {
-		return inlevel;
-	}
-
-	public void setInlevel(String inlevel) {
-		this.inlevel = inlevel;
-	}
-
-	public String getInname() {
-		return inname;
-	}
-
-	public void setInname(String inname) {
-		this.inname = inname;
-	}
-
-	public String getIntt() {
-		return intt;
-	}
-
-	public void setIntt(String intt) {
-		this.intt = intt;
-	}
-
-	public String getInadd() {
-		return inadd;
-	}
-
-	public void setInadd(String inadd) {
-		this.inadd = inadd;
-	}
-
-	public String getIndesc() {
-		return indesc;
-	}
-
-	public void setIndesc(String indesc) {
-		this.indesc = indesc;
-	}
-
-	public List<Parameter> getPrts() {
-		return prts;
-	}
-
-	public void setPrts(List<Parameter> prts) {
-		this.prts = prts;
-	}
-
-	public ParameterService getParametersr() {
-		return parametersr;
-	}
-
-	public void setParametersr(ParameterService parametersr) {
-		this.parametersr = parametersr;
-	}
-
-	public String getUserviceid() {
-		return userviceid;
-	}
-
-	public void setUserviceid(String userviceid) {
-		this.userviceid = userviceid;
-	}
-
-	public List<DTreeNode> getDtnodes() {
-		return dtnodes;
-	}
-
-	public void setDtnodes(List<DTreeNode> dtnodes) {
-		this.dtnodes = dtnodes;
-	}
-
-	public String getSch() {
-		return sch;
-	}
-
-	public void setSch(String sch) {
-		this.sch = sch;
-	}
-
-	public ConditionService getConditionsr() {
-		return conditionsr;
-	}
-
-	public void setConditionsr(ConditionService conditionsr) {
-		this.conditionsr = conditionsr;
-	}
-
-	public VariableService getVariablesr() {
-		return variablesr;
-	}
-
-	public void setVariablesr(VariableService variablesr) {
-		this.variablesr = variablesr;
-	}
-
-	public List<Condition> getConditions() {
-		return conditions;
-	}
-
-	public void setConditions(List<Condition> conditions) {
-		this.conditions = conditions;
-	}
-
-	public List<Variable> getVariables() {
-		return variables;
-	}
-
-	public void setVariables(List<Variable> variables) {
-		this.variables = variables;
-	}
-
-	public List<Condition> getC() {
-		return c;
-	}
-
-	public void setC(List<Condition> c) {
-		this.c = c;
-	}
-
-	public List<Variable> getV() {
-		return v;
-	}
-
-	public void setV(List<Variable> v) {
-		this.v = v;
-	}
-	
-	public List<Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
-	}
-
-	public Service getSr() {
-		return sr;
-	}
-
-	public File getMyFile() {
-		return myFile;
-	}
-
-	public void setMyFile(File myFile) {
-		this.myFile = myFile;
-	}
-	
-	public File getUploadFile() {
-		return uploadFile;
-	}
-
-	public void setUploadFile(File uploadFile) {
-		this.uploadFile = uploadFile;
-	}
-
-	public String getOption1() {
-		return option1;
-	}
-
-	public void setOption1(String option1) {
-		this.option1 = option1;
-	}
-
-	public String getOption2() {
-		return option2;
-	}
-
-	public void setOption2(String option2) {
-		this.option2 = option2;
-	}
-
-	public void setSr(Service sr) {
-		this.sr = sr;
-	}
-
-	public SerService getSrs() {
-		return srs;
-	}
-
-	public void setSrs(SerService srs) {
-		this.srs = srs;
-	}
-
-	public String getMaxLoad() {
-		return maxLoad;
-	}
-
-	public void setMaxLoad(String maxLoad) {
-		this.maxLoad = maxLoad;
-	}
-	
-	public List<Service> getServices() {
-		return services;
-	}
-
-	public void setServices(List<Service> services) {
-		this.services = services;
-	}
-	
-
-	public List<Service> getSelected() {
-		return selected;
-	}
-
-	public void setSelected(List<Service> selected) {
-		this.selected = selected;
-	}
-
-	public JFreeChart getChart() {
-		return chart;
-	}
-
-	public void setChart(JFreeChart chart) {
-		this.chart = chart;
-	}
-
-	public List<String> getInterest() {
-		return interest;
-	}
-
-	public void setInterest(List<String> interest) {
-		this.interest = interest;
-	}
-
-	public ServicerelationService getSrrelationsr() {
-		return srrelationsr;
-	}
-
-	public void setSrrelationsr(ServicerelationService srrelationsr) {
-		this.srrelationsr = srrelationsr;
-	}
-	
-	
-	public List<Service> getAllsers() {
-		return allsers;
-	}
-
-	public void setAllsers(List<Service> allsers) {
-		this.allsers = allsers;
-	}
-
-	public List<Service> getAcceptedservices() {
-		return acceptedservices;
-	}
-
-	public void setAcceptedservices(List<Service> acceptedservices) {
-		this.acceptedservices = acceptedservices;
-	}
-	
-
-	public List<Service> getRanklistByRuntimes() {
-		return ranklistByRuntimes;
-	}
-
-	public void setRanklistByRuntimes(List<Service> ranklistByRuntimes) {
-		this.ranklistByRuntimes = ranklistByRuntimes;
-	}
-	
-	public List<Service> getProvidedservices() {
-		return providedservices;
-	}
-
-	public void setProvidedservices(List<Service> providedservices) {
-		this.providedservices = providedservices;
-	}
-	
-	public List<Service> getCalledservices() {
-		return calledservices;
-	}
-
-	public void setCalledservices(List<Service> calledservices) {
-		this.calledservices = calledservices;
-	}
-
-	String serviceid = "";
-	
-	public String getServiceid() {
-		return serviceid;
-	}
-
-	public void setServiceid(String serviceid) {
-		this.serviceid = serviceid;
-	}
+	String serviceid = "";	
 
 	private String queryserviceid = "";
 	private String queryServiceresult = "";
 
-	public String getQueryserviceid() {
-		return queryserviceid;
-	}
-
-	public void setQueryserviceid(String queryserviceid) {
-		this.queryserviceid = queryserviceid;
-	}
-	
-	public String getQueryServiceresult() {
-		return queryServiceresult;
-	}
-
-	public void setQueryServiceresult(String queryServiceresult) {
-		this.queryServiceresult = queryServiceresult;
-	}
-	
 	EvaluationService evaluationsr = new EvaluationService();
 	LicenceService licencesr = new LicenceService();
 	RunlogService runlogsr = new RunlogService();
@@ -628,111 +186,15 @@ public class ServiceAction extends ActionSupport{
 	SpecTaskRoleUserService strusr = new SpecTaskRoleUserService();
 	AttachmentService attachmentsr = new AttachmentService();
 	
-	public EvaluationService getEvaluationsr() {
-		return evaluationsr;
-	}
-
-	public void setEvaluationsr(EvaluationService evaluationsr) {
-		this.evaluationsr = evaluationsr;
-	}
-
-	public LicenceService getLicencesr() {
-		return licencesr;
-	}
-
-	public void setLicencesr(LicenceService licencesr) {
-		this.licencesr = licencesr;
-	}
-
-	public RunlogService getRunlogsr() {
-		return runlogsr;
-	}
-
-	public void setRunlogsr(RunlogService runlogsr) {
-		this.runlogsr = runlogsr;
-	}
-
-	public SpecificationService getSpecsr() {
-		return specsr;
-	}
-
-	public void setSpecsr(SpecificationService specsr) {
-		this.specsr = specsr;
-	}
-
-	public SpecTaskRoleUserService getStrusr() {
-		return strusr;
-	}
-
-	public void setStrusr(SpecTaskRoleUserService strusr) {
-		this.strusr = strusr;
-	}
-	
-	
-	public AttachmentService getAttachmentsr() {
-		return attachmentsr;
-	}
-
-	public void setAttachmentsr(AttachmentService attachmentsr) {
-		this.attachmentsr = attachmentsr;
-	}
-
 	String specJson = "";
 	String specid;
-	
-
-	public String getSpecJson() {
-		return specJson;
-	}
-
-	public void setSpecJson(String specJson) {
-		this.specJson = specJson;
-	}
-
-	public String getSpecid() {
-		return specid;
-	}
-
-	public void setSpecid(String specid) {
-		this.specid = specid;
-	}
 	
 	String selectedtype = "null";
 	String selectedbusiness = "null";
 	List<String> servicetypes = new ArrayList<String>();
 	List<String> servicebusinesses = new ArrayList<String>();
 	
-	public String getSelectedtype() {
-		return selectedtype;
-	}
 
-	public void setSelectedtype(String selectedtype) {
-		this.selectedtype = selectedtype;
-	}
-
-	public String getSelectedbusiness() {
-		return selectedbusiness;
-	}
-
-	public void setSelectedbusiness(String selectedbusiness) {
-		this.selectedbusiness = selectedbusiness;
-	}
-
-	public List<String> getServicetypes() {
-		return servicetypes;
-	}
-
-	public void setServicetypes(List<String> servicetypes) {
-		this.servicetypes = servicetypes;
-	}
-
-	public List<String> getServicebusinesses() {
-		return servicebusinesses;
-	}
-
-	public void setServicebusinesses(List<String> servicebusinesses) {
-		this.servicebusinesses = servicebusinesses;
-	}
 
 	public String queryservice(){
 		System.out.print(queryserviceid+";;;;");
@@ -2262,5 +1724,555 @@ public class ServiceAction extends ActionSupport{
 		}
 		
 	}
+	
+	
+	//  getter setter
+	public String getApplyString() {
+		return applyString;
+	}
+
+	public void setApplyString(String applyString) {
+		this.applyString = applyString;
+	}
+
+	public UserService getUserSr() {
+		return userSr;
+	}
+
+	public void setUserSr(UserService userSr) {
+		this.userSr = userSr;
+	}
+	
+	public RoleService getRolesr() {
+		return rolesr;
+	}
+
+	public void setRolesr(RoleService rolesr) {
+		this.rolesr = rolesr;
+	}
+
+	public TempService getTempSr() {
+		return tempSr;
+	}
+
+	public void setTempSr(TempService tempSr) {
+		this.tempSr = tempSr;
+	}
+
+	public UserSpecSerService getUserSpecSr() {
+		return userSpecSr;
+	}
+
+	public void setUserSpecSr(UserSpecSerService userSpecSr) {
+		this.userSpecSr = userSpecSr;
+	}
+
+	
+	public RoleSpecSerService getRoleSpecSr() {
+		return roleSpecSr;
+	}
+
+	public void setRoleSpecSr(RoleSpecSerService roleSpecSr) {
+		this.roleSpecSr = roleSpecSr;
+	}
+    
+	public Serviceresult getSrt() {
+		return srt;
+	}
+
+	public void setSrt(Serviceresult srt) {
+		this.srt = srt;
+	}
+
+	public ServiceresultService getSrresultsr() {
+		return srresultsr;
+	}
+
+	public void setSrresultsr(ServiceresultService srresultsr) {
+		this.srresultsr = srresultsr;
+	}
+
+	public String getNowuser() {
+		return nowuser;
+	}
+
+	public void setNowuser(String nowuser) {
+		this.nowuser = nowuser;
+	}
+
+	public PermissionServiceService getPermissionservicesr() {
+		return permissionservicesr;
+	}
+
+	public void setPermissionservicesr(PermissionServiceService permissionservicesr) {
+		this.permissionservicesr = permissionservicesr;
+	}
+
+	public UserRoleService getUserrolesr() {
+		return userrolesr;
+	}
+
+	public void setUserrolesr(UserRoleService userrolesr) {
+		this.userrolesr = userrolesr;
+	}
+
+	public RolePermissionService getRolepermissionsr() {
+		return rolepermissionsr;
+	}
+
+	public void setRolepermissionsr(RolePermissionService rolepermissionsr) {
+		this.rolepermissionsr = rolepermissionsr;
+	}
+
+	public String getInctns() {
+		return inctns;
+	}
+
+	public void setInctns(String inctns) {
+		this.inctns = inctns;
+	}
+
+	public String getInvars() {
+		return invars;
+	}
+
+	public void setInvars(String invars) {
+		this.invars = invars;
+	}
+
+	public String getInrange() {
+		return inrange;
+	}
+
+	public void setInrange(String inrange) {
+		this.inrange = inrange;
+	}
+	
+
+	public String getInbusiness() {
+		return inbusiness;
+	}
+
+	public void setInbusiness(String inbusiness) {
+		this.inbusiness = inbusiness;
+	}
+
+	public String getInpts() {
+		return inpts;
+	}
+
+	public void setInpts(String inpts) {
+		this.inpts = inpts;
+	}
+
+	public String getIntype() {
+		return intype;
+	}
+
+	public void setIntype(String intype) {
+		this.intype = intype;
+	}
+	
+	public String getInlevel() {
+		return inlevel;
+	}
+
+	public void setInlevel(String inlevel) {
+		this.inlevel = inlevel;
+	}
+
+	public String getInname() {
+		return inname;
+	}
+
+	public void setInname(String inname) {
+		this.inname = inname;
+	}
+
+	public String getIntt() {
+		return intt;
+	}
+
+	public void setIntt(String intt) {
+		this.intt = intt;
+	}
+
+	public String getInadd() {
+		return inadd;
+	}
+
+	public void setInadd(String inadd) {
+		this.inadd = inadd;
+	}
+
+	public String getIndesc() {
+		return indesc;
+	}
+
+	public void setIndesc(String indesc) {
+		this.indesc = indesc;
+	}
+
+	public List<Parameter> getPrts() {
+		return prts;
+	}
+
+	public void setPrts(List<Parameter> prts) {
+		this.prts = prts;
+	}
+
+	public ParameterService getParametersr() {
+		return parametersr;
+	}
+
+	public void setParametersr(ParameterService parametersr) {
+		this.parametersr = parametersr;
+	}
+
+	public String getUserviceid() {
+		return userviceid;
+	}
+
+	public void setUserviceid(String userviceid) {
+		this.userviceid = userviceid;
+	}
+
+	public List<DTreeNode> getDtnodes() {
+		return dtnodes;
+	}
+
+	public void setDtnodes(List<DTreeNode> dtnodes) {
+		this.dtnodes = dtnodes;
+	}
+
+	public String getSch() {
+		return sch;
+	}
+
+	public void setSch(String sch) {
+		this.sch = sch;
+	}
+
+	public ConditionService getConditionsr() {
+		return conditionsr;
+	}
+
+	public void setConditionsr(ConditionService conditionsr) {
+		this.conditionsr = conditionsr;
+	}
+
+	public VariableService getVariablesr() {
+		return variablesr;
+	}
+
+	public void setVariablesr(VariableService variablesr) {
+		this.variablesr = variablesr;
+	}
+
+	public List<Condition> getConditions() {
+		return conditions;
+	}
+
+	public void setConditions(List<Condition> conditions) {
+		this.conditions = conditions;
+	}
+
+	public List<Variable> getVariables() {
+		return variables;
+	}
+
+	public void setVariables(List<Variable> variables) {
+		this.variables = variables;
+	}
+
+	public List<Condition> getC() {
+		return c;
+	}
+
+	public void setC(List<Condition> c) {
+		this.c = c;
+	}
+
+	public List<Variable> getV() {
+		return v;
+	}
+
+	public void setV(List<Variable> v) {
+		this.v = v;
+	}
+	
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+
+	public Service getSr() {
+		return sr;
+	}
+
+	public File getMyFile() {
+		return myFile;
+	}
+
+	public void setMyFile(File myFile) {
+		this.myFile = myFile;
+	}
+	
+	public File getUploadFile() {
+		return uploadFile;
+	}
+
+	public void setUploadFile(File uploadFile) {
+		this.uploadFile = uploadFile;
+	}
+
+	public String getOption1() {
+		return option1;
+	}
+
+	public void setOption1(String option1) {
+		this.option1 = option1;
+	}
+
+	public String getOption2() {
+		return option2;
+	}
+
+	public void setOption2(String option2) {
+		this.option2 = option2;
+	}
+
+	public void setSr(Service sr) {
+		this.sr = sr;
+	}
+
+	public SerService getSrs() {
+		return srs;
+	}
+
+	public void setSrs(SerService srs) {
+		this.srs = srs;
+	}
+
+	public String getMaxLoad() {
+		return maxLoad;
+	}
+
+	public void setMaxLoad(String maxLoad) {
+		this.maxLoad = maxLoad;
+	}
+	
+	public List<Service> getServices() {
+		return services;
+	}
+
+	public void setServices(List<Service> services) {
+		this.services = services;
+	}
+	
+
+	public List<Service> getSelected() {
+		return selected;
+	}
+
+	public void setSelected(List<Service> selected) {
+		this.selected = selected;
+	}
+
+	public JFreeChart getChart() {
+		return chart;
+	}
+
+	public void setChart(JFreeChart chart) {
+		this.chart = chart;
+	}
+
+	public List<String> getInterest() {
+		return interest;
+	}
+
+	public void setInterest(List<String> interest) {
+		this.interest = interest;
+	}
+
+	public ServicerelationService getSrrelationsr() {
+		return srrelationsr;
+	}
+
+	public void setSrrelationsr(ServicerelationService srrelationsr) {
+		this.srrelationsr = srrelationsr;
+	}
+	
+	
+	public List<Service> getAllsers() {
+		return allsers;
+	}
+
+	public void setAllsers(List<Service> allsers) {
+		this.allsers = allsers;
+	}
+
+	public List<Service> getAcceptedservices() {
+		return acceptedservices;
+	}
+
+	public void setAcceptedservices(List<Service> acceptedservices) {
+		this.acceptedservices = acceptedservices;
+	}
+	
+
+	public List<Service> getRanklistByRuntimes() {
+		return ranklistByRuntimes;
+	}
+
+	public void setRanklistByRuntimes(List<Service> ranklistByRuntimes) {
+		this.ranklistByRuntimes = ranklistByRuntimes;
+	}
+	
+	public List<Service> getProvidedservices() {
+		return providedservices;
+	}
+
+	public void setProvidedservices(List<Service> providedservices) {
+		this.providedservices = providedservices;
+	}
+	
+	public List<Service> getCalledservices() {
+		return calledservices;
+	}
+
+	public void setCalledservices(List<Service> calledservices) {
+		this.calledservices = calledservices;
+	}
+	
+	public String getServiceid() {
+		return serviceid;
+	}
+
+	public void setServiceid(String serviceid) {
+		this.serviceid = serviceid;
+	}
+	
+	public String getQueryserviceid() {
+		return queryserviceid;
+	}
+
+	public void setQueryserviceid(String queryserviceid) {
+		this.queryserviceid = queryserviceid;
+	}
+	
+	public String getQueryServiceresult() {
+		return queryServiceresult;
+	}
+
+	public void setQueryServiceresult(String queryServiceresult) {
+		this.queryServiceresult = queryServiceresult;
+	}
+	
+	
+	public EvaluationService getEvaluationsr() {
+		return evaluationsr;
+	}
+
+	public void setEvaluationsr(EvaluationService evaluationsr) {
+		this.evaluationsr = evaluationsr;
+	}
+
+	public LicenceService getLicencesr() {
+		return licencesr;
+	}
+
+	public void setLicencesr(LicenceService licencesr) {
+		this.licencesr = licencesr;
+	}
+
+	public RunlogService getRunlogsr() {
+		return runlogsr;
+	}
+
+	public void setRunlogsr(RunlogService runlogsr) {
+		this.runlogsr = runlogsr;
+	}
+
+	public SpecificationService getSpecsr() {
+		return specsr;
+	}
+
+	public void setSpecsr(SpecificationService specsr) {
+		this.specsr = specsr;
+	}
+
+	public SpecTaskRoleUserService getStrusr() {
+		return strusr;
+	}
+
+	public void setStrusr(SpecTaskRoleUserService strusr) {
+		this.strusr = strusr;
+	}
+	
+	
+	public AttachmentService getAttachmentsr() {
+		return attachmentsr;
+	}
+
+	public void setAttachmentsr(AttachmentService attachmentsr) {
+		this.attachmentsr = attachmentsr;
+	}
+
+	public String getSpecJson() {
+		return specJson;
+	}
+
+	public void setSpecJson(String specJson) {
+		this.specJson = specJson;
+	}
+
+	public String getSpecid() {
+		return specid;
+	}
+
+	public void setSpecid(String specid) {
+		this.specid = specid;
+	}
+	
+	public String getSelectedtype() {
+		return selectedtype;
+	}
+
+	public void setSelectedtype(String selectedtype) {
+		this.selectedtype = selectedtype;
+	}
+
+	public String getSelectedbusiness() {
+		return selectedbusiness;
+	}
+
+	public void setSelectedbusiness(String selectedbusiness) {
+		this.selectedbusiness = selectedbusiness;
+	}
+
+	public List<String> getServicetypes() {
+		return servicetypes;
+	}
+
+	public void setServicetypes(List<String> servicetypes) {
+		this.servicetypes = servicetypes;
+	}
+
+	public List<String> getServicebusinesses() {
+		return servicebusinesses;
+	}
+
+	public void setServicebusinesses(List<String> servicebusinesses) {
+		this.servicebusinesses = servicebusinesses;
+	}
+	
 }
+
+
+
+
 

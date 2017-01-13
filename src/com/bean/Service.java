@@ -11,6 +11,10 @@ public class Service implements java.io.Serializable {
 
 	// Fields
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer serviceId;
 	private String serviceName;
 	private String serviceDesc;
