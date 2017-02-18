@@ -10,6 +10,7 @@ import com.action.ServiceAction;
 import com.bean.Service;
 import com.bean.SimpleService;
 import com.opensymphony.xwork2.ActionSupport;
+import com.server.ServiceInfo;
 import com.sun.net.httpserver.Authenticator.Success;
 
 /**
@@ -32,8 +33,10 @@ public class ServiceInterface extends ActionSupport{
 	 * @return
 	 */
 	public String getAllSimpleService(){
-		List<Service> listService = serviceAction.getMyService(userId);
-		serMap.put("services", BatcheService2SimService(listService));
+		//List<Service> listService = serviceAction.getMyService(userId);
+		ServiceInfo si = new ServiceInfo();
+		serMap.put("services",si.getProvidedAppAndSpec(userId));
+		//serMap.put("services", BatcheService2SimService(listService));
 		return SUCCESS;
 		
 	}
@@ -48,7 +51,7 @@ public class ServiceInterface extends ActionSupport{
 		while ( itService.hasNext() ) {
 			Service ser = itService.next();
 			SimpleService simSer = new SimpleService();
-			simSer.setId(ser.getServiceId());
+			simSer.setId(ser.getServiceId().toString());
 			simSer.setName(ser.getServiceName());
 			simSer.setType(simSer.getType());
 			simSer.setAppRoleUrl(simSer.getAppRoleUrl());

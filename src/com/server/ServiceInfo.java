@@ -5,11 +5,15 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -23,6 +27,7 @@ import com.bean.Condition;
 import com.bean.Parameter;
 import com.bean.Runlog;
 import com.bean.Service;
+import com.bean.SimpleService;
 import com.bean.SpecTaskRoleUser;
 import com.bean.Specification;
 import com.bean.Temp;
@@ -649,58 +654,75 @@ public  class ServiceInfo
 	 * @param userid
 	 * @return
 	 */
-	public static String getProvidedAppAndSpec(int userid) {
+	public static List<SimpleService> getProvidedAppAndSpec(int userid) {
+		List<SimpleService> res = new ArrayList<SimpleService>();
+		
 		List<Service> apps = new ArrayList<Service>();
 		apps = ser.getProvidedService(String.valueOf(userid));
-		List<Service> accepted = new ArrayList<Service>();
+		/*List<Service> accepted = new ArrayList<Service>();
 		accepted = ser.getAcceptedService();
-		apps.retainAll(accepted);
+		apps.retainAll(accepted);*/
 		
 		JSONArray json=new JSONArray();
 		for(int i = 0; i < apps.size(); i++){
 			Service s = new Service();
 			s = apps.get(i);
-			if(s.getServiceType().equalsIgnoreCase("APPLICATION")){
-				Map<String,String> map=new HashMap<String,String>();
-				map.put("id", s.getServiceId().toString());
-				map.put("name", s.getServiceName());
-				map.put("type", s.getServiceType());
-				map.put("url", s.getAppRoleUrl());
-				json.put(map);
+			if(s.getServiceType().equalsIgnoreCase("APPLICATION") && s.getAppRoleUrl().isEmpty() == false){
+				SimpleService service = new SimpleService();
+				service.setId(s.getServiceId().toString());
+				service.setName(s.getServiceName());
+				service.setType(s.getServiceType());
+				service.setAppRoleUrl(s.getAppRoleUrl());
+				res.add(service);
 			}
 			
 			else if(s.getServiceType().equalsIgnoreCase("BUSINESS")){
-				Map<String,String> map=new HashMap<String,String>();
 				String businessfile = s.getBusinessFile();
 				String specid = "", specname = "";
 				List<Specification> speclist = new ArrayList<Specification>();
 				speclist = specsr.getSpecDao().findByFilepath(businessfile);
 				
-				//List<SpecTaskRoleUser> stru = new ArrayList<SpecTaskRoleUser>();
-				//stru =  strusr.getStruDao().findByBusinessfile(businessfile);
 				if(speclist.size() != 0){
 					specid = speclist.get(0).getIdentifier();
 					specname = speclist.get(0).getName();
-					map.put("id", specid);
-					map.put("name", specname);
-					map.put("type", s.getServiceType());
-					String ip = "localhost";
+					
+					String ip = null;
+					Enumeration allNetInterfaces = null;
 					try {
-						InetAddress addr = InetAddress.getLocalHost();
-						ip = addr.getHostAddress().toString();//获得本机IP
-					} catch (UnknownHostException e) {
+						allNetInterfaces = NetworkInterface.getNetworkInterfaces();
+					} catch (SocketException e1) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						e1.printStackTrace();
 					}
-					String getSpecRoleURL = "http://"+ip+":8020/SSH_Prototype_J2EE_5.0/getSpecRoleFromSpec.action";
-					map.put("url", getSpecRoleURL);
-					json.put(map);
+					InetAddress ip1 = null;
+					while (allNetInterfaces.hasMoreElements())
+					{
+						NetworkInterface netInterface = (NetworkInterface) allNetInterfaces.nextElement();
+						Enumeration addresses = netInterface.getInetAddresses();
+						while (addresses.hasMoreElements())
+						{
+							ip1 = (InetAddress) addresses.nextElement();
+							if (ip1 != null && ip1 instanceof Inet4Address)
+							{
+								System.out.println("本机的IP = " + ip1.getHostAddress());
+								ip = ip1.getHostAddress();
+							} 
+						}
+					}
+					
+					String getSpecRoleURL = "http:\\\\"+ip+":8020\\SSH_Prototype_J2EE_5.0\\getSpecRoleFromSpec.action?specid=";
+					
+					SimpleService service = new SimpleService();
+					service.setId(specid);
+					service.setName(specname);
+					service.setType(s.getServiceType());
+					service.setAppRoleUrl(getSpecRoleURL);
+					res.add(service);
 				}
 				
 			}
 		}
-		System.out.print( "getProvidedAppAndSpec.toString():"+ json.toString()+"\n");
-		return json.toString();
+		return res;
 	}
 	
 	/**

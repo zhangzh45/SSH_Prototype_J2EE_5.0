@@ -372,7 +372,6 @@
         	<result name="error">/error.jsp</result>
         </action>
         <action name="addOutput" class="srAction" method="addOutput">
-        	<!--<result name="success">/WEB-INF/ServiceManage/AddOutput.jsp</result> -->
         	<result name="success">ServiceRequestSuccess.jsp</result>
         	<result name="error">/error.jsp</result>
         </action>
