@@ -16,7 +16,7 @@ public class UserSpecSer implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private Integer ussId;
 	private Service service;
-	private User user;
+	private Integer userId;
 	private String operaterName;
 	private Date applyTime;
 	private Date agreeTime;
@@ -29,18 +29,18 @@ public class UserSpecSer implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public UserSpecSer(Integer ussId, Service service, User user) {
+	public UserSpecSer(Integer ussId, Service service, Integer user) {
 		this.ussId = ussId;
 		this.service = service;
-		this.user = user;
+		this.userId = user;
 	}
 
 	/** full constructor */
-	public UserSpecSer( Service service, User user,
+	public UserSpecSer( Service service, Integer user,
 			String operaterName, Date applyTime, Date agreeTime, String descrip) {
 	//	this.ussId = ussId;
 		this.service = service;
-		this.user = user;
+		this.userId = user;
 		this.operaterName = operaterName;
 		this.applyTime = applyTime;
 		this.agreeTime = agreeTime;
@@ -65,12 +65,14 @@ public class UserSpecSer implements java.io.Serializable {
 		this.service = service;
 	}
 
-	public User getUser() {
-		return this.user;
+	
+
+	public Integer getUserId() {
+		return userId;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 
 	public String getOperaterName() {

@@ -184,6 +184,10 @@
 			<ref bean="sessionFactory" />
 		</property>
 	</bean>
+	
+	<bean id="grs" class="com.util.GetRemoteService">
+	</bean>
+	
 	<bean id="UserDAO" class="com.bean.UserDAO">
 		<property name="sessionFactory">
 			<ref bean="sessionFactory" />
@@ -201,6 +205,9 @@
 		</property>
 		<property name="srs">
 			<ref bean="srs" />
+		</property>
+		<property name="grs">
+			<ref bean="grs" />
 		</property>
 	</bean>
 	<bean id="usersr" class="com.service.UserService">

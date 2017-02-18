@@ -30,7 +30,7 @@ public class UserSpecSerDAO extends HibernateDaoSupport {
 	private static final Logger log = LoggerFactory
 			.getLogger(UserSpecSerDAO.class);
 	// property constants
-	public static final String USER_ID="user.userId";
+	public static final String USER_ID="userId";
 	public static final String SERVICE_ID="service.serviceId";
 	public static final String OPERATER_NAME = "operaterName";
 	public static final String DESCRIP = "descrip";
@@ -101,7 +101,7 @@ public class UserSpecSerDAO extends HibernateDaoSupport {
 	
 	public List<UserSpecSer> findSpecSerByUserId(int userId){
 		//String hql="select u from User u inner join fetch u.userRoles r inner join fetch r.role ro inner join fetch ro.rolePermissions where u.userId=?";
-		String hql="select distinct uss from UserSpecSer uss inner join fetch uss.service s left join fetch s.parameters where uss.user.userId=?";
+		String hql="select distinct uss from UserSpecSer uss inner join fetch uss.service s left join fetch s.parameters where uss.userId=?";
 		//System.out.print("hql:"+getHibernateTemplate().find(hql, userId));
 		return getHibernateTemplate().find(hql, userId);
 	}

@@ -265,8 +265,8 @@ function agree(tempId,userId,serviceId){
 			dataType: "json",
 			success: function(){
 			location.reload(true);
-				loadApply();
-				updateTable();
+				//loadApply();
+				//updateTable();
 			
 			},
 			error : function (XMLHttpRequest, textStatus, errorThrown) {
@@ -289,8 +289,8 @@ function disagree(tempId,userId,serviceId){
 	 	data: {"tempId":tempId,"userId":userId,"serviceId":serviceId},
 	 	success: function(){
 	 	location.reload(true);
-	 		loadApply();
-			updateTable();
+	 		//loadApply();
+			//updateTable();
 	 	},
 	 	error : function (XMLHttpRequest, textStatus, errorThrown) {
          // 通常情况下textStatus和errorThown只有其中一个有值 

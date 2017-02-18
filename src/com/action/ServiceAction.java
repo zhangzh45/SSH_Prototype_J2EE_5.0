@@ -1546,19 +1546,23 @@ public class ServiceAction extends ActionSupport{
 		String positionresult = grs.getPosition(nowuser);
 		JSONArray json = JSONArray.fromObject(positionresult );
 		System.out.println(json.toString()+"="+positionresult+"\n") ;
-		Map<String ,String> mp=new HashMap<String,String>();
+		//Map<String ,String> mp=new HashMap<String,String>();
+		String positions = "";
 	    if(json.size()>0){
 	    	for(int i=0;i<json.size();i++){// 閬嶅巻 jsonarray 鏁扮粍锛屾妸姣忎竴涓璞¤浆鎴?json 瀵硅薄
 	    		JSONObject job = json.getJSONObject(i);
-				mp.put("userId",nowuser);
+				/*mp.put("userId",nowuser);
 				mp.put("orgName","测试1组织系统");
 				mp.put("appName","服务管理中心");
 				mp.put("positions",job.getString("positions"));
-				json.add(mp);
-				System.out.print(json.toString());
+				json.add(mp);*/
+				System.out.print("positions:"+json.toString());
+				positions = job.getString("positions");
 				break;
 	    	}
+	    	
 	    }
+	   // String rolesresult = grs.postForm(url, nowuser, "测试1组织系统", "服务管理中心", positions) 
 		String rolesresult = grs.getApplicationRoles(json.toString());
 		
 		System.out.println(json.toString()+"="+rolesresult+"\n") ;

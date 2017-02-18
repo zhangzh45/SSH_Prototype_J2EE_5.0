@@ -27,13 +27,16 @@ import com.service.UserRoleService;
 import com.service.UserService;
 import com.util.GetRemoteService;
 import com.util.RegisterKey;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+
 
 
 public class UserAction extends ActionSupport
 {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private User user;
 	private UserService usersr;
 	private RoleService rolesr;
@@ -43,7 +46,7 @@ public class UserAction extends ActionSupport
 	private String language="Chinese";
 	
 	
-	private GetRemoteService grs = new GetRemoteService();
+	private GetRemoteService grs;
 
 	String option1;
 	
@@ -172,6 +175,12 @@ public class UserAction extends ActionSupport
 		this.users = users;
 	}
 	
+	public GetRemoteService getGrs() {
+		return grs;
+	}
+	public void setGrs(GetRemoteService grs) {
+		this.grs = grs;
+	}
 	public String getOption1() {
 		return option1;
 	}

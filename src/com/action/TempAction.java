@@ -93,12 +93,13 @@ public class TempAction extends ActionSupport{
 	public String agree(){
 		
 		UserSpecSer uss=new UserSpecSer();
-		User user=new User();
+		/*User user=new User();
 		user.setUserId(Integer.parseInt(userId));
-		uss.setUser(user);
+		uss.setUser(user);*/
+		uss.setUserId(Integer.parseInt(userId));
 		Service service=new Service();
 		service.setServiceId(Integer.parseInt(serviceId));
-		uss.setUser(user);
+		//uss.setUser(user);
 		uss.setService(service);
 		usstemp.add(uss);
 		disagree();
