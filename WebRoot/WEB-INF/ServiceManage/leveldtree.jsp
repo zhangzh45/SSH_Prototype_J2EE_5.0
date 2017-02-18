@@ -210,7 +210,7 @@
 	<script>
 
 		jQuery(document).ready(function() {       
-		   App.init();
+		  // App.init();
 		   TableAdvanced.init();
 		   
 		   checkuser();

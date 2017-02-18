@@ -1143,6 +1143,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			 });
 		}
 		
+		var display = false;
+		
 		var menu = $(".sub-menu").parent();
 		menu.click(function(){
 			for(var i=0;i<menu.size();i++)
@@ -1150,8 +1152,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				menu.eq(i).removeClass("active");
 			}
 			$(this).addClass("active");
-			$(this).children("ul").toggle();
+			//$(this).children("ul").toggle();
+			
+				
+		    if(display){
+		       $(this).children("ul").css("display", "none");
+		       display = false;
+		    }
+		    else {
+		        $(this).children("ul").css("display", "");
+		        display = true;
+		    }
 		});
+		
+		
 		
 		$(".sub-menu li a").click(function(){
 			document.cookie="item=" + $(this).text();

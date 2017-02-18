@@ -3497,6 +3497,8 @@
 			 });
 		}
 		
+		var display = false;
+		
 		var menu = $(".sub-menu").parent();
 		menu.click(function(){
 			for(var i=0;i<menu.size();i++)
@@ -3504,8 +3506,18 @@
 				menu.eq(i).removeClass("active");
 			}
 			$(this).addClass("active");
-			$(this).children("ul").toggle();
+			//$(this).children("ul").toggle();
+				
+		    if(display){
+		       $(this).children("ul").css("display", "none");
+		       display = false;
+		    }
+		    else {
+		         $(this).children("ul").css("display", "");
+		        display = true;
+		    }
 		});
+		
 		
 		$(".sub-menu li a").click(function(){
 			var item = $(this).text();
