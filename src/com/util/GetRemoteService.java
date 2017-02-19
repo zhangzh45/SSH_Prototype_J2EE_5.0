@@ -260,7 +260,7 @@ public class GetRemoteService {
         HttpPost httppost = new HttpPost(url);  
         // 创建参数队列    
         List<NameValuePair> formparams = new ArrayList<NameValuePair>();  
-        formparams.add(new BasicNameValuePair("userId", userId));  
+        formparams.add(new BasicNameValuePair("empId", userId));  
         formparams.add(new BasicNameValuePair("organName", organName));  
         formparams.add(new BasicNameValuePair("appName", appName));
         formparams.add(new BasicNameValuePair("positions", positions));  

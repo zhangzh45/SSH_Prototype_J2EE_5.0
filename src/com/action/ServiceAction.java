@@ -1562,26 +1562,46 @@ public class ServiceAction extends ActionSupport{
 	    	}
 	    	
 	    }
-	   // String rolesresult = grs.postForm(url, nowuser, "测试1组织系统", "服务管理中心", positions) 
-		String rolesresult = grs.getApplicationRoles(json.toString());
-		
-		System.out.println(json.toString()+"="+rolesresult+"\n") ;
+	    
+	    
 		List<Integer> myroles = new ArrayList<Integer>();
 		List<Role> allroles = new ArrayList<Role>();
 		allroles = rolesr.getAllRole();
-	         if(json.size()>0){
-	           for(int i=0;i<json.size();i++){// 閬嶅巻 jsonarray 鏁扮粍锛屾妸姣忎竴涓璞¤浆鎴?json 瀵硅薄
-	             JSONObject job = json.getJSONObject(i); 
-	             for(int j = 0; j < allroles.size(); j++){
+	    
+	   // String rolesresult = grs.postForm(url, nowuser, "测试1组织系统", "服务管理中心", positions) 
+		String rolesresult = grs.getApplicationRoles(json.toString());
+		System.out.println(json.toString()+"="+rolesresult+"\n") ;
+		/*String[] roles = rolesresult.split(",");
+		for(int i = 0; i < roles.length; i++){
+			if(roles[i].isEmpty() == false){
+				for(int j = 0; j < allroles.size(); j++){
+		           	 if(roles[i].equals(allroles.get(j).getRoleName())){
+		           		 Role role = new Role();
+		           		 role = allroles.get(j);
+		           		 if(myroles.contains(role.getRoleId()) == false){
+		           			myroles.add(role.getRoleId());
+		           		 }
+		           		 
+			         }
+		        }
+			}
+			
+		}*/
+		
+		if(json.size()>0){
+			for(int i=0;i<json.size();i++){// 閬嶅巻 jsonarray 鏁扮粍锛屾妸姣忎竴涓璞¤浆鎴?json 瀵硅薄
+				JSONObject job = json.getJSONObject(i); 
+	            for(int j = 0; j < allroles.size(); j++){
 	            	 if(job.getString("busiName").equals(allroles.get(j).getRoleName())){
 	            		 Role role = new Role();
 	            		 role = allroles.get(j);
 	            		 myroles.add(role.getRoleId());
 		             }
-	             }
+	            }
 	             
-	           }
+	       }
 	    }
+		
 	    return myroles;
 	}
 
