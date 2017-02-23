@@ -9,15 +9,20 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.bean.SpecTaskRoleUser;
 import com.bean.Specification;
+import com.opensymphony.xwork2.ActionContext;
 import com.service.SpecTaskRoleUserService;
 import com.service.SpecificationService;
 
@@ -163,6 +168,8 @@ public class ParseYawlFile {
 											while(roles.hasNext()){
 												Element role = (Element)roles.next();
 												String roleid = role.getText();
+												String rolename = specuri + "&" + taskname + "&" + getRoleName(roleid);
+												roleid = rolename;
 												System.out.print(specuri+":"+taskid+":"+taskname+":"+roleid+":"+businessfilepath+":\n");
 												
 												SpecTaskRoleUser stru = new SpecTaskRoleUser(specid, taskid, taskname, roleid, null);
@@ -244,5 +251,37 @@ public class ParseYawlFile {
 		}  
 	  	return filecontent;
    } 
+	 
+	public String getRoleName(String roleId){
+		String roleName = "";
+		Map<String, Object> session = ActionContext.getContext().getSession();
+		String user = (String) session.get("user");
+		String password = (String) session.get("password");
+		GetRemoteService grs = new GetRemoteService();
+		String roles = grs.getAllRole(user, password);
+		roles = roles.substring(1, roles.length() - 1);
+		roles = roles.replaceAll("\\\\", "");
+		System.out.println("roles:"+roles);
+		JSONArray arr;
+		try {
+			arr = new JSONArray(roles);
+			
+			if(arr.length() > 0){
+				for(int i = 0; i < arr.length(); i++){
+					JSONObject obj = new JSONObject();
+					obj = (JSONObject) arr.get(i);
+					if(obj.has(roleId)){
+						System.out.println("rolename:"+(String) obj.get(roleId));
+						return (String) obj.get(roleId);
+					}
+					
+				}
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return roleName;
+	}
 }
 

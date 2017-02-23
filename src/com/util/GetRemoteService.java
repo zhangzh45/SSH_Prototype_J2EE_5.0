@@ -2,6 +2,7 @@ package com.util;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 
 import java.util.HashMap;
@@ -15,12 +16,17 @@ import javax.xml.namespace.QName;
 import org.apache.axis.client.Call;
 import org.apache.axis.client.Service;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -297,4 +303,124 @@ public class GetRemoteService {
         }  
        return reponse;
     }  
+    
+    
+    /**
+     * post请求
+     * @param url         url地址
+     * @param jsonParam     参数
+     * @param noNeedResponse    不需要返回结果
+     * @return
+     */
+    public static String httpPost(String url,JSONObject jsonParam, boolean noNeedResponse){
+        //post请求返回结果
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+        String jsonResult = null;
+        HttpPost method = new HttpPost(url);
+        try {
+            if (null != jsonParam) {
+                //解决中文乱码问题
+                StringEntity entity = new StringEntity(jsonParam.toString(), "utf-8");
+              //  entity.setContentEncoding("UTF-8");
+                entity.setContentType("application/json");
+                method.setEntity(entity);
+            }
+            HttpResponse result = httpClient.execute(method);
+            url = URLDecoder.decode(url, "UTF-8");
+            /**请求发送成功，并得到响应**/
+            if (result.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+            	System.out.println("********发送成功！********");
+                String str = "";
+                try {
+                    /**读取服务器返回过来的json字符串数据**/
+                	jsonResult = EntityUtils.toString(result.getEntity());
+                    if (noNeedResponse) {
+                        return null;
+                    }
+                } catch (Exception e) {
+                	System.out.println("post请求提交失败:" + url);
+                }
+            }
+        } catch (IOException e) {
+        	System.out.println("post请求提交失败:" + url);
+        }
+        return jsonResult;
+    }
+    
+    
+    
+    /**
+     * 发送get请求
+     * @param url    路径
+     * @return
+     */
+    public static String httpGet(String url){
+        //get请求返回结果
+        String strResult = null;
+        try {
+            DefaultHttpClient client = new DefaultHttpClient();
+            //发送get请求
+            HttpGet request = new HttpGet(url);
+            HttpResponse response = client.execute(request);
+ 
+            /**请求发送成功，并得到响应**/
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+            	System.out.println("********发送成功！********");
+                /**读取服务器返回过来的json字符串数据**/
+                strResult = EntityUtils.toString(response.getEntity());
+                /**把json字符串转换成json对象**/
+                //jsonResult = JSONObject.fromObject(strResult);
+                url = URLDecoder.decode(url, "UTF-8");
+            } else {
+            	System.out.println("get请求提交失败:" + url);
+            }
+        } catch (IOException e) {
+        	System.out.println("get请求提交失败:" + url);
+        }
+        return strResult;
+    }
+    
+    /**
+     * 从sysuclient端获取所有角色
+     * @param userid
+     * @param password
+     * @return
+     */
+    public  String getAllRole(String user, String password) {
+    	String url = "http://127.0.0.1:8080/sysuClient/new/getAllRole.action?userid="+user+"&passwd="+password;
+    	result = httpGet(url);
+    	/*String url = "http://127.0.0.1:8080/sysuClient/new/getAllRole.action";
+    	JSONObject param = new JSONObject();
+    	param.put("userid", user);
+    	param.put("passwd", password);
+    	result = httpPost(url, param, true);*/
+    	System.out.println("roleresult"+result);
+    	return result;
+    	
+ 		/*String endpoint = "http://127.0.0.1:8080/sysuClient/ServerInterfacePort?wsdl";
+ 		System.out.println(user+"result"+password);
+
+	  try
+	  {
+          Service service = new Service();
+          Call call = (Call) service.createCall();
+          call.setTargetEndpointAddress(endpoint);
+          call.setOperationName(new QName("http://server.com/", "getAllRole")); //WSDL里面描述的接口名称
+          call.addParameter("arg0", org.apache.axis.encoding.XMLType.XSD_STRING,
+                        javax.xml.rpc.ParameterMode.IN);//接口的参数
+          call.addParameter("arg1", org.apache.axis.encoding.XMLType.XSD_STRING,
+                  javax.xml.rpc.ParameterMode.IN);//接口的参数
+          call.setReturnType(org.apache.axis.encoding.XMLType.XSD_STRING);//设置返回类型  
+         result = (String)call.invoke(new Object[]{user, password});
+       
+          System.out.println(result+"///");
+          return result;
+         
+	  }
+	  catch (Exception e) 
+	  {
+        System.err.println(e.toString());
+        return null;
+	  }*/
+	}
 }

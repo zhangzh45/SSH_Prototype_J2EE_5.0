@@ -218,6 +218,7 @@ public class UserAction extends ActionSupport
 				dashboard();
 				session.put("admin", "true");  
 				session.put("user", "0");   //将用户id保存在session中,管理员的userid标记为0
+				session.put("password", "1234");  
 				return SUCCESS;
 			}
 			else{
@@ -245,6 +246,7 @@ public class UserAction extends ActionSupport
 			     				 }*/
 			     				session.put("admin", "false"); 
 			     				session.put("user", user.getUserId().toString());   //将用户id保存在session中
+			     				session.put("password", user.getPassword());  
 			     				return SUCCESS;
 			            	 }else{
 			            		 return ERROR;

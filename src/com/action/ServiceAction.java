@@ -921,12 +921,14 @@ public class ServiceAction extends ActionSupport{
 		}
 		//services=userSpecSr.findSpecSerByUserId(userid);
 		urs = userrolesr.getUserRole(userid);
+		
 		rs.clear();
-		for(int i = 0; i < urs.size(); i++)
+		/*for(int i = 0; i < urs.size(); i++)
 		{
 			rs.add(urs.get(i).getRole().getRoleId());
-		}
-		//rs = getApplicationRoles();
+		}*/
+		
+		rs = getApplicationRoles();
 		
 		List<Integer> ps = new ArrayList<Integer>();
 		List<Integer> ss = new ArrayList<Integer>();
@@ -1568,10 +1570,12 @@ public class ServiceAction extends ActionSupport{
 		List<Role> allroles = new ArrayList<Role>();
 		allroles = rolesr.getAllRole();
 	    
-	   // String rolesresult = grs.postForm(url, nowuser, "测试1组织系统", "服务管理中心", positions) 
-		String rolesresult = grs.getApplicationRoles(json.toString());
+		//String url = "http://localhost:3000/rolemap/getBusiRoleByOrganRole/" + nowuser + "&测试1组织系统&服务管理中心&" + positions;
+		//String rolesresult = grs.httpGet("http://localhost:3000/rolemap/getBusiRoleByOrganRole/");
+	    String rolesresult = grs.postForm("http://localhost:3000/rolemap/getBusiRoleByOrganRole/", nowuser, "测试1组织系统", "服务管理中心", positions);
+		//String rolesresult = grs.getApplicationRoles(json.toString());
 		System.out.println(json.toString()+"="+rolesresult+"\n") ;
-		/*String[] roles = rolesresult.split(",");
+		String[] roles = rolesresult.split(",");
 		for(int i = 0; i < roles.length; i++){
 			if(roles[i].isEmpty() == false){
 				for(int j = 0; j < allroles.size(); j++){
@@ -1586,9 +1590,9 @@ public class ServiceAction extends ActionSupport{
 		        }
 			}
 			
-		}*/
+		}
 		
-		if(json.size()>0){
+		/*if(json.size()>0){
 			for(int i=0;i<json.size();i++){// 閬嶅巻 jsonarray 鏁扮粍锛屾妸姣忎竴涓璞¤浆鎴?json 瀵硅薄
 				JSONObject job = json.getJSONObject(i); 
 	            for(int j = 0; j < allroles.size(); j++){
@@ -1600,7 +1604,7 @@ public class ServiceAction extends ActionSupport{
 	            }
 	             
 	       }
-	    }
+	    }*/
 		
 	    return myroles;
 	}
