@@ -22,6 +22,9 @@
         <property name="roleId" type="string">
             <column name="roleId" />
         </property>
+        <property name="roleName" type="string">
+            <column name="roleName" />
+        </property>
         <property name="participantId" type="string">
             <column name="participantId" />
         </property>

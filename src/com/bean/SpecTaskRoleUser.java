@@ -8,11 +8,16 @@ public class SpecTaskRoleUser implements java.io.Serializable {
 
 	// Fields
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String specIdentifier;
 	private String taskId;
 	private String taskName;
 	private String roleId;
+	private String roleName;
 	private String participantId;
 
 	// Constructors
@@ -23,11 +28,12 @@ public class SpecTaskRoleUser implements java.io.Serializable {
 
 	/** full constructor */
 	public SpecTaskRoleUser(String specIdentifier, String taskId,
-			String taskName, String roleId, String participantId) {
+			String taskName, String roleId, String roleName,String participantId) {
 		this.specIdentifier = specIdentifier;
 		this.taskId = taskId;
 		this.taskName = taskName;
 		this.roleId = roleId;
+		this.roleName = roleName;
 		this.participantId = participantId;
 	}
 
@@ -71,6 +77,14 @@ public class SpecTaskRoleUser implements java.io.Serializable {
 
 	public void setRoleId(String roleId) {
 		this.roleId = roleId;
+	}
+
+	public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
 	}
 
 	public String getParticipantId() {

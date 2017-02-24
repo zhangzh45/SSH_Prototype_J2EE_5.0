@@ -11,6 +11,10 @@ public class Role implements java.io.Serializable {
 
 	// Fields
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer roleId;
 	private String roleName;
 	private String roleDesc;

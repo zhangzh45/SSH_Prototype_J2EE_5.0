@@ -169,10 +169,10 @@ public class ParseYawlFile {
 												Element role = (Element)roles.next();
 												String roleid = role.getText();
 												String rolename = specuri + "&" + taskname + "&" + getRoleName(roleid);
-												roleid = rolename;
+												//roleid = rolename;
 												System.out.print(specuri+":"+taskid+":"+taskname+":"+roleid+":"+businessfilepath+":\n");
 												
-												SpecTaskRoleUser stru = new SpecTaskRoleUser(specid, taskid, taskname, roleid, null);
+												SpecTaskRoleUser stru = new SpecTaskRoleUser(specid, taskid, taskname, roleid, rolename,null);
 												strusr.addSpecTaskRoleUser(stru);
 												//list.add(stru);
 												//break;
@@ -183,7 +183,7 @@ public class ParseYawlFile {
 												String userid = user.getText();
 												System.out.print(specuri+":"+taskid+":"+taskname+":"+userid+":"+businessfilepath+":\n");
 												
-												SpecTaskRoleUser stru = new SpecTaskRoleUser(specid, taskid, taskname, null, userid);
+												SpecTaskRoleUser stru = new SpecTaskRoleUser(specid, taskid, taskname, null, null,userid);
 												strusr.addSpecTaskRoleUser(stru);
 												//list.add(stru);
 												//break;
@@ -202,7 +202,8 @@ public class ParseYawlFile {
 										Element role = (Element)roles.next();
 										String roleid = role.getText();
 										System.out.print(specuri+":"+taskid+":"+taskname+":"+roleid+":"+businessfilepath+":\n");
-										SpecTaskRoleUser stru = new SpecTaskRoleUser(specid, taskid, taskname, roleid, null);
+										String rolename = specuri + "&" + taskname + "&" + getRoleName(roleid);
+										SpecTaskRoleUser stru = new SpecTaskRoleUser(specid, taskid, taskname, roleid,rolename,null);
 										strusr.addSpecTaskRoleUser(stru);
 										//list.add(stru);
 										//break;
@@ -212,7 +213,7 @@ public class ParseYawlFile {
 										Element user = (Element)users.next();
 										String userid = user.getText();
 										System.out.print(specuri+":"+taskid+":"+taskname+":"+userid+":"+businessfilepath+":\n");
-										SpecTaskRoleUser stru = new SpecTaskRoleUser(specid, taskid, taskname, null, userid);
+										SpecTaskRoleUser stru = new SpecTaskRoleUser(specid, taskid, taskname, null,null, userid);
 										strusr.addSpecTaskRoleUser(stru);
 										//list.add(stru);
 										//break;

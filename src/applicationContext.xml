@@ -26,13 +26,13 @@
             <value>com.mysql.jdbc.Driver</value>
         </property>
         <property name="url">
-            <value>jdbc:mysql://127.0.0.1:3306/enterpriseservicemanagementsystem</value>
+            <value>jdbc:mysql://127.0.0.1:3306/enterpriseservicemanagementsystem?characterEncoding=UTF-8</value>
         </property>
         <property name="username">
             <value>root</value>
         </property>
         <property name="password">
-            <value>3330428190</value>
+            <value>mysql</value>
         </property>
     </bean>
     <!-- 事务管理器的配置 -->
@@ -750,6 +750,11 @@
 	<bean id = "ServiceInterface" class="com.service.interfce.ServiceInterface">
 		<property name="serviceAction">
 			<ref bean="srAction"/>
+		</property>
+	</bean>
+	<bean id ="specificationRoleInteface" class="com.service.interfce.SpecificationRoleInterface">
+		<property name="specTaskRoleUserService">
+			<ref bean="specTaskRoleUserService"/>
 		</property>
 	</bean>
 	</beans>

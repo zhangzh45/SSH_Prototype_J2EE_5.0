@@ -187,7 +187,7 @@ public class ServiceAction extends ActionSupport{
 	AttachmentService attachmentsr = new AttachmentService();
 	
 	String specJson = "";
-	String specid;
+	
 	
 	String selectedtype = "null";
 	String selectedbusiness = "null";
@@ -1612,7 +1612,7 @@ public class ServiceAction extends ActionSupport{
 	/**
 	 * 根据流程id获取业务角色
 	 * @return
-	 */
+	
 	public String getSpecRoleFromSpec(){
 		ServiceInfo si = new ServiceInfo();
 		try{
@@ -1623,7 +1623,7 @@ public class ServiceAction extends ActionSupport{
 		}
 		return SUCCESS;
 		
-	}
+	}*/
 	
 	public String serviceByType(){
 		try{
@@ -2256,14 +2256,6 @@ public class ServiceAction extends ActionSupport{
 
 	public void setSpecJson(String specJson) {
 		this.specJson = specJson;
-	}
-
-	public String getSpecid() {
-		return specid;
-	}
-
-	public void setSpecid(String specid) {
-		this.specid = specid;
 	}
 	
 	public String getSelectedtype() {

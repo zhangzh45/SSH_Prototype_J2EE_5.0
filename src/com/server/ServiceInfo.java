@@ -710,7 +710,7 @@ public  class ServiceInfo
 						}
 					}
 					
-					String getSpecRoleURL = "http:\\\\"+ip+":8020\\SSH_Prototype_J2EE_5.0\\getSpecRoleFromSpec.action?specid=";
+					String getSpecRoleURL = "http:\\\\"+ip+":8080\\SSH_Prototype_J2EE_5.0\\getSpecRoleFromSpec.action?specid=";
 					
 					SimpleService service = new SimpleService();
 					service.setId(specid);
@@ -725,55 +725,6 @@ public  class ServiceInfo
 		return res;
 	}
 	
-	/**
-	 * 根据流程id获取流程的业务角色
-	 * @param specid
-	 * @return
-	 */
-	public static String getSpecRoleFromSpec(String specid){
-		JSONObject specJson=new JSONObject();
-		JSONArray json=new JSONArray();
-		List<SpecTaskRoleUser> stru = new ArrayList<SpecTaskRoleUser>();
-		stru =  strusr.getStruDao().findBySpecIdentifier(specid);
-		List<String> tasks = new ArrayList<String>();
-		for(int i = 0; i < stru.size(); i++){
-			SpecTaskRoleUser s = new SpecTaskRoleUser();
-			s = stru.get(i);
-			String taskid = s.getTaskId();
-			if(tasks.contains(taskid) == false){
-				tasks.add(taskid);
-				Map<String,String> map=new HashMap<String,String>();
-				map.put("taskId", taskid);
-				String rolestr = "{";
-				List<String> roles = new ArrayList<String>();
-				for(int j = i; j < stru.size(); j++){
-					if(stru.get(j).getTaskId().equals(taskid) && stru.get(j).getRoleId() != null){
-						if(roles.contains(stru.get(j).getRoleId()) == false){
-							roles.add(stru.get(j).getRoleId());
-							rolestr += stru.get(j).getRoleId() + ",";
-						}
-					}
-				}
-				if(rolestr.charAt(rolestr.length() - 1) == ','){
-					rolestr = rolestr.substring(0, rolestr.length() - 1);
-				}
-				rolestr += "}";
-				map.put("roles", rolestr);
-				json.put(map);
-			}
-			
-		}
-		try {
-			specJson.put("spec", json.toString());
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			//return "error";
-		}
-		System.out.print( "specJson.toString():"+ specJson.toString()+"\n");
-		return specJson.toString();
-		//return "success";
-	}
 
 	/**
 	 * 注册sysuclient端上传的流程
