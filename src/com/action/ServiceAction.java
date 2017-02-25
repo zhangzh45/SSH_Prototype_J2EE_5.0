@@ -914,6 +914,9 @@ public class ServiceAction extends ActionSupport{
 	public List<Service> getMyService(int userid)
 	{
 		services.clear();
+		
+		nowuser = String.valueOf(userid);
+		
 		List<Integer> rs = new ArrayList<Integer>();
 		List<UserRole> urs = new ArrayList<UserRole>();
 		for(UserSpecSer uss:userSpecSr.findSpecSerByUserId(userid)){
@@ -1572,7 +1575,8 @@ public class ServiceAction extends ActionSupport{
 	    
 		//String url = "http://localhost:3000/rolemap/getBusiRoleByOrganRole/" + nowuser + "&测试1组织系统&服务管理中心&" + positions;
 		//String rolesresult = grs.httpGet("http://localhost:3000/rolemap/getBusiRoleByOrganRole/");
-	    String rolesresult = grs.postForm("http://localhost:3000/rolemap/getBusiRoleByOrganRole/", nowuser, "测试1组织系统", "服务管理中心", positions);
+		String url = "http://localhost:3000/rolemap/getBusiRoleByOrganRole/";
+	    String rolesresult = grs.postForm(url, nowuser, "测试1组织系统", "服务管理中心", positions);
 		//String rolesresult = grs.getApplicationRoles(json.toString());
 		System.out.println(json.toString()+"="+rolesresult+"\n") ;
 		String[] roles = rolesresult.split(",");

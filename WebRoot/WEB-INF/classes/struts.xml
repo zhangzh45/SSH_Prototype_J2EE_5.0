@@ -86,13 +86,13 @@
      </action>
    	 <!--  获取所有角色的action，并返回json格式的字符串-->
    	   <action name="getAllRoles" class="roleAction" method="jsonListRole">
-     	 <result type="json">
+     	 <result type="json"  name="success">
      	 	<param name="root">mapRoles</param>
      	 </result>
      </action>
-     <action name="getSpecRoleFromSpec" class="srAction" method="getSpecRoleFromSpec">
-     	 <result type="json">
-     	 	<param name="root">specJson</param>
+     <action name="getSpecRoleFromSpec" class="specificationRoleInteface" method="getSpecRoleFromSpec">
+     	 <result type="json" name="success">
+     	 	<param name="root">specRoleMap</param>
      	 </result>
      </action>
      <!-- 提供给映射中的接口，根据ID获取所有的可用服务 -->

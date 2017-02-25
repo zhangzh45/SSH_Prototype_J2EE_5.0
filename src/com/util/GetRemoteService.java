@@ -93,57 +93,6 @@ public class GetRemoteService {
             return null;
 		  }
 		}
-	
-	     /**
-	      * 判断用户是不是管理员
-	      * @param userid
-	      * @return
-	      */
-	     public  boolean isAdmin(String userid) {
-		    	//调用的组织管理中心的地址
-		 		String endpoint = "http://127.0.0.1:8020/demo/EmployeeServerInterfacePort?wsdl";
-		 		System.out.println(userid+"result");
-	        //直接引用远程的wsdl文件
-	       //以下都是套路 
-			  try
-			  {
-		          Service service = new Service();
-		          Call call = (Call) service.createCall();
-		          call.setTargetEndpointAddress(endpoint);
-		          call.setOperationName(new QName("http://server.com/", "isAdmin")); //WSDL里面描述的接口名称
-		          call.addParameter("arg0", org.apache.axis.encoding.XMLType.XSD_STRING,
-		                        javax.xml.rpc.ParameterMode.IN);//接口的参数
-		         result = (String)call.invoke(new Object[]{userid});
-		          System.out.println(result+"///");
-		          
-		          
-		          JSONArray json = JSONArray.fromObject(result ); // 棣栧厛鎶婂瓧绗︿覆杞垚 JSONArray  瀵硅薄
-				  System.out.println(json.toString()+"="+result+"\n") ;
-				  Map<String ,String> mp=new HashMap<String,String>();
-			         if(json.size()>0){
-			           for(int i=0;i<json.size();i++){// 閬嶅巻 jsonarray 鏁扮粍锛屾妸姣忎竴涓璞¤浆鎴?json 瀵硅薄
-			             JSONObject job = json.getJSONObject(i); 
-			             if(job.getString("userid").equals(userid)){
-			            		 if(job.containsKey("Administrator") && job.getString("Administrator").equalsIgnoreCase("1")){
-			     					return true;    //为管理员
-			     				 }else{
-			     					return false;
-			     				 }
-			            }else{
-			            	return false;
-			            }	 
-			          }
-			        }
-		          
-		          return false;
-		         
-			  }
-			  catch (Exception e) 
-			  {
-	            System.err.println(e.toString());
-	            return false;
-			  }
-			}  
 	     
 	     
 	     /**
@@ -187,7 +136,7 @@ public class GetRemoteService {
 	 * @param positionlist
 	 * @return
 	 */
-	public  String getApplicationRoles(String positionsResult) {
+	/*public  String getApplicationRoles(String positionsResult) {
     	//调用的映射中心的地址
  		String endpoint = "http://127.0.0.1:8020/demo/EmployeeServerInterfacePort?wsdl";
 	 	  
@@ -220,7 +169,7 @@ public class GetRemoteService {
         System.err.println(e.toString());
         return null;
 	  }
-	 }
+	 }*/
 	
 	/**
      * 从组织管理中心获取用户数量
@@ -396,31 +345,5 @@ public class GetRemoteService {
     	result = httpPost(url, param, true);*/
     	System.out.println("roleresult"+result);
     	return result;
-    	
- 		/*String endpoint = "http://127.0.0.1:8080/sysuClient/ServerInterfacePort?wsdl";
- 		System.out.println(user+"result"+password);
-
-	  try
-	  {
-          Service service = new Service();
-          Call call = (Call) service.createCall();
-          call.setTargetEndpointAddress(endpoint);
-          call.setOperationName(new QName("http://server.com/", "getAllRole")); //WSDL里面描述的接口名称
-          call.addParameter("arg0", org.apache.axis.encoding.XMLType.XSD_STRING,
-                        javax.xml.rpc.ParameterMode.IN);//接口的参数
-          call.addParameter("arg1", org.apache.axis.encoding.XMLType.XSD_STRING,
-                  javax.xml.rpc.ParameterMode.IN);//接口的参数
-          call.setReturnType(org.apache.axis.encoding.XMLType.XSD_STRING);//设置返回类型  
-         result = (String)call.invoke(new Object[]{user, password});
-       
-          System.out.println(result+"///");
-          return result;
-         
-	  }
-	  catch (Exception e) 
-	  {
-        System.err.println(e.toString());
-        return null;
-	  }*/
 	}
 }

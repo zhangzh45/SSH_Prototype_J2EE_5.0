@@ -133,14 +133,8 @@ public  class ServiceInfo
 	 * 获取用户服务
 	 */
     public static String getMyService(int userId){
-    	GetRemoteService grs = new GetRemoteService();
-    	boolean isAdmin = grs.isAdmin(String.valueOf(userId));
     	List<Service> sl = new ArrayList<Service>();
-    	if(isAdmin || userId == 0){
-    		sl=ser.getAllService();  //不包括流程
-    	}else{
-    		sl=sa.getMyService(userId);
-    	}
+    	sl=sa.getMyService(userId);
     	 JSONArray json=new JSONArray();
     	 
     	 List<Service> businesslist = new ArrayList<Service>();
@@ -222,14 +216,8 @@ public  class ServiceInfo
      * @return
      */
     public static String getMySpec(int userId){
-    	GetRemoteService grs = new GetRemoteService();
-    	boolean isAdmin = grs.isAdmin(String.valueOf(userId));
     	List<Service> sl = new ArrayList<Service>();
-    	if(isAdmin || userId == 0){
-    		sl=ser.getAllService();  //不包括流程
-    	}else{
-    		sl=sa.getMyService(userId);
-    	}
+    	sl=sa.getMyService(userId);
     	 JSONArray json=new JSONArray();
     	 
     	 List<Service> businesslist = new ArrayList<Service>();
@@ -272,13 +260,7 @@ public  class ServiceInfo
     //	List<UserRole> urs = new ArrayList<UserRole>();
     	
         List<Service> speSerList=new ArrayList<Service>();
-    	GetRemoteService grs = new GetRemoteService();
-    	boolean isAdmin = grs.isAdmin(String.valueOf(userId));
-    	if(isAdmin || userId == 0){
-    		speSerList=ser.getAllService();
-    	}else{
-    		speSerList=sa.getMyService(userId);
-    	}
+    	speSerList=sa.getMyService(userId);
     	
     	//List<Service> speSerList=sa.getMyService(userId);//get the mapping service by permission that user has;
     	JSONArray json=new JSONArray();
@@ -401,13 +383,7 @@ public  class ServiceInfo
         //	List<UserRole> urs = new ArrayList<UserRole>();
         	
             List<Service> speSerList=new ArrayList<Service>();
-        	GetRemoteService grs = new GetRemoteService();
-        	boolean isAdmin = grs.isAdmin(String.valueOf(userId));
-        	if(isAdmin || userId == 0){
-        		speSerList=ser.getAll();
-        	}else{
-        		speSerList=sa.getMyService(userId);
-        	}
+        	speSerList=sa.getMyService(userId);
         	
         	//List<Service> speSerList=sa.getMyService(userId);//get the mapping service by permission that user has;
         	JSONArray json=new JSONArray();
@@ -710,7 +686,7 @@ public  class ServiceInfo
 						}
 					}
 					
-					String getSpecRoleURL = "http:\\\\"+ip+":8080\\SSH_Prototype_J2EE_5.0\\getSpecRoleFromSpec.action?specid=";
+					String getSpecRoleURL = "http:\\\\"+ip+":8020\\SSH_Prototype_J2EE_5.0\\getSpecRoleFromSpec.action?specid=";
 					
 					SimpleService service = new SimpleService();
 					service.setId(specid);
