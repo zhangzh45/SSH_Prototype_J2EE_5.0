@@ -47,8 +47,8 @@ public class GetServiceInfo {
 		return ServiceInfo.getProvidedAppAndSpec(userid);
 	}*/
 
-	public String registerSpec(String userid, String servicename, String xml) {
-		return ServiceInfo.registerSpec(userid, servicename, xml);
+	public String registerSpec(String userid, String password, String servicename, String xml) {
+		return ServiceInfo.registerSpec(userid, password, servicename, xml);
 	}
 
 	public String removeSpec(String specid) {

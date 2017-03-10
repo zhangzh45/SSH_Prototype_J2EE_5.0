@@ -3436,7 +3436,7 @@
 			
 			//alert(userid);
 			if(userid == "null"){    //没有登录
-				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+				window.location = "http://localhost:8080/SSH_Prototype_J2EE_5.0/error.jsp";
 			}
 			if(admin != "true"){
 			//if(userid != "0"){    //不是管理员
@@ -3458,9 +3458,9 @@
 				success	: function(result){
 					//alert(result);
 					if(result == "success"){
-						window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/login.jsp";
+						window.location = "http://localhost:8080/SSH_Prototype_J2EE_5.0/login.jsp";
 					}else if(result == "error"){
-						window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+						window.location = "http://localhost:8080/SSH_Prototype_J2EE_5.0/error.jsp";
 					}
 				
 				},

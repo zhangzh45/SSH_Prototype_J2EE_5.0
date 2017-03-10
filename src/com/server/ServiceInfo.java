@@ -319,6 +319,39 @@ public  class ServiceInfo
 	    		}
     		}
     		
+    		if(speSerList.size() == 0){
+    			for(int k=0;k<auditSerList.size();k++){//if this service  belongs to the audit service
+    				int auditSerId=auditSerList.get(k).getServiceId();
+    				Service auditService=ser.getUniqueService(String.valueOf(auditSerId));
+    				if(allSerId==auditSerId){
+    					Map<String,String> map=new HashMap<String,String>();
+    					map.put("appid", auditService.getServiceId().toString());
+    					map.put("appName", auditService.getServiceName());
+    					map.put("appType", auditService.getServiceType());
+    					map.put("appDesc", auditService.getServiceDesc());
+    					map.put("appURL", auditService.getServiceAddress());
+    					/*map.put("appURL", auditService.getServiceAddress());
+    					map.put("appQuery", auditService.getServiceQuery());*/
+    					
+    					Set paramSet=auditService.getParameters();
+    			   		if(paramSet.size()!=0){
+    			   			Map<String, String> paramsMap = new HashMap<String, String>();
+    						for(Object o : paramSet){
+    							Parameter param = (Parameter) o;
+    							paramsMap.put(param.getParametername(), param.getParametertype());
+    							String paramJson=new JSONObject(paramsMap).toString();
+    							map.put("params", paramJson);
+    			   		  	}
+    			   		}
+    					
+    					map.put("available", "audit");
+    					json.put(map);
+    					userSpeSer=true;
+    					k=auditSerList.size();
+    				}
+    			}
+    		}
+    		
     		if(userSpeSer==false){//the service that not choose
 	    		Map<String,String> map=new HashMap<String,String>();
 	    		map.put("appid", allService.get(i).getServiceId().toString());
@@ -431,6 +464,36 @@ public  class ServiceInfo
     	    			}
     	    		}
         		}
+        		
+        		
+        		if(speSerList.size() == 0){
+        			for(int k=0;k<auditSerList.size();k++){//if this service  belongs to the audit service
+	    				int auditSerId=auditSerList.get(k).getServiceId();
+	    				Service auditService=ser.getUniqueService(String.valueOf(auditSerId));
+	    				if(allSerId==auditSerId){
+	    					List<Specification> spec = new ArrayList<Specification>();
+	    					spec = specsr.getSpecDao().findByFilepath(auditService.getBusinessFile());
+	    					if(spec.size() > 0){
+	    						Map<String,String> map=new HashMap<String,String>();
+    	    					map.put("appid", auditService.getServiceId().toString());
+    	    					map.put("appName", auditService.getServiceName());
+    	    					map.put("appType", auditService.getServiceType());
+    	    					map.put("appDesc", auditService.getServiceDesc());
+    	    					map.put("appURL", auditService.getServiceAddress());
+	    						map.put("identifier", spec.get(0).getIdentifier());
+    	    					map.put("name", spec.get(0).getName());
+    	    					map.put("uri", spec.get(0).getUri());
+    	    					map.put("version", spec.get(0).getVersion());
+    	    					map.put("documentation", spec.get(0).getDescription());
+    	    					map.put("available", "audit");
+    	    					json.put(map);
+	    					}
+	    					userSpeSer=true;
+	    					k=auditSerList.size();
+	    				}
+	    			}
+        		}
+        		
         		
         		if(userSpeSer==false){//the service that not choose
 	        		List<Specification> spec = new ArrayList<Specification>();
@@ -686,7 +749,7 @@ public  class ServiceInfo
 						}
 					}
 					
-					String getSpecRoleURL = "http:\\\\"+ip+":8020\\SSH_Prototype_J2EE_5.0\\getSpecRoleFromSpec.action?specid=";
+					String getSpecRoleURL = "http:\\\\"+ip+":8080\\SSH_Prototype_J2EE_5.0\\getSpecRoleFromSpec.action?specid=";
 					
 					SimpleService service = new SimpleService();
 					service.setId(specid);
@@ -709,7 +772,7 @@ public  class ServiceInfo
 	 * @param xml   流程文件的内容
 	 * @return
 	 */
-	public static String registerSpec(String userid, String servicename, String xml) {
+	public static String registerSpec(String userid, String password, String servicename, String xml) {
 		JSONArray json=new JSONArray();
 		Map<String,String> map=new HashMap<String,String>();
 		try{
@@ -741,7 +804,8 @@ public  class ServiceInfo
 	        
 	        //解析流程文件
     		ParseYawlFile yawl = new ParseYawlFile();
-    		yawl.getSpecRoleOrUser(spec.getBusinessFile());
+    		boolean external = true;
+    		yawl.getSpecRoleOrUser(userid, password, spec.getBusinessFile());
     		/*List<SpecTaskRoleUser> strulist = new ArrayList<SpecTaskRoleUser>();
     		strulist = yawl.getSpecRoleOrUser(spec.getBusinessFile());
     		for(int i = 0; i < strulist.size(); i++){

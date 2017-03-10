@@ -244,28 +244,17 @@ public class ServiceAction extends ActionSupport{
 	}
 	
 	public String register(){
-		/*ParseYawlFile yawl = new ParseYawlFile();
-		List<SpecTaskRoleUser> strulist = new ArrayList<SpecTaskRoleUser>();
-		strulist = yawl.getSpecRoleOrUser("E:/mule-standalone-3.3.1/apps/mmn.yawl");
-		for(int i = 0; i < strulist.size(); i++){
-			strusr.addSpecTaskRoleUser(strulist.get(i));
-		}*/
 		
-		/*ServiceInfo.getProvidedAppAndSpec(1);
-		ServiceInfo.getProvidedAppication(1);
-		ServiceInfo.getServiceFromRole(1);
-		ServiceInfo.getSpecRoleFromSpec("www");
-		
-		ServiceInfo.getAllSpec(1);
-		ServiceInfo.getMySpec(1);
-		ServiceInfo.loadAllSpec();*/
+		Map<String, Object> session = ActionContext.getContext().getSession();
+		String loginUser = (String) session.get("user");
+		String loginPassword = (String) session.get("password");
 		
 		if(maxLoad.isEmpty() || maxLoad == null) maxLoad = default_maxload;
 		sr.setMaxLoad(Integer.valueOf(maxLoad));
 		sr.setServiceState("NO");
 		sr.setRunTimes(0);
 		sr.setFailTimes(0);
-		sr.setServiceProvider(nowuser);
+		sr.setServiceProvider(loginUser);
 		try{
             //String realpath = ServletActionContext.getServletContext().getRealPath("/files");
             //System.out.println("realpath: "+realpath);
@@ -351,7 +340,7 @@ public class ServiceAction extends ActionSupport{
 	    		//getSpecRole(sr.getBusinessFile()); //解析流程文件
 	    		try{
 	    			ParseYawlFile yawl = new ParseYawlFile();
-	    			yawl.getSpecRoleOrUser(sr.getBusinessFile());
+	    			yawl.getSpecRoleOrUser(loginUser, loginPassword, sr.getBusinessFile());
 	    			
 	    			//删除本次上传的文件
 	    			myFile = null;
@@ -569,6 +558,12 @@ public class ServiceAction extends ActionSupport{
 				}
 			}
 			
+			List<Servicerelation> servicerelations = new ArrayList<Servicerelation>();
+			servicerelations = srrelationsr.getSrrelationDao().findByServiceId(Integer.parseInt(option1));
+			for(int i = 0; i < servicerelations.size(); i++){
+				srrelationsr.getSrrelationDao().delete(servicerelations.get(i));
+			}
+			
 			//针对组合服务
 			if(sr.getCombineType() != null && sr.getCallService() != null){
 				List<Condition> conditions = new ArrayList<Condition>();
@@ -636,11 +631,6 @@ public class ServiceAction extends ActionSupport{
 					runlogsr.deleteRunlog(runlogs.get(i));
 				}
 				
-				List<Servicerelation> servicerelations = new ArrayList<Servicerelation>();
-				servicerelations = srrelationsr.getSrrelationDao().findByServiceId(Integer.parseInt(option1));
-				for(int i = 0; i < servicerelations.size(); i++){
-					srrelationsr.getSrrelationDao().delete(servicerelations.get(i));
-				}
 				
 				List<Serviceresult> serviceresults = new ArrayList<Serviceresult>();
 				serviceresults = srresultsr.getSrresultDao().findByServiceid(Integer.parseInt(option1));
@@ -967,6 +957,7 @@ public class ServiceAction extends ActionSupport{
 		}
 		System.out.println(services.size());
 		
+		/*
 		//包括自己注册的服务
 		List<Service> provided = new ArrayList<Service>();
 		provided = srs.getProvidedService(String.valueOf(userid));
@@ -976,7 +967,8 @@ public class ServiceAction extends ActionSupport{
 		//同时要是审核通过的服务
 		List<Service> accepted = new ArrayList<Service>();
 		accepted = srs.getAcceptedService();
-		services.retainAll(accepted);
+		services.retainAll(accepted);*/
+		
 		System.out.println("services.size():"+services.size());
 		
 		return services;
@@ -1232,6 +1224,7 @@ public class ServiceAction extends ActionSupport{
 	public String addCombineA()
 	{
 		String callservice = inpts.replaceAll("s", ",");
+		combineAService();
 		if(checkCombine(callservice) == false){
 			log.info("The selected subservices don't satisfy the combine condition!");
 			return ERROR;
@@ -1302,6 +1295,7 @@ public class ServiceAction extends ActionSupport{
 	public String addCombineB()
 	{
 		String callservice = inpts.replaceAll("s", ",");
+		combineBService();
 		if(checkCombine(callservice) == false){
 			log.info("The selected subservices don't satisfy the combine condition!");
 			return ERROR;
@@ -1713,20 +1707,24 @@ public class ServiceAction extends ActionSupport{
 				subsers.add(sers[i]);
 			}
 		}
-		for(int i = 0; i < dtnodes.size(); i++){
-			int father = dtnodes.get(i).getFather();
-			String content = dtnodes.get(i).getContent();
-			String sid = content.substring(content.lastIndexOf(" ")+1, content.length());
-			for(int j = 0; j < subsers.size(); j++){
+		
+		for(int j = 0; j < subsers.size(); j++){
+			for(int i = 0; i < dtnodes.size(); i++){
+				int father = dtnodes.get(i).getFather();
+				String content = dtnodes.get(i).getContent();
+				String sid = content.substring(content.lastIndexOf(" ")+1, content.length());
 				if(subsers.get(j).equalsIgnoreCase(sid)){ 
 					if(fathers.contains(father) == false){
 						fathers.add(father);
 					}
 					subsers.remove(j);
+					j--;
 					break;
 				}
 			}
 		}
+		
+		
 		if(subsers.size() == 0 && fathers.size() == 1){
 			return true;
 		}

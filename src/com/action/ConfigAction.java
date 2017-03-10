@@ -443,7 +443,13 @@ public class ConfigAction extends ActionSupport
 			String userid = (String) session.get("user");
 			
 			List<Service> providedservices = new ArrayList<Service>();
-			providedservices = srs.getSrDAO().findByServiceProvider(userid);
+			
+			if(userid.equals("0")){
+				providedservices = srs.getAll();
+			}
+			else{
+				providedservices = srs.getSrDAO().findByServiceProvider(userid);
+			}
 			if(providedservices.size() == 0){
 				log.info("User "+ userid + " hadn't permission to remove the configuration of service " + serviceid + "!");
 				removeConfigResult = "failed";

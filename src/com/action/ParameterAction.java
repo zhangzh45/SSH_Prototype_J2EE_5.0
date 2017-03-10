@@ -462,7 +462,7 @@ public class ParameterAction extends ActionSupport
 			}
 			
 			url = servicesr.getUniqueService(sid).getServiceAddress();
-			if(url.lastIndexOf("/") == url.length() - 1){
+			if(url.length() != 0 && url.lastIndexOf("/") == url.length() - 1){
 				url = url.substring(0, url.length() - 1);
 			}
 			

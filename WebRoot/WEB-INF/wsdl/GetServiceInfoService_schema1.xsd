@@ -29,10 +29,6 @@
 
   <xs:element name="getMySpecResponse" type="tns:getMySpecResponse"/>
 
-  <xs:element name="getProvidedAppAndSpec" type="tns:getProvidedAppAndSpec"/>
-
-  <xs:element name="getProvidedAppAndSpecResponse" type="tns:getProvidedAppAndSpecResponse"/>
-
   <xs:element name="getProvidedAppication" type="tns:getProvidedAppication"/>
 
   <xs:element name="getProvidedAppicationResponse" type="tns:getProvidedAppicationResponse"/>
@@ -104,18 +100,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="getProvidedAppAndSpec">
-    <xs:sequence>
-      <xs:element name="arg0" type="xs:int"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="getProvidedAppAndSpecResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="launchSpec">
     <xs:sequence>
       <xs:element minOccurs="0" name="arg0" type="xs:string"/>
@@ -168,18 +152,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="getMySpec">
-    <xs:sequence>
-      <xs:element name="arg0" type="xs:int"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="getMySpecResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="add">
     <xs:sequence>
       <xs:element name="arg0" type="xs:int"/>
@@ -188,6 +160,18 @@
   </xs:complexType>
 
   <xs:complexType name="addResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getMySpec">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getMySpecResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="xs:string"/>
     </xs:sequence>
@@ -214,6 +198,7 @@
       <xs:element minOccurs="0" name="arg0" type="xs:string"/>
       <xs:element minOccurs="0" name="arg1" type="xs:string"/>
       <xs:element minOccurs="0" name="arg2" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg3" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 

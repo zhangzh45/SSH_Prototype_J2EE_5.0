@@ -43,12 +43,9 @@ public class GetServiceInfoDelegate {
 		return getServiceInfo.loadAllSpec();
 	}
 
-	/*public String getProvidedAppAndSpec(int userid) {
-		return getServiceInfo.getProvidedAppAndSpec(userid);
-	}*/
-
-	public String registerSpec(String userid, String servicename, String xml) {
-		return getServiceInfo.registerSpec(userid, servicename, xml);
+	public String registerSpec(String userid, String password,
+			String servicename, String xml) {
+		return getServiceInfo.registerSpec(userid, password, servicename, xml);
 	}
 
 	public String removeSpec(String specid) {

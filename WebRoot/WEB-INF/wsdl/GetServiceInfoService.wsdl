@@ -60,12 +60,6 @@
   <message name="loadAllSpecResponse">
     <part element="tns:loadAllSpecResponse" name="parameters"/>
   </message>
-  <message name="getProvidedAppAndSpec">
-    <part element="tns:getProvidedAppAndSpec" name="parameters"/>
-  </message>
-  <message name="getProvidedAppAndSpecResponse">
-    <part element="tns:getProvidedAppAndSpecResponse" name="parameters"/>
-  </message>
   <message name="registerSpec">
     <part element="tns:registerSpec" name="parameters"/>
   </message>
@@ -138,10 +132,6 @@
     <operation name="loadAllSpec">
       <input message="tns:loadAllSpec"/>
       <output message="tns:loadAllSpecResponse"/>
-    </operation>
-    <operation name="getProvidedAppAndSpec">
-      <input message="tns:getProvidedAppAndSpec"/>
-      <output message="tns:getProvidedAppAndSpecResponse"/>
     </operation>
     <operation name="registerSpec">
       <input message="tns:registerSpec"/>
@@ -243,15 +233,6 @@
       </output>
     </operation>
     <operation name="loadAllSpec">
-      <soap:operation soapAction=""/>
-      <input>
-        <soap:body use="literal"/>
-      </input>
-      <output>
-        <soap:body use="literal"/>
-      </output>
-    </operation>
-    <operation name="getProvidedAppAndSpec">
       <soap:operation soapAction=""/>
       <input>
         <soap:body use="literal"/>

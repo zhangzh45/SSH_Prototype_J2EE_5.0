@@ -57,7 +57,7 @@ public class ParseYawlFile {
      * function:get the role through business file by parse the business.xml
      * @param the business file path
      */
-	public void getSpecRoleOrUser(String businessfilepath){
+	public void getSpecRoleOrUser(String loginUser, String loginPassword, String businessfilepath){
 		//List<SpecTaskRoleUser> list = new ArrayList<SpecTaskRoleUser>();
 		
     	SAXReader saxReader=new SAXReader();
@@ -168,7 +168,7 @@ public class ParseYawlFile {
 											while(roles.hasNext()){
 												Element role = (Element)roles.next();
 												String roleid = role.getText();
-												String rolename = specuri + "&" + taskname + "&" + getRoleName(roleid);
+												String rolename = specuri + "&" + taskname + "&" + getRoleName(loginUser, loginPassword, roleid);
 												//roleid = rolename;
 												System.out.print(specuri+":"+taskid+":"+taskname+":"+roleid+":"+businessfilepath+":\n");
 												
@@ -202,7 +202,7 @@ public class ParseYawlFile {
 										Element role = (Element)roles.next();
 										String roleid = role.getText();
 										System.out.print(specuri+":"+taskid+":"+taskname+":"+roleid+":"+businessfilepath+":\n");
-										String rolename = specuri + "&" + taskname + "&" + getRoleName(roleid);
+										String rolename = specuri + "&" + taskname + "&" + getRoleName(loginUser, loginPassword, roleid);
 										SpecTaskRoleUser stru = new SpecTaskRoleUser(specid, taskid, taskname, roleid,rolename,null);
 										strusr.addSpecTaskRoleUser(stru);
 										//list.add(stru);
@@ -253,13 +253,11 @@ public class ParseYawlFile {
 	  	return filecontent;
    } 
 	 
-	public String getRoleName(String roleId){
+	public String getRoleName(String loginUser, String loginPassword, String roleId){
 		String roleName = "";
-		Map<String, Object> session = ActionContext.getContext().getSession();
-		String user = (String) session.get("user");
-		String password = (String) session.get("password");
+		
 		GetRemoteService grs = new GetRemoteService();
-		String roles = grs.getAllRole(user, password);
+		String roles = grs.getAllRole(loginUser, loginPassword);
 		roles = roles.substring(1, roles.length() - 1);
 		roles = roles.replaceAll("\\\\", "");
 		System.out.println("roles:"+roles);

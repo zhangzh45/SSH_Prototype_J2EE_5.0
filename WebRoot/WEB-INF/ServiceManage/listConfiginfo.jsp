@@ -274,7 +274,7 @@
 				<div class="modal-body">
 					<table id="table3">
 						<tr>
-							<td><s:text name="ResultId"></s:text><input type="text" id="id" name="rid" value="" style="width:100px" readOnly="true"></td>
+							<td><s:text name="ResultId"></s:text><input type="text" id="rid" name="rid" value="" style="width:100px" readOnly="true"></td>
 						</tr>
 						<tr>
 							<td><s:text name="ResultName"></s:text><input type="text" id="rname" name="rname" value="" style="width:100px"></td>
@@ -311,7 +311,7 @@
 			var userid = document.getElementById("userid").value;
 			//alert(userid);
 			if(userid == "null"){    //不是管理员
-				window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+				window.location = "http://localhost:8080/SSH_Prototype_J2EE_5.0/error.jsp";
 			}
 			if(userid != "0"){    //不是管理员
 				var hideobjs = document.getElementsByName("byadmin");
@@ -389,17 +389,17 @@
 					//alert(removeConfigResult+"KKKKK");
 					if(removeConfigResult == "success"){
 						//window.reload();
-						window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/listconfig.action";
+						window.location = "http://localhost:8080/SSH_Prototype_J2EE_5.0/listconfig.action";
 					}else{
 						//alert("删除配置信息失败");
-						window.location ="http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+						window.location ="http://localhost:8080/SSH_Prototype_J2EE_5.0/error.jsp";
 					}
 					
 				},
 				error : function (XMLHttpRequest, textStatus, errorThrown) {
 					 // 通常情况下textStatus和errorThown只有其中一个有值 
 			       //alert(errorThrown);
-			       window.location = "http://localhost:8020/SSH_Prototype_J2EE_5.0/error.jsp";
+			       window.location = "http://localhost:8080/SSH_Prototype_J2EE_5.0/error.jsp";
 	         	}
 			});
 		}
