@@ -288,6 +288,9 @@
 		<property name="runlogsr">
 			<ref bean="runlogsr" />
 		</property>
+		<property name="srrelationsr">
+			<ref bean="srrelationsr" />
+		</property>
 		<property name="srs">
 			<ref bean="srs" />
 		</property>
@@ -570,10 +573,12 @@
 		<property name="sa">
 			<ref bean="srAction" />
 		</property>
+		<property name="pa">
+			<ref bean="parameterAction" />
+		</property>
 		<property name="ser">
 			<ref bean="srs"/>
 		</property>
-		 
 		<property name="utiluss">
 			<ref bean="UserSpecSerService"/>
 		</property>

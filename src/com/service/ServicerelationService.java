@@ -35,4 +35,8 @@ public class ServicerelationService
 		return (List<Servicerelation>)this.srrelationDao.findById(id);
 	}
 	
+	public List<Servicerelation> getServicerelationBySid(Integer id)
+	{
+		return (List<Servicerelation>)this.srrelationDao.findByServiceId(id);
+	}
 }

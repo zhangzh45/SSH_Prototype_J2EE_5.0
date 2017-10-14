@@ -37,13 +37,22 @@
 <!-- BEGIN BODY -->
 
 <body >
-	<div class="">
-		<IFRAME id="service" frameborder="0" width="100%" height="600" src="<s:property value="accessaddress"/>"></IFRAME>
+	<div>
+		<input name="url" type="hidden" value=<s:property value="url"/> id="url">
+		<iframe id="IF" frameborder="0" width="100%" height="600" src=""></iframe>
 	</div>	
 
 
 	<script>
-
+		$(window).load(function() {
+            showURL();
+        });
+		
+		function showURL()
+		{
+			//alert(document.getElementById("url").value);
+			document.getElementById("IF").src = document.getElementById("url").value;
+		}
 	</script>
 
 </body>

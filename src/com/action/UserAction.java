@@ -256,23 +256,6 @@ public class UserAction extends ActionSupport
 			         }
 
 			}
-			/*if(usersr.getUniqueUser(user.getUserId()).getPassword().equals(user.getPassword()))
-			{
-				 List<UserRole> list=userrolesr.getUserRole(user.getUserId());
-				username = usersr.getUniqueUser(user.getUserId()).getUserName();
-				dashboard();
-				
-				//RegisterKey.main();
-				//System.out.println(new AprioirItemSet().test());
-				//new Aprioir().test();
-			
-			}
-			else
-			{
-				return ERROR;
-			}*/
-			
-			
 		}
 		catch(Exception e)
 		{

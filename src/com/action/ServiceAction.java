@@ -119,7 +119,6 @@ public class ServiceAction extends ActionSupport{
 	
 	String default_maxload = "100";
 	
-	
 
 	private UserRoleService userrolesr;
 	private RolePermissionService rolepermissionsr;
@@ -129,6 +128,7 @@ public class ServiceAction extends ActionSupport{
 	private ServicerelationService srrelationsr;
 	
 	String maxLoad;
+	String isExternal;
 	String option1;
 	String option2;
 	File myFile;
@@ -251,6 +251,7 @@ public class ServiceAction extends ActionSupport{
 		
 		if(maxLoad.isEmpty() || maxLoad == null) maxLoad = default_maxload;
 		sr.setMaxLoad(Integer.valueOf(maxLoad));
+		sr.setIsExternal(Integer.valueOf(isExternal));
 		sr.setServiceState("NO");
 		sr.setRunTimes(0);
 		sr.setFailTimes(0);
@@ -1016,6 +1017,9 @@ public class ServiceAction extends ActionSupport{
 		acceptedservices = srs.getAcceptedService();
 		List<Service> ser = srs.getAllService();
 		acceptedservices.retainAll(ser);
+		List<Service> internalServices = new ArrayList<Service>();
+		internalServices = srs.getInternalService();
+		acceptedservices.retainAll(internalServices);
 		allsers.clear();
 		allsers = srs.getAll();
 		dtnodes.clear();
@@ -1023,6 +1027,8 @@ public class ServiceAction extends ActionSupport{
 		try
 		{
 			services = srs.getAllService();
+			services.retainAll(internalServices);      //服务组合只针对内部服务
+			
 			List<Integer> num = new ArrayList<Integer>();
 			for(int i = 0; i < services.size(); i++)
 			{
@@ -1032,16 +1038,13 @@ public class ServiceAction extends ActionSupport{
 			{
 				for(int j = i + 1; j < services.size(); j++)
 				{
-					//组合不是组合服务的服务，暂时不考虑多重组合的问题
-					if(services.get(i).getCombineType() == null && services.get(j).getCombineType() == null){
-						if(services.get(i).getServiceType().equals(services.get(j).getServiceType())){
-							if((services.get(i).getServiceTarget() != null && services.get(j).getServiceTarget() != null && services.get(i).getServiceTarget().equals(services.get(j).getServiceTarget()))
-									|| (services.get(i).getServiceTarget() == null && services.get(j).getServiceTarget() == null)){
-								if((services.get(i).getServiceRange() != null && services.get(j).getServiceRange() != null && services.get(i).getServiceRange().equals(services.get(j).getServiceRange()))
-										|| (services.get(i).getServiceRange() == null && services.get(j).getServiceRange() == null)){
-									num.set(i, num.get(i) + 1);
-									num.set(j, num.get(j) + 1);
-								}
+					if(services.get(i).getServiceType().equals(services.get(j).getServiceType())){
+						if((services.get(i).getServiceTarget() != null && services.get(j).getServiceTarget() != null && services.get(i).getServiceTarget().equals(services.get(j).getServiceTarget()))
+								|| (services.get(i).getServiceTarget() == null && services.get(j).getServiceTarget() == null)){
+							if((services.get(i).getServiceRange() != null && services.get(j).getServiceRange() != null && services.get(i).getServiceRange().equals(services.get(j).getServiceRange()))
+									|| (services.get(i).getServiceRange() == null && services.get(j).getServiceRange() == null)){
+								num.set(i, num.get(i) + 1);
+								num.set(j, num.get(j) + 1);
 							}
 						}
 					}
@@ -1126,12 +1129,16 @@ public class ServiceAction extends ActionSupport{
 		acceptedservices = srs.getAcceptedService();
 		List<Service> ser = srs.getAllService();
 		acceptedservices.retainAll(ser);
+		List<Service> internalServices = new ArrayList<Service>();
+		internalServices = srs.getInternalService();
+		acceptedservices.retainAll(internalServices);
 		
 		allsers.clear();
 		allsers = srs.getAll();
 		try
 		{
 			services = srs.getAllService();
+			services.retainAll(internalServices);
 			dtnodes.clear();
 			List<Integer> num = new ArrayList<Integer>();
 			for(int i = 0; i < services.size(); i++)
@@ -1142,16 +1149,13 @@ public class ServiceAction extends ActionSupport{
 			{
 				for(int j = i + 1; j < services.size(); j++)
 				{
-					//组合不是组合服务的服务，暂时不考虑多重组合的问题
-					if(services.get(i).getCombineType() == null && services.get(j).getCombineType() == null){
-						if(services.get(i).getServiceType().equals(services.get(j).getServiceType())){
-							if((services.get(i).getServiceTarget() != null && services.get(j).getServiceTarget() != null && services.get(i).getServiceTarget().equals(services.get(j).getServiceTarget()))
-									|| (services.get(i).getServiceTarget() == null && services.get(j).getServiceTarget() == null)){
-								if((services.get(i).getServiceRange() != null && services.get(j).getServiceRange() != null && services.get(i).getServiceRange().equals(services.get(j).getServiceRange()) == false)
-										|| (services.get(i).getServiceRange() == null && services.get(j).getServiceRange() == null)){
-									num.set(i, num.get(i) + 1);
-									num.set(j, num.get(j) + 1);
-								}
+					if(services.get(i).getServiceType().equals(services.get(j).getServiceType())){
+						if((services.get(i).getServiceTarget() != null && services.get(j).getServiceTarget() != null && services.get(i).getServiceTarget().equals(services.get(j).getServiceTarget()))
+								|| (services.get(i).getServiceTarget() == null && services.get(j).getServiceTarget() == null)){
+							if((services.get(i).getServiceRange() != null && services.get(j).getServiceRange() != null && services.get(i).getServiceRange().equals(services.get(j).getServiceRange()) == false)
+									|| (services.get(i).getServiceRange() == null && services.get(j).getServiceRange() == null)){
+								num.set(i, num.get(i) + 1);
+								num.set(j, num.get(j) + 1);
 							}
 						}
 					}
@@ -1240,10 +1244,14 @@ public class ServiceAction extends ActionSupport{
 		sr.setServiceRange(inrange);
 		sr.setRelateBusiness(inbusiness);
 		sr.setServiceState("NO");
-		sr.setServiceProvider(nowuser);
+		Map<String, Object> session = ActionContext.getContext().getSession();
+		String loginUser = (String) session.get("user");
+		String loginPassword = (String) session.get("password");
+		sr.setServiceProvider(loginUser);
 		sr.setRunTimes(0);
 		sr.setFailTimes(0);
 		sr.setCombineType("CombineA");
+		sr.setIsExternal(0);
 		
 		sr.setCallService(callservice);
 		//srs.getSrDAO().save(sr);
@@ -1311,11 +1319,14 @@ public class ServiceAction extends ActionSupport{
 		sr.setServiceRange(inrange);
 		sr.setRelateBusiness(inbusiness);
 		sr.setServiceState("NO");
-		sr.setServiceProvider(nowuser);
+		Map<String, Object> session = ActionContext.getContext().getSession();
+		String loginUser = (String) session.get("user");
+		String loginPassword = (String) session.get("password");
+		sr.setServiceProvider(loginUser);
 		sr.setRunTimes(0);
 		sr.setFailTimes(0);
 		sr.setCombineType("CombineB");
-		System.out.print(callservice+"\n");
+		sr.setIsExternal(0);
 		sr.setCallService(callservice);
 		//srs.getSrDAO().save(sr);
 		
@@ -1380,50 +1391,6 @@ public class ServiceAction extends ActionSupport{
 		else{
 			this.srs.unregister(sr);
 			log.info("Can't create this combined service because it didn't call any subservice!");
-			return ERROR;
-		}
-	}
-	
-	public String conbineServiceB() // 已经被弃用了
-	{
-		try
-		{
-			services = srs.getAllService();
-			//selected.addAll(services);
-			List<Integer> num = new ArrayList<Integer>();
-			for(int i = 0; i < services.size(); i++)
-			{
-				num.add(0);
-			}
-			for(int i = 0; i < services.size() - 1; i++)
-			{
-				for(int j = i + 1; j < services.size(); j++)
-				{
-					if(services.get(i).getServiceType().equals(services.get(j).getServiceType())
-					&&	services.get(i).getServiceTarget().equals(services.get(j).getServiceTarget())
-					&&	(false == services.get(i).getServiceRange().equals(services.get(j).getServiceRange()))
-					)
-					{
-						num.set(i, num.get(i) + 1);
-						num.set(j, num.get(j) + 1);
-					}
-				}
-			}
-			selected.clear();
-			for(int i = 0; i < services.size(); i++)
-			{
-				if(num.get(i) > 0)
-				{
-					selected.add(services.get(i));
-				}
-			}
-			
-			//System.out.println(services.size());
-			return SUCCESS;
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
 			return ERROR;
 		}
 	}
@@ -1544,24 +1511,16 @@ public class ServiceAction extends ActionSupport{
 		GetRemoteService grs = new GetRemoteService();
 		String positionresult = grs.getPosition(nowuser);
 		JSONArray json = JSONArray.fromObject(positionresult );
-		System.out.println(json.toString()+"="+positionresult+"\n") ;
-		//Map<String ,String> mp=new HashMap<String,String>();
+		System.out.println(json.toString()+"="+positionresult+"\n");
 		String positions = "";
 	    if(json.size()>0){
 	    	for(int i=0;i<json.size();i++){// 閬嶅巻 jsonarray 鏁扮粍锛屾妸姣忎竴涓璞¤浆鎴?json 瀵硅薄
 	    		JSONObject job = json.getJSONObject(i);
-				/*mp.put("userId",nowuser);
-				mp.put("orgName","测试1组织系统");
-				mp.put("appName","服务管理中心");
-				mp.put("positions",job.getString("positions"));
-				json.add(mp);*/
 				System.out.print("positions:"+json.toString());
 				positions = job.getString("positions");
 				break;
 	    	}
-	    	
 	    }
-	    
 	    
 		List<Integer> myroles = new ArrayList<Integer>();
 		List<Role> allroles = new ArrayList<Role>();
@@ -1571,7 +1530,7 @@ public class ServiceAction extends ActionSupport{
 		//String rolesresult = grs.httpGet("http://localhost:3000/rolemap/getBusiRoleByOrganRole/");
 		String url = "http://localhost:3000/rolemap/getBusiRoleByOrganRole/";
 	    String rolesresult = grs.postForm(url, nowuser, "测试1组织系统", "服务管理中心", positions);
-		//String rolesresult = grs.getApplicationRoles(json.toString());
+		//String rolesresult = "God";
 		System.out.println(json.toString()+"="+rolesresult+"\n") ;
 		String[] roles = rolesresult.split(",");
 		for(int i = 0; i < roles.length; i++){
@@ -1723,7 +1682,6 @@ public class ServiceAction extends ActionSupport{
 				}
 			}
 		}
-		
 		
 		if(subsers.size() == 0 && fathers.size() == 1){
 			return true;
@@ -2090,6 +2048,15 @@ public class ServiceAction extends ActionSupport{
 	public String getMaxLoad() {
 		return maxLoad;
 	}
+	
+	public String getIsExternal() {
+		return isExternal;
+	}
+
+	public void setIsExternal(String isExternal) {
+		this.isExternal = isExternal;
+	}
+
 
 	public void setMaxLoad(String maxLoad) {
 		this.maxLoad = maxLoad;

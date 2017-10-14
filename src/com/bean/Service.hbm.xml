@@ -79,6 +79,9 @@
         <property name="attachments" type="string">
             <column name="Attachments" />
         </property>
+        <property name="isExternal" type="integer">
+            <column name="isExternal" />
+        </property>
         <set name="variables" inverse="true">
             <key>
                 <column name="serviceId" />
@@ -127,7 +130,7 @@
             </key>
             <one-to-many class="com.bean.RoleSpecSer" />
         </set>
-        <set name="permissionServices" inverse="true">
+        <set name="permissionservices" inverse="true">
             <key>
                 <column name="serviceid" not-null="true" />
             </key>

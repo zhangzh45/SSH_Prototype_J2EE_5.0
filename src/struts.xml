@@ -97,7 +97,7 @@
      </action>
      <!-- 提供给映射中的接口，根据ID获取所有的可用服务 -->
      <action name="getAllAvaService" class="ServiceInterface" method="getAllSimpleService">
-     	<result type="json">
+     	<result type="json" name="success">
      		<param name="root">serMap</param>
      	</result>
      </action>

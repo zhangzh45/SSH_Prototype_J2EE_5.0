@@ -11,10 +11,6 @@ public class Service implements java.io.Serializable {
 
 	// Fields
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private Integer serviceId;
 	private String serviceName;
 	private String serviceDesc;
@@ -39,6 +35,7 @@ public class Service implements java.io.Serializable {
 	private String businessFile;
 	private String combineType;
 	private String attachments;
+	private Integer isExternal;
 	private Set variables = new HashSet(0);
 	private Set userSpecSers = new HashSet(0);
 	private Set servicerelationsForServiceId = new HashSet(0);
@@ -47,7 +44,7 @@ public class Service implements java.io.Serializable {
 	private Set serviceresults = new HashSet(0);
 	private Set parameters = new HashSet(0);
 	private Set roleSpecSers = new HashSet(0);
-	private Set permissionServices = new HashSet(0);
+	private Set permissionservices = new HashSet(0);
 	private Set servicerelationsForSubServiceId = new HashSet(0);
 	private Set licences = new HashSet(0);
 
@@ -65,11 +62,11 @@ public class Service implements java.io.Serializable {
 			String serviceTime, String serviceHost, String serviceQuery,
 			Integer runTimes, Integer failTimes, String callService,
 			String serviceProvider, String appRoleUrl, String businessFile,
-			String combineType, String attachments, Set variables,
-			Set userSpecSers, Set servicerelationsForServiceId,
+			String combineType, String attachments, Integer isExternal,
+			Set variables, Set userSpecSers, Set servicerelationsForServiceId,
 			Set conditionsForSubServiceId, Set conditionsForServiceId,
 			Set serviceresults, Set parameters, Set roleSpecSers,
-			Set permissionServices, Set servicerelationsForSubServiceId,
+			Set permissionservices, Set servicerelationsForSubServiceId,
 			Set licences) {
 		this.serviceName = serviceName;
 		this.serviceDesc = serviceDesc;
@@ -94,6 +91,7 @@ public class Service implements java.io.Serializable {
 		this.businessFile = businessFile;
 		this.combineType = combineType;
 		this.attachments = attachments;
+		this.isExternal = isExternal;
 		this.variables = variables;
 		this.userSpecSers = userSpecSers;
 		this.servicerelationsForServiceId = servicerelationsForServiceId;
@@ -102,7 +100,7 @@ public class Service implements java.io.Serializable {
 		this.serviceresults = serviceresults;
 		this.parameters = parameters;
 		this.roleSpecSers = roleSpecSers;
-		this.permissionServices = permissionServices;
+		this.permissionservices = permissionservices;
 		this.servicerelationsForSubServiceId = servicerelationsForSubServiceId;
 		this.licences = licences;
 	}
@@ -301,6 +299,14 @@ public class Service implements java.io.Serializable {
 		this.attachments = attachments;
 	}
 
+	public Integer getIsExternal() {
+		return this.isExternal;
+	}
+
+	public void setIsExternal(Integer isExternal) {
+		this.isExternal = isExternal;
+	}
+
 	public Set getVariables() {
 		return this.variables;
 	}
@@ -365,12 +371,12 @@ public class Service implements java.io.Serializable {
 		this.roleSpecSers = roleSpecSers;
 	}
 
-	public Set getPermissionServices() {
-		return this.permissionServices;
+	public Set getPermissionservices() {
+		return this.permissionservices;
 	}
 
-	public void setPermissionServices(Set permissionServices) {
-		this.permissionServices = permissionServices;
+	public void setPermissionservices(Set permissionservices) {
+		this.permissionservices = permissionservices;
 	}
 
 	public Set getServicerelationsForSubServiceId() {

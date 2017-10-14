@@ -20,8 +20,7 @@
 	<meta content="" name="description" />
 
 	<meta content="" name="author" />
-	
-	<script src="js/dtree.js"></script>
+
 	
 	<script src="media/js/form-components.js"></script>
 	
@@ -36,25 +35,19 @@
 
 <!-- BEGIN BODY -->
 
-<body >
-	<div class="">
+<body>
+	<div>
 		<form name="form1" method="post" action="accessService.action">
 			<input id="accessid" type="hidden" name="accessid"  value="">
 			<input id="accessaddress" type="hidden" name="accessaddress"  value="">
 			<input id="userid" name="userid" type="hidden" value=<%=request.getSession().getAttribute("user")%>>
 			<input id="clientuserid" name="clientuserid" type="hidden" value="">
-			<IFRAME id="service" frameborder="0" width="100%" height="600" src="<s:property value="accessaddress"/>"></IFRAME>
 		</form>
 	</div>	
 
 
 	<script>
 	
-		
-		//alert(serviceurl);
-		//document.getElementById("service").src = serviceurl;
-		//document.getElementById("accessaddrss").value = serviceurl;
-
 		$(document).ready(function() {       
 		   //App.init();
 		   //TableAdvanced.init();
@@ -79,8 +72,6 @@
 		    }
 		   
 		});
-		
-		
 
 	</script>
 

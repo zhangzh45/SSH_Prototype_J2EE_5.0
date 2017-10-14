@@ -46,6 +46,7 @@ public class ServiceDAO extends HibernateDaoSupport {
 	public static final String BUSINESS_FILE = "businessFile";
 	public static final String COMBINE_TYPE = "combineType";
 	public static final String ATTACHMENTS = "attachments";
+	public static final String IS_EXTERNAL = "isExternal";
 
 	protected void initDao() {
 		// do nothing
@@ -203,6 +204,10 @@ public class ServiceDAO extends HibernateDaoSupport {
 		return findByProperty(ATTACHMENTS, attachments);
 	}
 
+	public List findByIsExternal(Object isExternal) {
+		return findByProperty(IS_EXTERNAL, isExternal);
+	}
+
 	public List findAll() {
 		log.debug("finding all Service instances");
 		try {
@@ -249,6 +254,11 @@ public class ServiceDAO extends HibernateDaoSupport {
 		}
 	}
 
+	public static ServiceDAO getFromApplicationContext(ApplicationContext ctx) {
+		return (ServiceDAO) ctx.getBean("ServiceDAO");
+	}
+	
+	
 	/*
 	 * @method findParmById
 	 * function:at the time  find the service by serviceId that can load the service's parameter information
@@ -263,10 +273,6 @@ public class ServiceDAO extends HibernateDaoSupport {
 				throw re;
 			}
 		}
-	
-	public static ServiceDAO getFromApplicationContext(ApplicationContext ctx) {
-		return (ServiceDAO) ctx.getBean("ServiceDAO");
-	}
 	
 	public List<Service> orderByRuntimes() {
 		String hql="select distinct ser from Service ser order by ser.runTimes desc, ser.serviceId asc";

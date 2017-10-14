@@ -22,6 +22,7 @@ import java.util.List;
 
 
 
+import com.action.ParameterAction;
 import com.action.ServiceAction;
 import com.bean.Condition;
 import com.bean.Parameter;
@@ -56,6 +57,7 @@ import org.json.JSONObject;
 public  class ServiceInfo
 {
 	private  static ServiceAction sa;
+	private  static ParameterAction pa;
     private  static SerService ser;
     private  static UserSpecSerService utiluss;
     private  static TempService tempser;
@@ -96,7 +98,15 @@ public  class ServiceInfo
 		this.sa = sa;
 	}
 	
-    public ConditionService getConditionsr() {
+    public ParameterAction getPa() {
+		return pa;
+	}
+
+	public void setPa(ParameterAction pa) {
+		ServiceInfo.pa = pa;
+	}
+
+	public ConditionService getConditionsr() {
 		return conditionsr;
 	}
 
@@ -133,8 +143,8 @@ public  class ServiceInfo
 	 * 获取用户服务
 	 */
     public static String getMyService(int userId){
-    	List<Service> sl = new ArrayList<Service>();
-    	sl=sa.getMyService(userId);
+    	 List<Service> sl = new ArrayList<Service>();
+    	 sl=sa.getMyService(userId);
     	 JSONArray json=new JSONArray();
     	 
     	 List<Service> businesslist = new ArrayList<Service>();
@@ -146,68 +156,49 @@ public  class ServiceInfo
     	 
 	   	  for(int i = 0; i < sl.size(); i++)
 	   	  {
+	   		  String sid = sl.get(i).getServiceId().toString();
 	   		  Map<String, String> map=new HashMap<String, String>();
-	   		  map.put("appid", sl.get(i).getServiceId().toString());
+	   		  map.put("appid", sid);
 	   		  map.put("appName", sl.get(i).getServiceName());
 	   		  map.put("appType", sl.get(i).getServiceType());
 	   		  map.put("appDesc", sl.get(i).getServiceDesc());
 	   		  map.put("appURL", sl.get(i).getServiceAddress());
 	   		  map.put("query", sl.get(i).getServiceQuery());
-	   		  Set paramSet=sl.get(i).getParameters();
-	   		  if(paramSet.size()!=0){
-	   			  Map<String, String> paramsMap = new HashMap<String, String>();
-				for(Object o : paramSet){
-					Parameter param = (Parameter) o;
-					paramsMap.put(param.getParametername(), param.getParametertype());
-					String paramJson=new JSONObject(paramsMap).toString();
-					map.put("params", paramJson);
-	   		  	}
-				System.out.print(map.toString()+"\n");
+	   		  List<String> subsers = new ArrayList<String>();
+	   		  subsers = pa.getCallServiceByFid(sid);
+	   		  Map<String, String> paramsMap = new HashMap<String, String>();
+	   		  Map<String, String> varMap = new HashMap<String, String>();
+	   		  for(int j = 0; j < subsers.size(); j++){
+	   			  Service curser = new Service();
+	   			  curser = ser.getUniqueService(subsers.get(j));
+	   			  Set paramSet = curser.getParameters();
+		   		  if(paramSet.size()!=0){
+		   			  for(Object o : paramSet){
+						Parameter param = (Parameter) o;
+						paramsMap.put(subsers.get(j)+"_"+param.getParametername(), param.getParametertype());
+		   		  	}
+		   		  }
+		   		  
+		   		  if(curser.getCombineType() != null && curser.getCombineType().equalsIgnoreCase("CombineB")){
+		 			  Set varSet = curser.getVariables();    //获取组合服务中的控制变量
+		 	 		  if(varSet.size() != 0){
+		 	 			    for(Object o : varSet){
+			 					Variable var = (Variable) o;
+			 					varMap.put(subsers.get(j)+"_"+var.getVariableName(), var.getVariableDesc());
+			 	 		  	}
+		 	 		  }
+		 		  }
 	   		  }
+	   		  String paramJson=new JSONObject(paramsMap).toString();
+	   		  map.put("params", paramJson);
+	   		  String varJson=new JSONObject(varMap).toString();
+			  map.put("vars", varJson);
+	   		  System.out.print(map.toString()+"\n");
 	   		  
-	 		  
-	 		  if(sl.get(i).getCombineType() != null && sl.get(i).getCombineType().equalsIgnoreCase("CombineB")){
-	 			  Set varSet=sl.get(i).getVariables();    //获取组合服务中的控制变量
-	 	 		  if(varSet.size() != 0){
-	 	 			    Map<String, String> varMap = new HashMap<String, String>();
-		 				for(Object o : varSet){
-		 					Variable var = (Variable) o;
-		 					varMap.put(var.getVariableName(), var.getVariableDesc());
-		 					String varJson=new JSONObject(varMap).toString();
-		 					map.put("vars", varJson);
-		 	 		  	}
-		 				System.out.print(map.toString()+"\n");
-	 	 		  }
-	 	 		  
-	 	 		 Set cons=sl.get(i).getConditionsForServiceId();    //获取组合服务中的运行条件
-	 			 //List<Condition> cons = new ArrayList<Condition>();
-	 			 //cons = conditionsr.getConditionDao().findByServiceId(sl.get(i).getServiceId());
-	 			 if(cons.size() != 0){
-	 				Service subservice = new Service();
-	 				for(Object o : cons){
-	 					Condition con = (Condition) o;
-	 					subservice = con.getServiceBySubServiceId();
-	 					Set subparamSet = subservice.getParameters();    //获取组合服务中子服务的参数
-	 	 	 	   		  if(subparamSet.size()!=0){
-	 	 	 	   			  Map<String, String> subparamsMap = new HashMap<String, String>();
-	 	 	 				for(Object o1 : subparamSet){
-	 	 	 					Parameter para = (Parameter) o1;
-	 	 	 					subparamsMap.put(para.getParametername(), para.getParametertype());
-	 	 	 					String subparamsJson=new JSONObject(subparamsMap).toString();
-	 	 	 					map.put("subparams", subparamsJson);
-	 	 	 	   		  	}
-	 	 	 	   		  }
-	 	 	 	   		  break;
-	 	 		  	}
-	 			 }
-	 			 
-	 	   		System.out.print(map.toString()+"\n");
-	 		  }
-	   		  json.put(map);  
+	 		  json.put(map);  
 	   		  System.out.print(json.toString());
 	   	  }
 	   	  return json.toString();
-   	
     }
     
     /**
@@ -297,18 +288,6 @@ public  class ServiceInfo
 	    					map.put("appURL", auditService.getServiceAddress());
 	    					/*map.put("appURL", auditService.getServiceAddress());
 	    					map.put("appQuery", auditService.getServiceQuery());*/
-	    					
-	    					Set paramSet=auditService.getParameters();
-	    			   		if(paramSet.size()!=0){
-	    			   			Map<String, String> paramsMap = new HashMap<String, String>();
-	    						for(Object o : paramSet){
-	    							Parameter param = (Parameter) o;
-	    							paramsMap.put(param.getParametername(), param.getParametertype());
-	    							String paramJson=new JSONObject(paramsMap).toString();
-	    							map.put("params", paramJson);
-	    			   		  	}
-	    			   		}
-	    					
 	    					map.put("available", "audit");
 	    					json.put(map);
 	    					userSpeSer=true;
@@ -332,18 +311,6 @@ public  class ServiceInfo
     					map.put("appURL", auditService.getServiceAddress());
     					/*map.put("appURL", auditService.getServiceAddress());
     					map.put("appQuery", auditService.getServiceQuery());*/
-    					
-    					Set paramSet=auditService.getParameters();
-    			   		if(paramSet.size()!=0){
-    			   			Map<String, String> paramsMap = new HashMap<String, String>();
-    						for(Object o : paramSet){
-    							Parameter param = (Parameter) o;
-    							paramsMap.put(param.getParametername(), param.getParametertype());
-    							String paramJson=new JSONObject(paramsMap).toString();
-    							map.put("params", paramJson);
-    			   		  	}
-    			   		}
-    					
     					map.put("available", "audit");
     					json.put(map);
     					userSpeSer=true;
@@ -361,18 +328,6 @@ public  class ServiceInfo
 				map.put("appURL", allService.get(i).getServiceAddress());
 				/*map.put("appURL", allService.get(i).getServiceAddress());
 				map.put("appQuery", allService.get(i).getServiceQuery());*/
-				
-				Set paramSet=allService.get(i).getParameters();
-		   		if(paramSet.size()!=0){
-		   			Map<String, String> paramsMap = new HashMap<String, String>();
-					for(Object o : paramSet){
-						Parameter param = (Parameter) o;
-						paramsMap.put(param.getParametername(), param.getParametertype());
-						String paramJson=new JSONObject(paramsMap).toString();
-						map.put("params", paramJson);
-		   		  	}
-		   		}
-				
 				map.put("available", "false");
 				json.put(map);
     		}
@@ -387,23 +342,10 @@ public  class ServiceInfo
     			map1.put("appURL", uss.getService().getServiceAddress());
     			/*map1.put("appURL", uss.getService().getServiceAddress());
     			map1.put("appQuery", uss.getService().getServiceQuery());*/
-    			
-    			Set paramSet=uss.getService().getParameters();
-    	   		if(paramSet.size()!=0){
-    	   			Map<String, String> paramsMap = new HashMap<String, String>();
-    				for(Object o : paramSet){
-    					Parameter param = (Parameter) o;
-    					paramsMap.put(param.getParametername(), param.getParametertype());
-    					String paramJson=new JSONObject(paramsMap).toString();
-    					map1.put("params", paramJson);
-    	   		  	}
-    	   		}
-    			
     			map1.put("available", "true");
     			json.put(map1);
     		}
 		}
-  
     	return json.toString();
     }
     

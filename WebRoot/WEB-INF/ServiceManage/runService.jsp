@@ -100,7 +100,7 @@
 									<s:text name="ServiceOperation.Result"></s:text>URL
 								</div>
 								<div class="portlet-body">
-									<iframe src="" name="iframe" id="IF" width="100%" height="300" id="ifrid"></iframe>
+									<iframe src="" name="iframe" id="IF" width="100%" height="300"></iframe>
 								</div>
 							</div>
 							

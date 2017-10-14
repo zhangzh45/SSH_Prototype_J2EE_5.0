@@ -57,6 +57,21 @@ public class SerService
 		return (List<Service>)this.srDAO.findAll();  
 	}
 	
+	public List<Service> getInternalService()
+	{
+		List<Service> re = new ArrayList<Service>();
+		re.addAll(this.srDAO.findByIsExternal(0));
+		return re;
+	}
+	
+	public List<Service> getExternalService()
+	{
+		List<Service> re = new ArrayList<Service>();
+		re.addAll(this.srDAO.findByIsExternal(1));
+		return re;
+	}
+	
+	
 	public List<Service> getUnService()
 	{
 		return (List<Service>)this.srDAO.findByServiceState("NO");
@@ -143,6 +158,12 @@ public class SerService
 	public String getServiceType(int sid)
 	{
 		return this.srDAO.findById(sid).getServiceType();
+		
+	}
+	
+	public int getIsExternal(int sid)
+	{
+		return this.srDAO.findById(sid).getIsExternal();
 		
 	}
 	

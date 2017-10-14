@@ -227,13 +227,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								    <div class="controls">
 								      <label class="radio">
 										<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
-										     <s:text name="ServiceLocalMode"></s:text>
+										     <s:text name="ServiceInternalMode"></s:text>
 								  	  </label>
 									  <label class="radio">
 										<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-										   <s:text name="ServiceRemoteMode"></s:text>
+										   <s:text name="ServiceExternalMode"></s:text>
 									  </label>
 								    </div>
+								    <input id="inputIsExternal" name="isExternal" type="hidden" value="">
 								  </div>
 								  
 								  <div class="control-group">
@@ -453,6 +454,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				}
 			}
 			document.getElementById("inputCallService").value = callstring;
+			
+			var isExternal = "0";
+			if(document.getElementById("optionsRadios2").checked == true){
+				isExternal = "1";
+			}
+			document.getElementById("inputIsExternal").value = isExternal;
+			
 			form2.action='register.action'; 
 			form2.submit();
 		}
