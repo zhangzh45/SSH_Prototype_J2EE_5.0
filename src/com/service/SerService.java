@@ -57,6 +57,29 @@ public class SerService
 		return (List<Service>)this.srDAO.findAll();  
 	}
 	
+	public List<Service> getExceptedService()   //获取除服务类型为service（微服务）以外的所有服务。包括流程
+	{
+		List<Service> all = (List<Service>)this.srDAO.findAll();  
+		List<Service> mservceis = (List<Service>)this.srDAO.findByServiceType("SERVICE");
+		all.removeAll(mservceis);
+		return all;
+	}
+	
+	public List<Service> getInternalService()
+	{
+		List<Service> re = new ArrayList<Service>();
+		re.addAll(this.srDAO.findByIsExternal(0));
+		return re;
+	}
+	
+	public List<Service> getExternalService()
+	{
+		List<Service> re = new ArrayList<Service>();
+		re.addAll(this.srDAO.findByIsExternal(1));
+		return re;
+	}
+	
+	
 	public List<Service> getUnService()
 	{
 		return (List<Service>)this.srDAO.findByServiceState("NO");
@@ -146,6 +169,12 @@ public class SerService
 		
 	}
 	
+	public int getIsExternal(int sid)
+	{
+		return this.srDAO.findById(sid).getIsExternal();
+		
+	}
+	
 	public String getCombineType(int sid)
 	{
 		return this.srDAO.findById(sid).getCombineType();
@@ -187,5 +216,73 @@ public class SerService
 	
 	public List<String> getRelateBusiness(){
 		return srDAO.findRelateBusiness();
+	}
+	
+	public Service getServiceidByServiename(String serviceName){
+		return srDAO.findServiceidByServiecename(serviceName);
+	}
+	
+	/**
+	 * 获取所有服务的最大可靠性值
+	 * @return
+	 */
+	public double getMaxServiceReliability(){
+		return srDAO.findMaxServiceReliability();
+	}
+	
+	/**
+	 * 获取所有服务的最小可靠性值
+	 * @return
+	 */
+	public double getMinServiceReliability(){
+		return srDAO.findMinServiceReliability();
+	}
+	
+	/**
+	 * 获取所有服务的最大运行时间值
+	 * @return
+	 */
+	public double getMaxServiceTime(){
+		return srDAO.findMaxServiceTime();
+	}
+	
+	/**
+	 * 获取所有服务的最小运行时间值
+	 * @return
+	 */
+	public double getMinServiceTime(){
+		return srDAO.findMinServiceTime();
+	}
+	
+	/**
+	 * 获取所有服务的最大成本值
+	 * @return
+	 */
+	public double getMaxServiceCost(){
+		return srDAO.findMaxServiceCost();
+	}
+	
+	/**
+	 * 获取所有服务的最小成本值
+	 * @return
+	 */
+	public double getMinServiceCost(){
+		return srDAO.findMinServiceCost();
+	}
+	
+	/**
+	 * 获取所有服务的最大QoS值
+	 * @return
+	 */
+	public double getMaxServiceQos(){
+		return srDAO.findMaxServiceQos();
+	}
+	
+	/**
+	 * 获取所有服务的最小QoS值
+	 * @return
+	 */
+	public double getMinServiceQos(){
+		return srDAO.findMinServiceQos();
 	}
 }

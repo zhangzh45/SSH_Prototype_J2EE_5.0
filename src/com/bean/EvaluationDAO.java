@@ -157,4 +157,48 @@ public class EvaluationDAO extends HibernateDaoSupport {
 	public static EvaluationDAO getFromApplicationContext(ApplicationContext ctx) {
 		return (EvaluationDAO) ctx.getBean("EvaluationDAO");
 	}
+	
+	/**
+	 * 查找所有服务的最大用户平均评分
+	 * @return
+	 */
+	public Double findMaxAvgEvaluation(){
+		String hql="select avg(evaluationMark) from Evaluation group by evaluationService";
+		List<Double> list = (List<Double>) getHibernateTemplate().find(hql);
+		int num = list.size();
+		if(num == 0){
+			return 0.0;
+		}
+		else{
+			Double maxAvg = 0.0;
+			for(int i = 0 ; i < num; i++){
+				if(list.get(i) > maxAvg){
+					maxAvg = list.get(i);
+				}
+			}
+			return maxAvg;
+		}
+	}
+	
+	/**
+	 * 查找所有服务的最小用户平均评分
+	 * @return
+	 */
+	public Double findMinAvgEvaluation(){
+		String hql="select avg(evaluationMark) from Evaluation group by evaluationService";
+		List<Double> list = (List<Double>) getHibernateTemplate().find(hql);
+		int num = list.size();
+		if(num == 0){
+			return 0.0;
+		}
+		else{
+			Double minAvg = list.get(0);
+			for(int i = 1; i < num; i++){
+				if(list.get(i) < minAvg){
+					minAvg = list.get(i);
+				}
+			}
+			return minAvg;
+		}
+	}
 }

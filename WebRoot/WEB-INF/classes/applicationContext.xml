@@ -84,10 +84,12 @@
                 <value>com/bean/Variable.hbm.xml</value>
                 <value>com/bean/UserRole.hbm.xml</value>
                 <value>com/bean/Serviceresult.hbm.xml</value>
+                <value>com/bean/Serviceclass.hbm.xml</value>
                 <value>com/bean/Searchkeyword.hbm.xml</value>
                 <value>com/bean/Searchsite.hbm.xml</value>
                 <value>com/bean/Searchinf.hbm.xml</value>
                 <value>com/bean/Servicerelation.hbm.xml</value>
+                <value>com/bean/Servicelinks.hbm.xml</value>
                 <value>com/bean/UserSpecSer.hbm.xml</value>
                 <value>com/bean/Temp.hbm.xml</value>
                 <value>com/bean/Runlog.hbm.xml</value>
@@ -170,6 +172,12 @@
 		</property>
 		<property name="attachmentsr">
 			<ref bean="attachmentsr" />
+		</property>
+		<property name="serlinkssr">
+			<ref bean="ServicelinksService" />
+		</property>
+		<property name="serclasssr">
+			<ref bean="ServiceclassService" />
 		</property>
 	</bean>
 	
@@ -273,9 +281,6 @@
 		<property name="parametersr">
 			<ref bean="parametersr" />
 		</property>
-		<property name="servicesr">
-			<ref bean="srs" />
-		</property>
 		<property name="srresultsr">
 			<ref bean="srresultsr" />
 		</property>
@@ -287,6 +292,9 @@
 		</property>
 		<property name="runlogsr">
 			<ref bean="runlogsr" />
+		</property>
+		<property name="srrelationsr">
+			<ref bean="srrelationsr" />
 		</property>
 		<property name="srs">
 			<ref bean="srs" />
@@ -454,6 +462,9 @@
 		<property name="srrelationsr">
 			<ref bean="srrelationsr"/>
 		</property>
+		<property name="serlinkssr">
+			<ref bean="ServicelinksService" />
+		</property>
 	</bean>
 
 	<bean id="VariableDAO" class="com.bean.VariableDAO">
@@ -570,10 +581,12 @@
 		<property name="sa">
 			<ref bean="srAction" />
 		</property>
+		<property name="pa">
+			<ref bean="parameterAction" />
+		</property>
 		<property name="ser">
 			<ref bean="srs"/>
 		</property>
-		 
 		<property name="utiluss">
 			<ref bean="UserSpecSerService"/>
 		</property>
@@ -755,6 +768,26 @@
 	<bean id ="specificationRoleInteface" class="com.service.interfce.SpecificationRoleInterface">
 		<property name="specTaskRoleUserService">
 			<ref bean="specTaskRoleUserService"/>
+		</property>
+	</bean>
+	<bean id="ServicelinksDAO" class="com.bean.ServicelinksDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="ServicelinksService" class="com.service.ServicelinksService">
+		<property name="srlinksDao">
+			<ref bean="ServicelinksDAO" />
+		</property>
+	</bean>
+	<bean id="ServiceclassDAO" class="com.bean.ServiceclassDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="ServiceclassService" class="com.service.ServiceclassService">
+		<property name="srclassDao">
+			<ref bean="ServiceclassDAO" />
 		</property>
 	</bean>
 	</beans>

@@ -88,6 +88,7 @@
 							  		<ul class="nav">
 							  			<li class="active"><a onclick="form2.action='combineAService.action'; form2.submit();"><s:text name="ReliabilityCombination"></s:text></a></li>
 							  			<li><a onclick="form2.action='combineBService.action'; form2.submit();"><s:text name="ApplicabilityCombination"></s:text></a></li>
+							  			<li><a onclick="form2.action='combineCService.action'; form2.submit();"><s:text name="ProcessCombination"></s:text></a></li>
 							  			<li><a ><s:text name="Other"></s:text></a></li>
 							  		</ul>
 							  	</div>
@@ -447,7 +448,7 @@
 			var userid = document.getElementById("userid").value;
 			//alert(userid);
 			if(userid == "null"){    //不是管理员
-				window.location = "http://localhost:8080/SSH_Prototype_J2EE_5.0/error.jsp";
+				window.location = "/error.jsp";
 			}
 			if(userid != "0"){    //不是管理员
 				var hideobjs = document.getElementsByName("byadmin");

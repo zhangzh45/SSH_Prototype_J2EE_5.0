@@ -118,10 +118,14 @@ public class ParseYawlFile {
 					}
 					System.out.println("specdesc: " + specdesc);
 				}
+				
+				//保存流程到数据库
 				Specification spec= new Specification(specid, specname, specuri, specversion, specdesc, filecontent, businessfilepath);
 				System.out.print(spec.toString()+";;;");
 				System.out.print(specsr.toString());
 				specsr.addSpec(spec);
+				
+				//解析流程中的任务分配用户/角色
 				Iterator decompositions=specification.elementIterator("decomposition");
 				while(decompositions.hasNext()){
 					Element decomposition=(Element)decompositions.next();

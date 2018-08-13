@@ -118,7 +118,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 								<form name="form2" class="form-horizontal" action="register.action" method="post" enctype="multipart/form-data">
 
-									<div class="control-group">
+								<div class="control-group">
 								    <label class="control-label" for="inputServiceName"><s:text name="ServiceName"></s:text></label>
 								    <div class="controls">
 								      <input type="text" id="inputServiceName" name="sr.serviceName" placeholder="ServiceName">
@@ -154,6 +154,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								    </div>
 								  </div>
 								  <div class="control-group">
+								    <label class="control-label" for="inputServiceCost"><s:text name="ServiceCost"></s:text></label>
+								    <div class="controls">
+								      <input type="text" id="inputServiceCost" name="serviceCost" placeholder="ServiceCost">
+								    </div>
+								  </div>
+								  <div class="control-group">
+								    <label class="control-label" for="inputServiceReliability"><s:text name="ServiceReliability"></s:text></label>
+								    <div class="controls">
+								      <input type="text" id="inputServiceReliability" name="serviceReliability" placeholder="ServiceReliability">
+								    </div>
+								  </div>
+								  <div class="control-group">
 								    <label class="control-label" for="inputServiceAddress"><s:text name="ServiceAddress"></s:text></label>
 								    <div class="controls">
 								      <input type="text" id="inputServiceAddress" name="sr.serviceAddress" placeholder="ServiceAddress">
@@ -163,6 +175,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								    <label class="control-label" for="inputServiceQuery"><s:text name="ServiceQuery"></s:text></label>
 								    <div class="controls">
 								      <input type="text" id="inputServiceQuery" name="sr.serviceQuery" placeholder="ServiceQuery">
+								    </div>
+								  </div>
+								  <div class="control-group">
+								    <label class="control-label" for="inputServiceTime"><s:text name="ServiceTime"></s:text></label>
+								    <div class="controls">
+								      <input type="text" id="inputServiceTime" name="sr.serviceTime" placeholder="ServiceTime">
 								    </div>
 								  </div>
 								  <div id='AppRoleURL' style="display:none" class="control-group">
@@ -196,7 +214,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								    </div>
 								  </div>
 								  
-								  <div class="control-group">
+								  <div class="control-group" style="display:none">
 								    <label class="control-label" for="inputCallService"><s:text name="ServiceCalledServices"></s:text></label>
 								    <div class="controls">
 								    <table class="" style="" id="CallServiceTable">
@@ -218,7 +236,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								  <div id="Businessfile" style="display:none" class="control-group">
 								    <label class="control-label" for="inputBusinessfile"><s:text name="UploadSpecificationFile"></s:text></label>
 								    <div class="controls">
-										<input name="myFile" type="FILE" id="myFile" size="500" >
+										<input name="myFile" type="FILE" id="myFile" >
 									</div>
 								  </div>
 								  
@@ -227,16 +245,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								    <div class="controls">
 								      <label class="radio">
 										<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
-										     <s:text name="ServiceLocalMode"></s:text>
+										     <s:text name="ServiceInternalMode"></s:text>
 								  	  </label>
 									  <label class="radio">
 										<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-										   <s:text name="ServiceRemoteMode"></s:text>
+										   <s:text name="ServiceExternalMode"></s:text>
 									  </label>
 								    </div>
+								    <input id="inputIsExternal" name="isExternal" type="hidden" value="">
 								  </div>
 								  
-								  <div class="control-group">
+								  <div class="control-group" style="display:none">
 								    <div class="controls">
 								      <label class="checkbox">
 								        <input type="checkbox"><s:text name="ServiceAnonymous"></s:text>
@@ -333,7 +352,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			var userid = document.getElementById("userid").value;
 			//alert(userid);
 			if(userid == "null"){    //不是管理员
-				window.location = "http://localhost:8080/SSH_Prototype_J2EE_5.0/error.jsp";
+				window.location = "/error.jsp";
 			}
 			if(admin != "true"){    //不是管理员
 				var hideobjs = document.getElementsByName("byadmin");
@@ -434,9 +453,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			document.getElementById("inputServiceLevel").value = servicelevelvalue;
 			
 			
-			var callservicesobj = document.getElementsByName("callservices");
+			//var callservicesobj = document.getElementsByName("callservices");
 			var callstring = "";
-			for(var i = 0; i < callservicesobj.length; i++){
+			/*for(var i = 0; i < callservicesobj.length; i++){
 				var callservice = callservicesobj[i];
 				var callserviceindex = callservice.selectedIndex;
 				var callservicevalue = callservice.options[callserviceindex].value;
@@ -451,8 +470,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						callstring += callservicevalue;
 					}
 				}
-			}
+			}*/
 			document.getElementById("inputCallService").value = callstring;
+			
+			var isExternal = "0";
+			if(document.getElementById("optionsRadios2").checked == true){
+				isExternal = "1";
+			}
+			document.getElementById("inputIsExternal").value = isExternal;
+			
 			form2.action='register.action'; 
 			form2.submit();
 		}

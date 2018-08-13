@@ -19,8 +19,8 @@
         <many-to-one name="serviceBySubServiceId" class="com.bean.Service" fetch="select">
             <column name="subServiceId" />
         </many-to-one>
-        <property name="seqNum" type="integer">
-            <column name="seqNum" />
+        <property name="linkServiceId" type="integer">
+            <column name="linkServiceId" />
         </property>
     </class>
 </hibernate-mapping>

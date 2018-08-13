@@ -34,6 +34,12 @@
         <property name="serviceRange" type="string">
             <column name="ServiceRange" length="45" />
         </property>
+        <property name="serviceReliability" type="double">
+            <column name="ServiceReliability" precision="22" scale="0" />
+        </property>
+        <property name="serviceCost" type="double">
+            <column name="ServiceCost" precision="22" scale="0" />
+        </property>
         <property name="serviceState" type="string">
             <column name="ServiceState" length="45" />
         </property>
@@ -49,35 +55,41 @@
         <property name="serviceTime" type="string">
             <column name="ServiceTime" length="45" />
         </property>
-        <property name="serviceHost" type="string">
-            <column name="ServiceHost" length="45" />
-        </property>
-        <property name="serviceQuery" type="string">
-            <column name="ServiceQuery" length="45" />
-        </property>
         <property name="runTimes" type="integer">
             <column name="runTimes" />
         </property>
         <property name="failTimes" type="integer">
             <column name="failTimes" />
         </property>
+        <property name="serviceQos" type="double">
+            <column name="ServiceQos" precision="22" scale="0" />
+        </property>
+        <property name="serviceHost" type="string">
+            <column name="ServiceHost" length="45" />
+        </property>
+        <property name="serviceQuery" type="string">
+            <column name="ServiceQuery" length="45" />
+        </property>
         <property name="callService" type="string">
-            <column name="CallService" length="45" />
+            <column name="CallService" />
         </property>
         <property name="serviceProvider" type="string">
             <column name="ServiceProvider" length="45" />
         </property>
-        <property name="appRoleUrl" type="string">
-            <column name="AppRoleURL" />
-        </property>
         <property name="businessFile" type="string">
             <column name="BusinessFile" />
+        </property>
+        <property name="appRoleUrl" type="string">
+            <column name="AppRoleURL" />
         </property>
         <property name="combineType" type="string">
             <column name="CombineType" length="45" />
         </property>
         <property name="attachments" type="string">
             <column name="Attachments" />
+        </property>
+        <property name="isExternal" type="integer">
+            <column name="isExternal" />
         </property>
         <set name="variables" inverse="true">
             <key>
@@ -115,6 +127,12 @@
             </key>
             <one-to-many class="com.bean.Serviceresult" />
         </set>
+        <set name="permissionservices" inverse="true">
+            <key>
+                <column name="serviceid" not-null="true" />
+            </key>
+            <one-to-many class="com.bean.Permissionservice" />
+        </set>
         <set name="parameters" inverse="true">
             <key>
                 <column name="serviceid" not-null="true" />
@@ -126,12 +144,6 @@
                 <column name="serviceId" not-null="true" />
             </key>
             <one-to-many class="com.bean.RoleSpecSer" />
-        </set>
-        <set name="permissionServices" inverse="true">
-            <key>
-                <column name="serviceid" not-null="true" />
-            </key>
-            <one-to-many class="com.bean.Permissionservice" />
         </set>
         <set name="servicerelationsForSubServiceId" inverse="true">
             <key>

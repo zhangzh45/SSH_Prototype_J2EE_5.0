@@ -39,5 +39,37 @@ public class EvaluationService
 		return this.evaluationDao.findByEvaluationService(sid);
 	}
 	
+	/**
+	 * 获取指定服务的用户平均评分
+	 * @param serviceid
+	 * @return
+	 */
+	public Double getAvgEvaluation(int serviceid){
+		List<Evaluation> evas = getServiceEvaluate(serviceid);
+		int num = evas.size();
+		if(num == 0){
+			return 0.0;
+		}
+		int points = 0;
+		for(int i = 0 ; i < num; i++){
+			points += Integer.parseInt(evas.get(i).getEvaluationMark());
+		}
+		return points * 1.0 / num;
+	}
 	
+	/**
+	 * 获取指定服务的最大用户平均评分
+	 * @return
+	 */
+	public Double getMaxAvgEvaluation(){
+		return evaluationDao.findMaxAvgEvaluation();
+	}
+	
+	/**
+	 * 获取指定服务的最小用户平均评分
+	 * @return
+	 */
+	public Double getMinAvgEvaluation(){
+		return evaluationDao.findMinAvgEvaluation();
+	}
 }

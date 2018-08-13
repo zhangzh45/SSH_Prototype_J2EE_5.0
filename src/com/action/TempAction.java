@@ -1,6 +1,7 @@
 package com.action;
 
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -117,6 +118,7 @@ public class TempAction extends ActionSupport{
 		}
 		return SUCCESS;	
 	}
+	
 	public boolean reflash(){
 		HttpSession session=ServletActionContext.getRequest().getSession();
 		//session.setAttribute("submitToken", submitToken);
@@ -185,6 +187,25 @@ public class TempAction extends ActionSupport{
 		return SUCCESS;
 	}
 
+	public String cancelTemp(){
+		List<Temp> tempsers = tempser.findByServiceId(Integer.parseInt(serviceId));
+		List<Temp> tempusers = tempser.findyByUserId(Integer.parseInt(userId));
+		tempsers.retainAll(tempusers);
+		if(tempsers.size() > 0){
+			tempser.delete(tempsers.get(0));
+			return SUCCESS;
+		}
+		return ERROR;
+	}
 	
+	public String addTemp(){
+		tempser.add(Integer.parseInt(serviceId), Integer.parseInt(userId));
+		return SUCCESS;
+	}
+	
+	public String removeSpecSer(){
+		usstemp.deleteByServiceUserId(Integer.parseInt(serviceId), Integer.parseInt(userId));
+		return SUCCESS;
+	}
 
 }

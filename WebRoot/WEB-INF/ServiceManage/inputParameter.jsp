@@ -101,10 +101,10 @@
 										<tbody>
 											<s:iterator var="parameters" value="ps" status="L">
 												<tr>
-													<td><s:property value="parameterid"/></td>
-													<td><s:property value="serviceid"/></td>
-													<td><s:property value="parametertype"/></td>
-													<td><s:property value="parametername"/></td>
+													<td><span name="parameters.pid"><s:property value="parameterid"/></span></td>
+													<td><span name="parameters.sid"><s:property value="service.serviceId"/></span></td>
+													<td><span name="parameters.type"><s:property value="parametertype"/></span></td>
+													<td><span name="parameters.name"><s:property value="parametername"/></span></td>
 													<td><input name="parameters.pt" type="text" value=""></td>
 												</tr>
 											</s:iterator>
@@ -122,6 +122,7 @@
 										<thead>
 											<tr>
 												<th>Variable Id</th>
+												<th>Service Id</th>
 												<th>Variable Name</th>
 												<th>Variable Desc</th>
 												<th>Input</th>
@@ -129,9 +130,10 @@
 										</thead>
 										<s:iterator var="vars" value="vars" status="L">
 											<tr>
-												<td><s:property value="variableId"/></td>
-												<td><s:property value="variableName"/></td>
-												<td><s:property value="variableDesc"/></td>
+												<td><span name="vars.vid"><s:property value="variableId"/></span></td>
+												<td><span name="vars.sid"><s:property value="service.serviceId"/></span></td>
+												<td><span name="vars.name"><s:property value="variableName"/></span></td>
+												<td><span name="vars.desc"><s:property value="variableDesc"/></span></td>
 												<td><input name="varvalue" type="text" value=""></td>
 											</tr>
 										</s:iterator>
@@ -190,7 +192,7 @@
 			var userid = document.getElementById("userid").value;
 			//alert(userid);
 			if(userid == "null"){    //不是管理员
-				window.location = "http://localhost:8080/SSH_Prototype_J2EE_5.0/error.jsp";
+				window.location = "/error.jsp";
 			}
 			if(userid != "0"){    //不是管理员
 				var hideobjs = document.getElementsByName("byadmin");
@@ -203,33 +205,38 @@
 		function getNumber()
 			{
 				var number = document.getElementsByName("parameters.pt");
-				var vv = document.getElementsByName("varvalue");
+				var para_sid = document.getElementsByName("parameters.sid");
+				var para_name = document.getElementsByName("parameters.name");
 				//alert(number.length);
 				document.getElementById("number").value = number.length;
 				for(var i = 0; i < number.length; i++)
 				{
 					if(number[i].value != "")
 					{
-						document.getElementById("pts").value += number[i].value;
+						document.getElementById("pts").value += para_sid[i].innerText + "_" + para_name[i].innerText + "=" + number[i].value;
 					}
 					else
 					{
-						document.getElementById("pts").value += ";";
+						document.getElementById("pts").value += para_sid[i].innerText + "_" + para_name[i].innerText + "=" + ";";
 					}
 					if(i != number.length - 1)
 					{
 						document.getElementById("pts").value += ",";
 					}
 				}
+				
+				var vv = document.getElementsByName("varvalue");
+				var var_sid = document.getElementsByName("vars.sid");
+				var var_name = document.getElementsByName("vars.name");
 				for(var i = 0; i < vv.length; i++)
 				{
 					if(vv[i].value != "")
 					{
-						document.getElementById("vrs").value += vv[i].value;
+						document.getElementById("vrs").value += var_sid[i].innerText + "_" + var_name[i].innerText + "=" + vv[i].value;
 					}
 					else
 					{
-						document.getElementById("vrs").value += ";";
+						document.getElementById("vrs").value += var_sid[i].innerText + "_" + var_name[i].innerText + "=" + ";";
 					}
 					if(i != vrs.length - 1)
 					{

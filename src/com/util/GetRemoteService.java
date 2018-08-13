@@ -3,6 +3,7 @@ package com.util;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.axis.client.Call;
 import org.apache.axis.client.Service;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -24,6 +26,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -31,7 +34,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
-import com.opensymphony.xwork2.ActionContext;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -43,7 +45,8 @@ import net.sf.json.JSONObject;
  *
  */
 public class GetRemoteService {
-		 private static  String result;
+		 private static String result;
+		 private static String endpoint = ConstantUtil.getDemoendpoint();
 
 		 /**
 		  * 用户登录验证
@@ -53,7 +56,7 @@ public class GetRemoteService {
 		  */
 	     public  String loginVerify(String userid, String password) {
 	    	//调用的组织管理中心的地址
-	 		String endpoint = "http://127.0.0.1:8020/demo/EmployeeServerInterfacePort?wsdl";
+	 		//String endpoint = "http://127.0.0.1:8020/demo/EmployeeServerInterfacePort?wsdl";
 	 		System.out.println(userid+"result");
         //直接引用远程的wsdl文件
        //以下都是套路 
@@ -68,11 +71,6 @@ public class GetRemoteService {
 	          call.addParameter("arg1", org.apache.axis.encoding.XMLType.XSD_STRING,
                       javax.xml.rpc.ParameterMode.IN);//接口的参数
 	          call.setReturnType(org.apache.axis.encoding.XMLType.XSD_STRING);//设置返回类型  
-	          //String result2 = (String)call.invoke(new Object[]{temp, temp});
-	          //List<Map<String,Object>> li=new ArrayList<Map<String,Object>>();
-	        //  JSONArray js=new JSONArray();
-	        
-	          //result= (String)call.invoke(new Object[]{userid});
 	         result = (String)call.invoke(new Object[]{userid, password});
 	          //给方法传递参数，并且调用方法
 	         // System.out.println("result is "+result2);
@@ -83,12 +81,6 @@ public class GetRemoteService {
 		  }
 		  catch (Exception e) 
 		  {
-			  //WebServiceService server = new WebServiceService();
-			  //WebServiceDelegate dd = server.getWebServicePort();
-			  
-			  //String result = dd.sayHello("hewei");
-			  
-			  //System.out.println(result);
             System.err.println(e.toString());
             return null;
 		  }
@@ -103,7 +95,7 @@ public class GetRemoteService {
 	      */
 	     public  String getPosition(String userid) {
 		    	//调用的组织管理中心的地址
-		 		String endpoint = "http://127.0.0.1:8020/demo/EmployeeServerInterfacePort?wsdl";
+		 		//String endpoint = "http://127.0.0.1:8020/demo/EmployeeServerInterfacePort?wsdl";
 		 		System.out.println(userid+"result");
 	        //直接引用远程的wsdl文件
 	       //以下都是套路 
@@ -177,7 +169,7 @@ public class GetRemoteService {
      */
     public  String getUserNum() {
 	    //调用的组织管理中心的地址
-	 	String endpoint = "http://127.0.0.1:8020/demo/EmployeeServerInterfacePort?wsdl";
+	 	//String endpoint = "http://127.0.0.1:8020/demo/EmployeeServerInterfacePort?wsdl";
 	 	String UserNum = "";
 		  try
 		  {
@@ -273,6 +265,7 @@ public class GetRemoteService {
               //  entity.setContentEncoding("UTF-8");
                 entity.setContentType("application/json");
                 method.setEntity(entity);
+                method.setHeader("Authorization", "CBA1DDBCC6193C2D4B43:aRdL1vag1UyezX4sGmvRHrae1CGsrezLs17jz5t1");
             }
             HttpResponse result = httpClient.execute(method);
             url = URLDecoder.decode(url, "UTF-8");
@@ -303,7 +296,7 @@ public class GetRemoteService {
      * @param url    路径
      * @return
      */
-    public static String httpGet(String url){
+    public String httpGet(String url){
         //get请求返回结果
         String strResult = null;
         try {
@@ -336,7 +329,8 @@ public class GetRemoteService {
      * @return
      */
     public  String getAllRole(String user, String password) {
-    	String url = "http://127.0.0.1:8080/sysuClient/new/getAllRole.action?userid="+user+"&passwd="+password;
+    	//String url = "http://127.0.0.1:8080/sysuClient/new/getAllRole.action?userid="+user+"&passwd="+password;
+    	String url = ConstantUtil.getGetallroleurl() + "?userid="+user+"&passwd="+password;
     	result = httpGet(url);
     	/*String url = "http://127.0.0.1:8080/sysuClient/new/getAllRole.action";
     	JSONObject param = new JSONObject();
@@ -346,4 +340,73 @@ public class GetRemoteService {
     	System.out.println("roleresult"+result);
     	return result;
 	}
+    
+    /**
+     * 向rancher服务器发送请求
+     * @param url 服务器地址
+     * @param jsonParam 请求参数
+     * @param httpMethod 请求方法
+     * @param noNeedResponse 是否需要响应
+     * @return
+     */
+    public static String sendToRancher(String url, JSONObject jsonParam, String httpMethod, boolean noNeedResponse){
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+        HttpResponse result = null;
+        String jsonResult = null;    //请求返回结果
+        //String auth = "1477356FAC57627DB36C:KMPUFAwMxceHEp6ANvBCRG4EPhTgDK5xAXUfFbqL";  
+        String auth = ConstantUtil.getRancherapikeys();    //rancher api keys
+	    byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")));
+	    String authHeader = "Basic " + new String(encodedAuth);
+	    System.out.println(authHeader);
+        try {
+        	if(httpMethod.equalsIgnoreCase("POST")){
+        		HttpPost method = new HttpPost(url);
+                method.setHeader("Authorization", authHeader);
+                if(null != jsonParam){
+                	//解决中文乱码问题
+                    StringEntity entity = new StringEntity(jsonParam.toString(), "utf-8");
+                  //  entity.setContentEncoding("UTF-8");
+                    entity.setContentType("application/json");
+                    method.setEntity(entity);
+                }
+                result = httpClient.execute(method);
+        	}
+        	else if(httpMethod.equalsIgnoreCase("PUT")){
+        		HttpPut method = new HttpPut(url);
+                method.setHeader("Authorization", authHeader);
+                if(null != jsonParam){
+                	//解决中文乱码问题
+                    StringEntity entity = new StringEntity(jsonParam.toString(), "utf-8");
+                  //  entity.setContentEncoding("UTF-8");
+                    entity.setContentType("application/json");
+                    method.setEntity(entity);
+                }
+                result = httpClient.execute(method);
+        	}
+        	else if(httpMethod.equalsIgnoreCase("GET")){   //发送get请求
+        		HttpGet method = new HttpGet(url);
+        		method.setHeader("Authorization", authHeader);
+                System.out.println("get:"+authHeader);
+                result = httpClient.execute(method);
+        	}
+            url = URLDecoder.decode(url, "UTF-8");
+            /**请求发送成功，并得到响应**/
+            if (result.getStatusLine().getStatusCode() == HttpStatus.SC_OK || result.getStatusLine().getStatusCode() == HttpStatus.SC_ACCEPTED) {
+            	System.out.println("********发送成功！********");
+                String str = "";
+                try {
+                    /**读取服务器返回过来的json字符串数据**/
+                	jsonResult = EntityUtils.toString(result.getEntity());
+                    if (noNeedResponse) {
+                        return null;
+                    }
+                } catch (Exception e) {
+                	System.out.println("请求提交失败:" + url);
+                }
+            }
+        } catch (IOException e) {
+        	System.out.println("请求提交失败:" + url);
+        }
+        return jsonResult;
+    }
 }

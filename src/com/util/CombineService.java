@@ -10,7 +10,7 @@ public class CombineService {
 		  // TODO Auto-generated method stub
 		  
 		  //String endpoint = "http://localhost:8080/ServiceInf/DemoPort?wsdl";
-		  String endpoint = "http://localhost:8020/SSH_Prototype_J2EE_5.0/GetServiceInfoPort?wsdl";
+		  String endpoint = "http://localhost:8080/SSH_Prototype_J2EE_5.0/GetServiceInfoPort?wsdl";
           //直接引用远程的wsdl文件
          //以下都是套路 
 		  try

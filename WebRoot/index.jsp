@@ -614,6 +614,9 @@
 							<s:text name="ServiceClassification"></s:text></a>
 						</li>
 						<li >
+							<a onclick="form1.action='serviceQos.action';form1.submit()"><s:text name="ServiceQos"></s:text></a>
+						</li>
+						<li >
 							<a onclick="form1.action='callRelation.action';form1.submit()"><s:text name="ServiceCallRelations"></s:text></a>
 						</li>
 						<li >
@@ -621,6 +624,9 @@
 						</li>
 						<li >
 							<a onclick="form1.action='myService.action'; form1.submit();"><s:text name="ServiceOperation"></s:text></a>
+						</li>
+						<li >
+							<a name="byuser" onclick="form1.action='applyService.action'; form1.submit();"><s:text name="ServiceApply"></s:text></a>
 						</li>
 						<li >
 							<a name="byadmin" onclick="form1.action='appService.action'; form1.submit();"><s:text name="ServiceApplyApproval"></s:text></a>
@@ -701,6 +707,9 @@
 
 						<li>
 							<a onclick="form1.action='combineBService.action'; form1.submit();"><s:text name="ApplicabilityCombination"></s:text></a>
+						</li>
+						<li>
+							<a onclick="form1.action='combineCService.action'; form1.submit();"><s:text name="ProcessCombination"></s:text></a>
 						</li>
 					</ul>
 				</li>
@@ -3445,6 +3454,12 @@
 					hideobjs[i].style="display:none";
 				}
 			}
+			else{
+				var hideobjs = document.getElementsByName("byuser");
+				for(var i=0; i<hideobjs.length; i++){
+					hideobjs[i].style="display:none";
+				}
+			}
 		}
 		
 		function logout(){
@@ -3458,9 +3473,9 @@
 				success	: function(result){
 					//alert(result);
 					if(result == "success"){
-						window.location = "http://localhost:8080/SSH_Prototype_J2EE_5.0/login.jsp";
+						window.location = "/SSH_Prototype_J2EE_5.0";
 					}else if(result == "error"){
-						window.location = "http://localhost:8080/SSH_Prototype_J2EE_5.0/error.jsp";
+						window.location = "/SSH_Prototype_J2EE_5.0/error.jsp";
 					}
 				
 				},

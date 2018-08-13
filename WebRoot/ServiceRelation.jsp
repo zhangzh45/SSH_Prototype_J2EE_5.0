@@ -74,6 +74,10 @@
 				
 				var fatheraddress = document.getElementsByName("lfatheraddress");
 				var sonaddress = document.getElementsByName("lsonaddress");
+				var fathernames = document.getElementsByName("lfathername");
+				var sonnames = document.getElementsByName("lsonname");
+				
+				
 				if(fatherids.length == 0 && document.getElementById('relationFather').value !== ""){
 					//alert(document.getElementById('relationFather').value);
 					$('#topoRegion').html("该服务没有调用其他服务！");
@@ -82,11 +86,11 @@
 					var nodeTypeArray = ['APPLICATION', 'SERVICE', 'BUSINESS', 'LOCAL'];
 					var topoData = {
 						type: fathertypes.item(0).value, 
-						key: fatherids.item(0).value, 
+						key: fatherids.item(0).value + "_" + fathernames.item(0).value, 
 						rel: [
 						     {
 						    	 type: sontypes.item(0).value,
-						    	 key: sonids.item(0).value,
+						    	 key: sonids.item(0).value + "_" + sonnames.item(0).value,
 						    	 data: {'url': sonaddress.item(0).value}
 						     },
 						], 
@@ -94,31 +98,32 @@
 					};
 					
 					drawTopo(topoData, rootPosition, nodeTypeArray);
-					
 					for(var i = 1; i < fatherids.length; i++)
 					{
 						//alert(sontypes.item(i).value);
 						var newTopoData = {
 							type: fathertypes.item(i).value,
-					    	key: fatherids.item(i).value,
+					    	key: fatherids.item(i).value + "_" + fathernames.item(i).value,
 					    	rel: [
 		                           {
 		                            	type: sontypes.item(i).value,
-		                            	key: sonids.item(i).value,
+		                            	key: sonids.item(i).value + "_" + sonnames.item(i).value,
 		                            	data: {'url': sonaddress.item(i).value}
 		                           },
 					    	],
 					    	data: {'url': fatheraddress.item(i).value}
 						};
-						//alert(newTopoData.rel[0].key);
 						var mergedTopoData = mergeNewTopo(topoData, newTopoData);
-						$('#topoRegion').empty();
-						drawTopo(mergedTopoData, rootPosition, nodeTypeArray);
-						//topoData = mergedTopoData;
+						if(mergedTopoData == topoData){
+							drawTopo(newTopoData, rootPosition, nodeTypeArray);
+						}
+						else{
+							$('#topoRegion').empty();
+							drawTopo(mergedTopoData, rootPosition, nodeTypeArray);
+						}
+						topoData = mergedTopoData;
 					}
 				}
-				
-				
 			});
 		
 		</script>
@@ -132,7 +137,20 @@
 				<!-- <input name="btn" type="button" class="btn" onclick="document.getElementById('table1').style.display=''" value="详情"> -->
 			<!--  </div> -->
 			 <div class="input-group">
-      			<input type="text" class="form-control" name="relationFather" value="">
+			 	<div class="control-group">
+					<label class="control-label" for="inputServiceGranularity"><s:text name="SelectServiceGranularity"></s:text></label>
+					<div class="controls">
+						<select id="ServiceGranularity"  onchange="selectServiceGranularity()">
+							<option><s:text name="SingleService"></s:text></option>
+							<option><s:text name="RelatedServices"></s:text></option>
+							<option><s:text name="AllServices"></s:text></option>
+						</select>
+					</div>
+				</div>
+			</div>
+			 
+			 	<input type="hidden" class="form-control" id="serviceGranularity" name="serviceGranularity" value="single">
+      			<input type="text" class="form-control" name="relationFather" value="<s:property value="relationFather"/>">
       			<input type="hidden" class="form-control" id="relationFather" value="<s:property value="relationFather"/>">
       			<span class="input-group-btn">
         			<button class="btn btn-default" type="button" onclick="form1.submit()"><s:text name="RelationGraph"></s:text></button>
@@ -164,6 +182,8 @@
 				<td><input name="lfatherid" type="hidden" value="<s:property value="fatherid"/>"></td>
 				<td><input name="lfatheraddress" type="hidden" value="<s:property value="fatheraddress"/>"></td>
 				<td><input name="lsonaddress" type="hidden" value="<s:property value="sonaddress"/>"></td>
+				<td><input name="lfathername" type="hidden" value="<s:property value="fathername"/>"></td>
+				<td><input name="lsonname" type="hidden" value="<s:property value="sonname"/>"></td>
 				<!-- <input name="ldesc" type="hidden" value="<s:property value="desc"/>"> -->
 			</tr>
 			</s:iterator>
@@ -296,9 +316,20 @@
 	         	}
 			});
 		
-		
-		//form1.action = "inputParameter.action";
-		//form1.submit();
+	}
+	
+	
+	function selectServiceGranularity(){
+			var serviceGranularityobj = document.getElementById("ServiceGranularity");
+			var serviceGranularityindex = serviceGranularityobj.selectedIndex;
+			alert(serviceGranularityindex);
+			if(serviceGranularityindex == 0){
+				document.getElementById("serviceGranularity").value="single";
+			}else if(serviceGranularityindex == 1){
+				document.getElementById("serviceGranularity").value="related";
+			}else if(serviceGranularityindex == 2){
+				document.getElementById("serviceGranularity").value="all";
+			}
 	}
 </script>
 

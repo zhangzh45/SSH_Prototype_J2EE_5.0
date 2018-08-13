@@ -31,21 +31,25 @@ public class ServiceDAO extends HibernateDaoSupport {
 	public static final String RELATE_BUSINESS = "relateBusiness";
 	public static final String SERVICE_TARGET = "serviceTarget";
 	public static final String SERVICE_RANGE = "serviceRange";
+	public static final String SERVICE_RELIABILITY = "serviceReliability";
+	public static final String SERVICE_COST = "serviceCost";
 	public static final String SERVICE_STATE = "serviceState";
 	public static final String SERVICE_ADDRESS = "serviceAddress";
 	public static final String SERVICE_VERSION = "serviceVersion";
 	public static final String SERVICE_MAKER = "serviceMaker";
 	public static final String SERVICE_TIME = "serviceTime";
-	public static final String SERVICE_HOST = "serviceHost";
-	public static final String SERVICE_QUERY = "serviceQuery";
 	public static final String RUN_TIMES = "runTimes";
 	public static final String FAIL_TIMES = "failTimes";
+	public static final String SERVICE_QOS = "serviceQos";
+	public static final String SERVICE_HOST = "serviceHost";
+	public static final String SERVICE_QUERY = "serviceQuery";
 	public static final String CALL_SERVICE = "callService";
 	public static final String SERVICE_PROVIDER = "serviceProvider";
-	public static final String APP_ROLE_URL = "appRoleUrl";
 	public static final String BUSINESS_FILE = "businessFile";
+	public static final String APP_ROLE_URL = "appRoleUrl";
 	public static final String COMBINE_TYPE = "combineType";
 	public static final String ATTACHMENTS = "attachments";
+	public static final String IS_EXTERNAL = "isExternal";
 
 	protected void initDao() {
 		// do nothing
@@ -143,6 +147,14 @@ public class ServiceDAO extends HibernateDaoSupport {
 		return findByProperty(SERVICE_RANGE, serviceRange);
 	}
 
+	public List findByServiceReliability(Object serviceReliability) {
+		return findByProperty(SERVICE_RELIABILITY, serviceReliability);
+	}
+
+	public List findByServiceCost(Object serviceCost) {
+		return findByProperty(SERVICE_COST, serviceCost);
+	}
+
 	public List findByServiceState(Object serviceState) {
 		return findByProperty(SERVICE_STATE, serviceState);
 	}
@@ -163,20 +175,24 @@ public class ServiceDAO extends HibernateDaoSupport {
 		return findByProperty(SERVICE_TIME, serviceTime);
 	}
 
-	public List findByServiceHost(Object serviceHost) {
-		return findByProperty(SERVICE_HOST, serviceHost);
-	}
-
-	public List findByServiceQuery(Object serviceQuery) {
-		return findByProperty(SERVICE_QUERY, serviceQuery);
-	}
-
 	public List findByRunTimes(Object runTimes) {
 		return findByProperty(RUN_TIMES, runTimes);
 	}
 
 	public List findByFailTimes(Object failTimes) {
 		return findByProperty(FAIL_TIMES, failTimes);
+	}
+
+	public List findByServiceQos(Object serviceQos) {
+		return findByProperty(SERVICE_QOS, serviceQos);
+	}
+
+	public List findByServiceHost(Object serviceHost) {
+		return findByProperty(SERVICE_HOST, serviceHost);
+	}
+
+	public List findByServiceQuery(Object serviceQuery) {
+		return findByProperty(SERVICE_QUERY, serviceQuery);
 	}
 
 	public List findByCallService(Object callService) {
@@ -187,12 +203,12 @@ public class ServiceDAO extends HibernateDaoSupport {
 		return findByProperty(SERVICE_PROVIDER, serviceProvider);
 	}
 
-	public List findByAppRoleUrl(Object appRoleUrl) {
-		return findByProperty(APP_ROLE_URL, appRoleUrl);
-	}
-
 	public List findByBusinessFile(Object businessFile) {
 		return findByProperty(BUSINESS_FILE, businessFile);
+	}
+
+	public List findByAppRoleUrl(Object appRoleUrl) {
+		return findByProperty(APP_ROLE_URL, appRoleUrl);
 	}
 
 	public List findByCombineType(Object combineType) {
@@ -201,6 +217,10 @@ public class ServiceDAO extends HibernateDaoSupport {
 
 	public List findByAttachments(Object attachments) {
 		return findByProperty(ATTACHMENTS, attachments);
+	}
+
+	public List findByIsExternal(Object isExternal) {
+		return findByProperty(IS_EXTERNAL, isExternal);
 	}
 
 	public List findAll() {
@@ -249,6 +269,25 @@ public class ServiceDAO extends HibernateDaoSupport {
 		}
 	}
 
+	public static ServiceDAO getFromApplicationContext(ApplicationContext ctx) {
+		return (ServiceDAO) ctx.getBean("ServiceDAO");
+	}
+	
+	public Service findServiceidByServiecename(Object serviceName){
+		try{
+			String sql="select sr from Service sr where sr.serviceName=?";
+			List<Service> list=getHibernateTemplate().find(sql, serviceName);
+			if(list.size() > 0){
+				return list.get(0);
+			}
+			return null;
+		}catch(RuntimeException re) {
+			log.error("get failed", re);
+			throw re;
+		}
+	}
+	
+	
 	/*
 	 * @method findParmById
 	 * function:at the time  find the service by serviceId that can load the service's parameter information
@@ -264,10 +303,6 @@ public class ServiceDAO extends HibernateDaoSupport {
 			}
 		}
 	
-	public static ServiceDAO getFromApplicationContext(ApplicationContext ctx) {
-		return (ServiceDAO) ctx.getBean("ServiceDAO");
-	}
-	
 	public List<Service> orderByRuntimes() {
 		String hql="select distinct ser from Service ser order by ser.runTimes desc, ser.serviceId asc";
 		System.out.print("hql:");
@@ -282,5 +317,77 @@ public class ServiceDAO extends HibernateDaoSupport {
 	public List<String> findRelateBusiness() {
 		String hql="select distinct relateBusiness from Service";
 		return getHibernateTemplate().find(hql);
+	}
+	
+	/**
+	 * 查找所有服务的最大可靠性值
+	 * @return
+	 */
+	public double findMaxServiceReliability(){
+		String hql="select max(serviceReliability) from Service";
+		return (Double) getHibernateTemplate().find(hql).get(0);
+	}
+	
+	/**
+	 * 查找所有服务的最小可靠性值
+	 * @return
+	 */
+	public double findMinServiceReliability(){
+		String hql="select min(serviceReliability) from Service";
+		return (Double) getHibernateTemplate().find(hql).get(0);
+	}
+	
+	/**
+	 * 查找所有服务的最大运行时间值
+	 * @return
+	 */
+	public double findMaxServiceTime(){
+		String hql="select max(serviceTime) from Service";
+		return Double.parseDouble((String) getHibernateTemplate().find(hql).get(0));
+	}
+	
+	/**
+	 * 查找所有服务的最小运行时间值
+	 * @return
+	 */
+	public double findMinServiceTime(){
+		String hql="select min(serviceTime) from Service";
+		return Double.parseDouble((String) getHibernateTemplate().find(hql).get(0));
+	}
+	
+	/**
+	 * 查找所有服务的最大成本值
+	 * @return
+	 */
+	public double findMaxServiceCost(){
+		String hql="select max(serviceCost) from Service";
+		return (Double) getHibernateTemplate().find(hql).get(0);
+	}
+	
+	/**
+	 * 查找所有服务的最小成本值
+	 * @return
+	 */
+	public double findMinServiceCost(){
+		String hql="select min(serviceCost) from Service";
+		return (Double) getHibernateTemplate().find(hql).get(0);
+	}
+	
+	/**
+	 * 查找所有服务的最大QoS值
+	 * @return
+	 */
+	public double findMaxServiceQos(){
+		String hql="select max(serviceQos) from Service";
+		return (Double) getHibernateTemplate().find(hql).get(0);
+	}
+	
+	/**
+	 * 查找所有服务的最小QoS值
+	 * @return
+	 */
+	public double findMinServiceQos(){
+		String hql="select min(serviceQos) from Service";
+		return (Double) getHibernateTemplate().find(hql).get(0);
 	}
 }

@@ -11,10 +11,6 @@ public class Service implements java.io.Serializable {
 
 	// Fields
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private Integer serviceId;
 	private String serviceName;
 	private String serviceDesc;
@@ -24,30 +20,34 @@ public class Service implements java.io.Serializable {
 	private String relateBusiness;
 	private String serviceTarget;
 	private String serviceRange;
+	private double serviceReliability;
+	private double serviceCost;
 	private String serviceState;
 	private String serviceAddress;
 	private String serviceVersion;
 	private String serviceMaker;
 	private String serviceTime;
-	private String serviceHost;
-	private String serviceQuery;
 	private Integer runTimes;
 	private Integer failTimes;
+	private double serviceQos;
+	private String serviceHost;
+	private String serviceQuery;
 	private String callService;
 	private String serviceProvider;
-	private String appRoleUrl;
 	private String businessFile;
+	private String appRoleUrl;
 	private String combineType;
 	private String attachments;
+	private Integer isExternal;
 	private Set variables = new HashSet(0);
 	private Set userSpecSers = new HashSet(0);
 	private Set servicerelationsForServiceId = new HashSet(0);
 	private Set conditionsForSubServiceId = new HashSet(0);
 	private Set conditionsForServiceId = new HashSet(0);
 	private Set serviceresults = new HashSet(0);
+	private Set permissionservices = new HashSet(0);
 	private Set parameters = new HashSet(0);
 	private Set roleSpecSers = new HashSet(0);
-	private Set permissionServices = new HashSet(0);
 	private Set servicerelationsForSubServiceId = new HashSet(0);
 	private Set licences = new HashSet(0);
 
@@ -60,17 +60,18 @@ public class Service implements java.io.Serializable {
 	/** full constructor */
 	public Service(String serviceName, String serviceDesc, Integer maxLoad,
 			String serviceType, String serviceLevel, String relateBusiness,
-			String serviceTarget, String serviceRange, String serviceState,
+			String serviceTarget, String serviceRange,
+			double serviceReliability, double serviceCost, String serviceState,
 			String serviceAddress, String serviceVersion, String serviceMaker,
-			String serviceTime, String serviceHost, String serviceQuery,
-			Integer runTimes, Integer failTimes, String callService,
-			String serviceProvider, String appRoleUrl, String businessFile,
-			String combineType, String attachments, Set variables,
-			Set userSpecSers, Set servicerelationsForServiceId,
-			Set conditionsForSubServiceId, Set conditionsForServiceId,
-			Set serviceresults, Set parameters, Set roleSpecSers,
-			Set permissionServices, Set servicerelationsForSubServiceId,
-			Set licences) {
+			String serviceTime, Integer runTimes, Integer failTimes,
+			double serviceQos, String serviceHost, String serviceQuery,
+			String callService, String serviceProvider, String businessFile,
+			String appRoleUrl, String combineType, String attachments,
+			Integer isExternal, Set variables, Set userSpecSers,
+			Set servicerelationsForServiceId, Set conditionsForSubServiceId,
+			Set conditionsForServiceId, Set serviceresults,
+			Set permissionservices, Set parameters, Set roleSpecSers,
+			Set servicerelationsForSubServiceId, Set licences) {
 		this.serviceName = serviceName;
 		this.serviceDesc = serviceDesc;
 		this.maxLoad = maxLoad;
@@ -79,30 +80,34 @@ public class Service implements java.io.Serializable {
 		this.relateBusiness = relateBusiness;
 		this.serviceTarget = serviceTarget;
 		this.serviceRange = serviceRange;
+		this.serviceReliability = serviceReliability;
+		this.serviceCost = serviceCost;
 		this.serviceState = serviceState;
 		this.serviceAddress = serviceAddress;
 		this.serviceVersion = serviceVersion;
 		this.serviceMaker = serviceMaker;
 		this.serviceTime = serviceTime;
-		this.serviceHost = serviceHost;
-		this.serviceQuery = serviceQuery;
 		this.runTimes = runTimes;
 		this.failTimes = failTimes;
+		this.serviceQos = serviceQos;
+		this.serviceHost = serviceHost;
+		this.serviceQuery = serviceQuery;
 		this.callService = callService;
 		this.serviceProvider = serviceProvider;
-		this.appRoleUrl = appRoleUrl;
 		this.businessFile = businessFile;
+		this.appRoleUrl = appRoleUrl;
 		this.combineType = combineType;
 		this.attachments = attachments;
+		this.isExternal = isExternal;
 		this.variables = variables;
 		this.userSpecSers = userSpecSers;
 		this.servicerelationsForServiceId = servicerelationsForServiceId;
 		this.conditionsForSubServiceId = conditionsForSubServiceId;
 		this.conditionsForServiceId = conditionsForServiceId;
 		this.serviceresults = serviceresults;
+		this.permissionservices = permissionservices;
 		this.parameters = parameters;
 		this.roleSpecSers = roleSpecSers;
-		this.permissionServices = permissionServices;
 		this.servicerelationsForSubServiceId = servicerelationsForSubServiceId;
 		this.licences = licences;
 	}
@@ -181,6 +186,22 @@ public class Service implements java.io.Serializable {
 		this.serviceRange = serviceRange;
 	}
 
+	public double getServiceReliability() {
+		return this.serviceReliability;
+	}
+
+	public void setServiceReliability(double serviceReliability) {
+		this.serviceReliability = serviceReliability;
+	}
+
+	public double getServiceCost() {
+		return this.serviceCost;
+	}
+
+	public void setServiceCost(double serviceCost) {
+		this.serviceCost = serviceCost;
+	}
+
 	public String getServiceState() {
 		return this.serviceState;
 	}
@@ -221,22 +242,6 @@ public class Service implements java.io.Serializable {
 		this.serviceTime = serviceTime;
 	}
 
-	public String getServiceHost() {
-		return this.serviceHost;
-	}
-
-	public void setServiceHost(String serviceHost) {
-		this.serviceHost = serviceHost;
-	}
-
-	public String getServiceQuery() {
-		return this.serviceQuery;
-	}
-
-	public void setServiceQuery(String serviceQuery) {
-		this.serviceQuery = serviceQuery;
-	}
-
 	public Integer getRunTimes() {
 		return this.runTimes;
 	}
@@ -251,6 +256,30 @@ public class Service implements java.io.Serializable {
 
 	public void setFailTimes(Integer failTimes) {
 		this.failTimes = failTimes;
+	}
+
+	public double getServiceQos() {
+		return this.serviceQos;
+	}
+
+	public void setServiceQos(double serviceQos) {
+		this.serviceQos = serviceQos;
+	}
+
+	public String getServiceHost() {
+		return this.serviceHost;
+	}
+
+	public void setServiceHost(String serviceHost) {
+		this.serviceHost = serviceHost;
+	}
+
+	public String getServiceQuery() {
+		return this.serviceQuery;
+	}
+
+	public void setServiceQuery(String serviceQuery) {
+		this.serviceQuery = serviceQuery;
 	}
 
 	public String getCallService() {
@@ -269,20 +298,20 @@ public class Service implements java.io.Serializable {
 		this.serviceProvider = serviceProvider;
 	}
 
-	public String getAppRoleUrl() {
-		return this.appRoleUrl;
-	}
-
-	public void setAppRoleUrl(String appRoleUrl) {
-		this.appRoleUrl = appRoleUrl;
-	}
-
 	public String getBusinessFile() {
 		return this.businessFile;
 	}
 
 	public void setBusinessFile(String businessFile) {
 		this.businessFile = businessFile;
+	}
+
+	public String getAppRoleUrl() {
+		return this.appRoleUrl;
+	}
+
+	public void setAppRoleUrl(String appRoleUrl) {
+		this.appRoleUrl = appRoleUrl;
 	}
 
 	public String getCombineType() {
@@ -299,6 +328,14 @@ public class Service implements java.io.Serializable {
 
 	public void setAttachments(String attachments) {
 		this.attachments = attachments;
+	}
+
+	public Integer getIsExternal() {
+		return this.isExternal;
+	}
+
+	public void setIsExternal(Integer isExternal) {
+		this.isExternal = isExternal;
 	}
 
 	public Set getVariables() {
@@ -349,6 +386,14 @@ public class Service implements java.io.Serializable {
 		this.serviceresults = serviceresults;
 	}
 
+	public Set getPermissionservices() {
+		return this.permissionservices;
+	}
+
+	public void setPermissionservices(Set permissionservices) {
+		this.permissionservices = permissionservices;
+	}
+
 	public Set getParameters() {
 		return this.parameters;
 	}
@@ -363,14 +408,6 @@ public class Service implements java.io.Serializable {
 
 	public void setRoleSpecSers(Set roleSpecSers) {
 		this.roleSpecSers = roleSpecSers;
-	}
-
-	public Set getPermissionServices() {
-		return this.permissionServices;
-	}
-
-	public void setPermissionServices(Set permissionServices) {
-		this.permissionServices = permissionServices;
 	}
 
 	public Set getServicerelationsForSubServiceId() {

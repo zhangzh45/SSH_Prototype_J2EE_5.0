@@ -23,7 +23,7 @@ public class ServicerelationDAO extends HibernateDaoSupport {
 	private static final Logger log = LoggerFactory
 			.getLogger(ServicerelationDAO.class);
 	// property constants
-	public static final String SEQ_NUM = "seqNum";
+	public static final String LINK_SERVICE_ID = "linkServiceId";
 
 	protected void initDao() {
 		// do nothing
@@ -89,8 +89,8 @@ public class ServicerelationDAO extends HibernateDaoSupport {
 		}
 	}
 
-	public List findBySeqNum(Object seqNum) {
-		return findByProperty(SEQ_NUM, seqNum);
+	public List findByLinkServiceId(Object linkServiceId) {
+		return findByProperty(LINK_SERVICE_ID, linkServiceId);
 	}
 
 	public List findAll() {

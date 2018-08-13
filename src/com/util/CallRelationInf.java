@@ -7,6 +7,8 @@ public class CallRelationInf {
 	String sontype;
 	String fatherbusiness;
 	String sonbusiness;
+	String fathername;
+	String sonname;
 	String fatheraddress;
 	String sonaddress;
 	String fatherparameter;
@@ -57,6 +59,19 @@ public class CallRelationInf {
 	}
 	public void setSonbusiness(String sonbusiness) {
 		this.sonbusiness = sonbusiness;
+	}
+	
+	public String getFathername() {
+		return fathername;
+	}
+	public void setFathername(String fathername) {
+		this.fathername = fathername;
+	}
+	public String getSonname() {
+		return sonname;
+	}
+	public void setSonname(String sonname) {
+		this.sonname = sonname;
 	}
 	public String getFatheraddress() {
 		return fatheraddress;

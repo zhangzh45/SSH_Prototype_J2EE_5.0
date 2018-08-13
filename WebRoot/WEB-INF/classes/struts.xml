@@ -58,7 +58,7 @@
          <result type="json">
                 <param name="root">applyString</param>
             </result>
-        </action>
+     </action>
      <action name="agree" class="TempAct" method="agree">
      	<result name="success" type="json">
      		 <param name="root"></param>
@@ -97,10 +97,25 @@
      </action>
      <!-- 提供给映射中的接口，根据ID获取所有的可用服务 -->
      <action name="getAllAvaService" class="ServiceInterface" method="getAllSimpleService">
-     	<result type="json">
+     	<result type="json" name="success">
      		<param name="root">serMap</param>
      	</result>
      </action>
+     <action name="cancelTemp" class="TempAct" method="cancelTemp">
+	     	<result name="success" type="json">
+	     		 <param name="root"></param>
+	     	</result>
+	     </action>
+	     <action name="addTemp" class="TempAct" method="addTemp"> 
+	     	<result name="success" type="json">
+	     		 <param name="root"></param>
+	     	</result>
+	     </action>
+	     <action name="removeSpecSer" class="TempAct" method="removeSpecSer"> 
+	     	<result name="success" type="json">
+	     		 <param name="root"></param>
+	     	</result>
+	     </action>
 </package>
 	<package name="common" extends="struts-default">
         <action name="register" class="srAction" method="register">
@@ -347,6 +362,10 @@
         	<result name="success">/WEB-INF/ServiceManage/CombineBTree.jsp</result>
         	<result name="error">/error.jsp</result>
         </action>
+        <action name="combineCService" class="srAction" method="combineCService">
+        	<result name="success">/WEB-INF/ServiceManage/CombineCTree.jsp</result>
+        	<result name="error">/error.jsp</result>
+        </action>
         <action name="serviceDetail" class="srAction" method="serviceDetail">
         	<result name="success">/WEB-INF/ServiceManage/CombineATree.jsp</result>
             <result name="error">/error.jsp</result>
@@ -356,6 +375,10 @@
             <result name="error">/error.jsp</result>
         </action>
         <action name="addCombineB" class="srAction" method="addCombineB">
+        	<result name="success">/ServiceRequestSuccess.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="addCombineC" class="srAction" method="addCombineC">
         	<result name="success">/ServiceRequestSuccess.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
@@ -450,7 +473,14 @@
         <action name="topodemo">
         	<result>/topodemo.jsp</result>
         </action>
-        
+        <action name="serviceQos" class="srAction" method="getAllServiceQos">
+        	<result name="success">/WEB-INF/ServiceManage/ServiceQos.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="applyService" class="srAction" method="getApplyService">
+        	<result name="success">/WEB-INF/ServiceManage/ServiceApply.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
         
     </package>
 </struts>    

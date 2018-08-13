@@ -1,5 +1,8 @@
 package com.action;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
 import java.util.HashMap;
@@ -26,9 +29,10 @@ import com.service.SerService;
 import com.service.UserRoleService;
 import com.service.UserService;
 import com.util.GetRemoteService;
+import com.util.InteractWithRancherUtil;
 import com.util.RegisterKey;
 
-
+import org.yaml.snakeyaml.Yaml;
 
 public class UserAction extends ActionSupport
 {
@@ -233,17 +237,7 @@ public class UserAction extends ActionSupport
 			             JSONObject job = json.getJSONObject(i); 
 			             if(job.getString("userid").equals(user.getUserId().toString())){
 			            	 if(job.getString("LoginVerify").equals("success")){  //鐧诲綍鎴愬姛
-			            		 //username = usersr.getUniqueUser(user.getUserId()).getUserName();
 			     				 dashboard();
-			     				 
-			     				/*Map<String, Object> session = ActionContext.getContext().getSession();
-			     				 if(job.containsKey("Administrator") && job.getString("Administrator").equalsIgnoreCase("1")){
-			     					   //为管理员
-			     					session.put("admin", "true");  
-			     				 }
-			     				 else{
-			     					session.put("admin", "false"); 
-			     				 }*/
 			     				session.put("admin", "false"); 
 			     				session.put("user", user.getUserId().toString());   //将用户id保存在session中
 			     				session.put("password", user.getPassword());  
@@ -256,23 +250,6 @@ public class UserAction extends ActionSupport
 			         }
 
 			}
-			/*if(usersr.getUniqueUser(user.getUserId()).getPassword().equals(user.getPassword()))
-			{
-				 List<UserRole> list=userrolesr.getUserRole(user.getUserId());
-				username = usersr.getUniqueUser(user.getUserId()).getUserName();
-				dashboard();
-				
-				//RegisterKey.main();
-				//System.out.println(new AprioirItemSet().test());
-				//new Aprioir().test();
-			
-			}
-			else
-			{
-				return ERROR;
-			}*/
-			
-			
 		}
 		catch(Exception e)
 		{
@@ -281,7 +258,6 @@ public class UserAction extends ActionSupport
 		}
 		return SUCCESS;
 	}
-	
 	
 	public String logout(){
 		try{

@@ -38,6 +38,8 @@
 		<mapping resource="com/bean/Specification.hbm.xml" />
 		<mapping resource="com/bean/Attachment.hbm.xml" />
 		<mapping resource="com/bean/Permissionservice.hbm.xml" />
+		<mapping resource="com/bean/Servicelinks.hbm.xml" />
+		<mapping resource="com/bean/Serviceclass.hbm.xml" />
 
 	</session-factory>
 

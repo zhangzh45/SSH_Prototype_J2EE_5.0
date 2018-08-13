@@ -12,11 +12,13 @@ import java.util.List;
 import com.bean.Condition;
 import com.bean.Parameter;
 import com.bean.Service;
+import com.bean.Servicelinks;
 import com.bean.Servicerelation;
 import com.bean.Variable;
 import com.opensymphony.xwork2.ActionSupport;
 import com.service.ConditionService;
 import com.service.SerService;
+import com.service.ServicelinksService;
 import com.service.ServicerelationService;
 import com.service.VariableService;
 import com.service.ParameterService;
@@ -33,6 +35,7 @@ public class ConditionAction extends ActionSupport
 	private VariableService variablesr = new VariableService();
 	private ParameterService parametersr = new ParameterService();
 	private ServicerelationService srrelationsr;
+	private ServicelinksService serlinkssr = new ServicelinksService();
 
 	String option1;
 	String option2;
@@ -47,6 +50,7 @@ public class ConditionAction extends ActionSupport
 	String e2;
 	
 	String relationFather;
+	String serviceGranularity;
 	
 	List<Service> services = new ArrayList<Service>();
 	List<Service> allservices = new ArrayList<Service>();
@@ -62,11 +66,6 @@ public class ConditionAction extends ActionSupport
 	List<Integer> combineTimes = new ArrayList<Integer>();
 	
 	
-	/*List<Condition> conditionsOfWebService = new ArrayList<Condition>();
-	List<Condition> conditionsOfHttp = new ArrayList<Condition>();
-	List<Condition> conditionsOfURL = new ArrayList<Condition>();
-	List<Condition> conditionsOfOther = new ArrayList<Condition>();*/
-	
 	String numOfLevelclass = "";
 	
 
@@ -77,38 +76,6 @@ public class ConditionAction extends ActionSupport
 	public void setNumOfLevelclass(String numOfLevelclass) {
 		this.numOfLevelclass = numOfLevelclass;
 	}
-
-	/*public List<Condition> getConditionsOfWebService() {
-		return conditionsOfWebService;
-	}
-
-	public void setConditionsOfWebService(List<Condition> conditionsOfWebService) {
-		this.conditionsOfWebService = conditionsOfWebService;
-	}
-
-	public List<Condition> getConditionsOfHttp() {
-		return conditionsOfHttp;
-	}
-
-	public void setConditionsOfHttp(List<Condition> conditionsOfHttp) {
-		this.conditionsOfHttp = conditionsOfHttp;
-	}
-
-	public List<Condition> getConditionsOfURL() {
-		return conditionsOfURL;
-	}
-
-	public void setConditionsOfURL(List<Condition> conditionsOfURL) {
-		this.conditionsOfURL = conditionsOfURL;
-	}
-
-	public List<Condition> getConditionsOfOther() {
-		return conditionsOfOther;
-	}
-
-	public void setConditionsOfOther(List<Condition> conditionsOfOther) {
-		this.conditionsOfOther = conditionsOfOther;
-	}*/
 
 	public ParameterService getParametersr() {
 		return parametersr;
@@ -124,6 +91,14 @@ public class ConditionAction extends ActionSupport
 
 	public void setRelationFather(String relationFather) {
 		this.relationFather = relationFather;
+	}
+	
+	public String getServiceGranularity() {
+		return serviceGranularity;
+	}
+
+	public void setServiceGranularity(String serviceGranularity) {
+		this.serviceGranularity = serviceGranularity;
 	}
 
 	public List<RelationInf> getRelations() {
@@ -188,6 +163,15 @@ public class ConditionAction extends ActionSupport
 
 	public void setConditionsr(ConditionService conditionsr) {
 		this.conditionsr = conditionsr;
+	}
+
+	
+	public ServicelinksService getSerlinkssr() {
+		return serlinkssr;
+	}
+
+	public void setSerlinkssr(ServicelinksService serlinkssr) {
+		this.serlinkssr = serlinkssr;
 	}
 
 	public String getOption1() {
@@ -456,8 +440,8 @@ public class ConditionAction extends ActionSupport
 			re.setParameter(pas);
 			
 			relations.add(re);
+			
 		}
-		
 		return SUCCESS;
 	}
 	
@@ -546,26 +530,25 @@ public class ConditionAction extends ActionSupport
 	{
 		try
 		{
+			services.clear();
 			services = srs.getAllService();
 			dtnodes.clear();
 			//selected.addAll(services);
 			List<Integer> num = new ArrayList<Integer>();
 			for(int i = 0; i < services.size(); i++)
 			{
-				num.add(0);
+				if(services.get(i).getServiceLevel() != null && !services.get(i).getServiceLevel().isEmpty()){
+					num.add(1);
+				}
+				else{
+					num.add(0);
+				}
 			}
 			for(int i = 0; i < services.size() - 1; i++)
 			{
 				for(int j = i + 1; j < services.size(); j++)
 				{
-					if(services.get(i).getServiceLevel() == null){
-						services.get(i).setServiceLevel("1");
-					}
-					if(services.get(j).getServiceLevel() == null){
-						services.get(j).setServiceLevel("1");
-					}
-					
-					if(services.get(i).getServiceLevel().equals(services.get(j).getServiceLevel())){
+					if(services.get(i).getServiceLevel() != null && services.get(j).getServiceLevel() != null && services.get(i).getServiceLevel().equals(services.get(j).getServiceLevel())){
 						num.set(i, num.get(i) + 1);
 						num.set(j, num.get(j) + 1);
 					}
@@ -1011,6 +994,162 @@ public class ConditionAction extends ActionSupport
 				if(calldetails.contains(subcri) == false){
 					calldetails.add(subcri);
 					break;
+				}
+			}
+		}
+		
+		if(serviceGranularity != null){          //选择显示的服务关系粒度
+			System.out.print(serviceGranularity);
+			if(serviceGranularity.equalsIgnoreCase("single")){    //针对单个服务的服务关系
+				List<Servicelinks> links = new ArrayList<Servicelinks>();
+				links = serlinkssr.findByParentAppId(Integer.parseInt(relationFather));
+				System.out.println(links.size());
+				for(int j = 0; j < links.size(); j++){
+					Servicelinks serlinks = links.get(j);
+					Service ser = srs.getUniqueService(serlinks.getServiceId().toString());
+					CallRelationInf linkrel = new CallRelationInf();
+					linkrel.setFatherid(ser.getServiceId().toString());
+					linkrel.setFatheraddress(ser.getServiceAddress());
+					linkrel.setFathertype(ser.getServiceType());
+					linkrel.setFathername(ser.getServiceName());
+					Service subser = srs.getUniqueService(serlinks.getSubServiceId().toString());
+					linkrel.setSonid(subser.getServiceId().toString());
+					linkrel.setSonaddress(subser.getServiceAddress());
+					linkrel.setSontype(subser.getServiceType());
+					linkrel.setSonname(subser.getServiceName());
+					callrelations.add(linkrel);
+				}
+			}
+			else if(serviceGranularity.equalsIgnoreCase("related")){     //针对选择服务及其相关服务的服务关系
+				List<Service> sers = new ArrayList<Service>();
+				sers.add(srs.getUniqueService(relationFather));
+				List<Servicerelation> serrels = new ArrayList<Servicerelation>();
+				serrels = srrelationsr.getAllServicerelation();
+				for(int i = 0; i < sers.size(); i++){
+					Service ser = sers.get(i);
+					i--;
+					sers.remove(ser);
+					for(int j = 0; j < serrels.size(); j++){
+						Servicerelation serrel = serrels.get(i);
+						if(serrel.getServiceByServiceId().getServiceId() == ser.getServiceId()){
+							Service subser = serrel.getServiceBySubServiceId();
+							if(!sers.contains(subser)){
+								sers.add(subser);
+							}
+							CallRelationInf linkrel = new CallRelationInf();
+							linkrel.setFatherid(ser.getServiceId().toString());
+							linkrel.setFatheraddress(ser.getServiceAddress());
+							linkrel.setFathertype(ser.getServiceType());
+							linkrel.setFathername(ser.getServiceName());
+							linkrel.setSonid(subser.getServiceId().toString());
+							linkrel.setSonaddress(subser.getServiceAddress());
+							linkrel.setSontype(subser.getServiceType());
+							linkrel.setSonname(subser.getServiceName());
+							linkrel.setDesc(serrel.getLinkServiceId().toString());
+							if(!callrelations.contains(linkrel)){
+								callrelations.add(linkrel);
+							}
+						}
+						else if(serrel.getServiceBySubServiceId().getServiceId() == ser.getServiceId()){
+							Service subser = serrel.getServiceByServiceId();
+							if(!sers.contains(subser)){
+								sers.add(subser);
+							}
+							CallRelationInf linkrel = new CallRelationInf();
+							linkrel.setFatherid(ser.getServiceId().toString());
+							linkrel.setFatheraddress(ser.getServiceAddress());
+							linkrel.setFathertype(ser.getServiceType());
+							linkrel.setFathername(ser.getServiceName());
+							linkrel.setSonid(subser.getServiceId().toString());
+							linkrel.setSonaddress(subser.getServiceAddress());
+							linkrel.setSontype(subser.getServiceType());
+							linkrel.setSonname(subser.getServiceName());
+							linkrel.setDesc(serrel.getLinkServiceId().toString());//desc字段用于标记相同的微服务
+							if(!callrelations.contains(linkrel)){
+								callrelations.add(linkrel);
+							}
+						}
+					}
+				}
+				for(int i = 0; i < callrelations.size(); i++){
+					String sameServices = "";
+					for(int j = i + 1; j < callrelations.size(); j++){
+						if(callrelations.get(i).getFatherid() == callrelations.get(j).getFatherid()  //合并多个相同的微服务
+								&& callrelations.get(i).getSonid() == callrelations.get(j).getSonid()){
+							if(sameServices != ""){
+								sameServices = "," + callrelations.get(i).getDesc() + "," + callrelations.get(j).getDesc();
+							}
+							else{
+								sameServices = callrelations.get(i).getDesc() + "," + callrelations.get(j).getDesc();
+							}
+							callrelations.remove(j);
+							j--;
+						}
+					}
+					callrelations.get(i).setDesc(sameServices);
+				}
+			}
+			else if(serviceGranularity.equalsIgnoreCase("all")){   //针对所有的服务关系
+				List<Service> sers = new ArrayList<Service>();
+				sers = srs.getServiceByType("APPLICATION");
+				List<Servicerelation> serrels = new ArrayList<Servicerelation>();
+				serrels = srrelationsr.getAllServicerelation();
+				for(int i = 0; i < sers.size(); i++){
+					Service ser = sers.get(i);
+					for(int j = 0; j < serrels.size(); j++){
+						Servicerelation serrel = serrels.get(j);
+						if(serrel.getServiceByServiceId().getServiceId() == ser.getServiceId()){
+							Service subser = serrel.getServiceBySubServiceId();
+							CallRelationInf linkrel = new CallRelationInf();
+							linkrel.setFatherid(ser.getServiceId().toString());
+							linkrel.setFatheraddress(ser.getServiceAddress());
+							linkrel.setFathertype(ser.getServiceType());
+							linkrel.setFathername(ser.getServiceName());
+							linkrel.setSonid(subser.getServiceId().toString());
+							linkrel.setSonaddress(subser.getServiceAddress());
+							linkrel.setSontype(subser.getServiceType());
+							linkrel.setSonname(subser.getServiceName());
+							linkrel.setDesc(serrel.getLinkServiceId().toString());//desc字段用于标记相同的微服务
+							if(!callrelations.contains(linkrel)){
+								callrelations.add(linkrel);
+							}
+						}
+						else if(serrel.getServiceBySubServiceId().getServiceId() == ser.getServiceId()){
+							Service subser = serrel.getServiceByServiceId();
+							CallRelationInf linkrel = new CallRelationInf();
+							linkrel.setFatherid(ser.getServiceId().toString());
+							linkrel.setFatheraddress(ser.getServiceAddress());
+							linkrel.setFathertype(ser.getServiceType());
+							linkrel.setFathername(ser.getServiceName());
+							linkrel.setSonid(subser.getServiceId().toString());
+							linkrel.setSonaddress(subser.getServiceAddress());
+							linkrel.setSontype(subser.getServiceType());
+							linkrel.setSonname(subser.getServiceName());
+							linkrel.setDesc(serrel.getLinkServiceId().toString());//desc字段用于标记相同的微服务
+							if(!callrelations.contains(linkrel)){
+								callrelations.add(linkrel);
+							}
+						}
+						serrels.remove(j);
+						j--;
+					}
+				}
+				for(int i = 0; i < callrelations.size(); i++){
+					String sameServices = "";
+					for(int j = i + 1; j < callrelations.size(); j++){
+						if(callrelations.get(i).getFatherid() == callrelations.get(j).getFatherid()
+								&& callrelations.get(i).getSonid() == callrelations.get(j).getSonid()){
+							if(sameServices != ""){
+								sameServices = "," + callrelations.get(i).getDesc() + "," + callrelations.get(j).getDesc();
+							}
+							else{
+								sameServices = callrelations.get(i).getDesc() + "," + callrelations.get(j).getDesc();
+							}
+							callrelations.remove(j);
+							j--;
+						}
+					}
+					callrelations.get(i).setDesc(sameServices);
 				}
 			}
 		}

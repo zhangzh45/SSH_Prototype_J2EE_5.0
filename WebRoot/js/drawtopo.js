@@ -22,6 +22,7 @@
 			[ "Label", { 
 				location:0.1,
 				id:"label",
+				label:"",
 				cssClass:"aLabel"
 			}]
 		]
@@ -85,7 +86,7 @@
 		},
 	    
 	    initConnection: function(connection) {
-			connection.getOverlay("label").setLabel(connection.sourceId + "-" + connection.targetId);
+	    	connection.getOverlay("label").setLabel(connection.sourceId + "-" + connection.targetId);
 			connection.bind("editCompleted", function(o) {
 				if (typeof console != "undefined")
 					console.log("connection edited. path is now ", o.path);
