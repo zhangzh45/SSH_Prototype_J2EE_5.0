@@ -29,15 +29,17 @@ public class Service implements java.io.Serializable {
 	private String serviceTime;
 	private Integer runTimes;
 	private Integer failTimes;
-	private double serviceQos;
+	private String preferredTarget;
 	private String serviceHost;
 	private String serviceQuery;
 	private String callService;
 	private String serviceProvider;
-	private String businessFile;
 	private String appRoleUrl;
 	private String combineType;
+	private String businessFile;
 	private String attachments;
+	private String team;
+	private String accessRule;
 	private Integer isExternal;
 	private Set variables = new HashSet(0);
 	private Set userSpecSers = new HashSet(0);
@@ -59,19 +61,19 @@ public class Service implements java.io.Serializable {
 
 	/** full constructor */
 	public Service(String serviceName, String serviceDesc, Integer maxLoad,
-			String serviceType, String serviceLevel, String relateBusiness,
-			String serviceTarget, String serviceRange,
-			double serviceReliability, double serviceCost, String serviceState,
-			String serviceAddress, String serviceVersion, String serviceMaker,
-			String serviceTime, Integer runTimes, Integer failTimes,
-			double serviceQos, String serviceHost, String serviceQuery,
-			String callService, String serviceProvider, String businessFile,
-			String appRoleUrl, String combineType, String attachments,
-			Integer isExternal, Set variables, Set userSpecSers,
-			Set servicerelationsForServiceId, Set conditionsForSubServiceId,
-			Set conditionsForServiceId, Set serviceresults,
-			Set permissionservices, Set parameters, Set roleSpecSers,
-			Set servicerelationsForSubServiceId, Set licences) {
+				   String serviceType, String serviceLevel, String relateBusiness,
+				   String serviceTarget, String serviceRange,
+				   double serviceReliability, double serviceCost, String serviceState,
+				   String serviceAddress, String serviceVersion, String serviceMaker,
+				   String serviceTime, Integer runTimes, Integer failTimes,
+				   String preferredTarget, String serviceHost, String serviceQuery,
+				   String callService, String serviceProvider, String appRoleUrl,
+				   String combineType, String businessFile, String attachments,
+				   String team, String accessRule, Integer isExternal, Set variables,
+				   Set userSpecSers, Set servicerelationsForServiceId,
+				   Set conditionsForSubServiceId, Set conditionsForServiceId,
+				   Set serviceresults, Set permissionservices, Set parameters,
+				   Set roleSpecSers, Set servicerelationsForSubServiceId, Set licences) {
 		this.serviceName = serviceName;
 		this.serviceDesc = serviceDesc;
 		this.maxLoad = maxLoad;
@@ -89,15 +91,17 @@ public class Service implements java.io.Serializable {
 		this.serviceTime = serviceTime;
 		this.runTimes = runTimes;
 		this.failTimes = failTimes;
-		this.serviceQos = serviceQos;
+		this.preferredTarget = preferredTarget;
 		this.serviceHost = serviceHost;
 		this.serviceQuery = serviceQuery;
 		this.callService = callService;
 		this.serviceProvider = serviceProvider;
-		this.businessFile = businessFile;
 		this.appRoleUrl = appRoleUrl;
 		this.combineType = combineType;
+		this.businessFile = businessFile;
 		this.attachments = attachments;
+		this.team = team;
+		this.accessRule = accessRule;
 		this.isExternal = isExternal;
 		this.variables = variables;
 		this.userSpecSers = userSpecSers;
@@ -258,12 +262,12 @@ public class Service implements java.io.Serializable {
 		this.failTimes = failTimes;
 	}
 
-	public double getServiceQos() {
-		return this.serviceQos;
+	public String getPreferredTarget() {
+		return this.preferredTarget;
 	}
 
-	public void setServiceQos(double serviceQos) {
-		this.serviceQos = serviceQos;
+	public void setPreferredTarget(String preferredTarget) {
+		this.preferredTarget = preferredTarget;
 	}
 
 	public String getServiceHost() {
@@ -298,14 +302,6 @@ public class Service implements java.io.Serializable {
 		this.serviceProvider = serviceProvider;
 	}
 
-	public String getBusinessFile() {
-		return this.businessFile;
-	}
-
-	public void setBusinessFile(String businessFile) {
-		this.businessFile = businessFile;
-	}
-
 	public String getAppRoleUrl() {
 		return this.appRoleUrl;
 	}
@@ -322,12 +318,36 @@ public class Service implements java.io.Serializable {
 		this.combineType = combineType;
 	}
 
+	public String getBusinessFile() {
+		return this.businessFile;
+	}
+
+	public void setBusinessFile(String businessFile) {
+		this.businessFile = businessFile;
+	}
+
 	public String getAttachments() {
 		return this.attachments;
 	}
 
 	public void setAttachments(String attachments) {
 		this.attachments = attachments;
+	}
+
+	public String getTeam() {
+		return this.team;
+	}
+
+	public void setTeam(String team) {
+		this.team = team;
+	}
+
+	public String getAccessRule() {
+		return this.accessRule;
+	}
+
+	public void setAccessRule(String accessRule) {
+		this.accessRule = accessRule;
 	}
 
 	public Integer getIsExternal() {

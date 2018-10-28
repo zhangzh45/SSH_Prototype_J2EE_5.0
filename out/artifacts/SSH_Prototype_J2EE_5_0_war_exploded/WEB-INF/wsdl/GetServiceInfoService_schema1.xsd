@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://server.com/" targetNamespace="http://server.com/" version="1.0">
+
+  <xs:element name="add" type="tns:add"/>
+
+  <xs:element name="addResponse" type="tns:addResponse"/>
+
+  <xs:element name="cancelSpec" type="tns:cancelSpec"/>
+
+  <xs:element name="cancelSpecResponse" type="tns:cancelSpecResponse"/>
+
+  <xs:element name="delete" type="tns:delete"/>
+
+  <xs:element name="deleteResponse" type="tns:deleteResponse"/>
+
+  <xs:element name="getAllService" type="tns:getAllService"/>
+
+  <xs:element name="getAllServiceResponse" type="tns:getAllServiceResponse"/>
+
+  <xs:element name="getAllSpec" type="tns:getAllSpec"/>
+
+  <xs:element name="getAllSpecResponse" type="tns:getAllSpecResponse"/>
+
+  <xs:element name="getMyService" type="tns:getMyService"/>
+
+  <xs:element name="getMyServiceResponse" type="tns:getMyServiceResponse"/>
+
+  <xs:element name="getMySpec" type="tns:getMySpec"/>
+
+  <xs:element name="getMySpecResponse" type="tns:getMySpecResponse"/>
+
+  <xs:element name="getProvidedAppication" type="tns:getProvidedAppication"/>
+
+  <xs:element name="getProvidedAppicationResponse" type="tns:getProvidedAppicationResponse"/>
+
+  <xs:element name="getServiceFromRole" type="tns:getServiceFromRole"/>
+
+  <xs:element name="getServiceFromRoleResponse" type="tns:getServiceFromRoleResponse"/>
+
+  <xs:element name="launchSpec" type="tns:launchSpec"/>
+
+  <xs:element name="launchSpecResponse" type="tns:launchSpecResponse"/>
+
+  <xs:element name="loadAllSpec" type="tns:loadAllSpec"/>
+
+  <xs:element name="loadAllSpecResponse" type="tns:loadAllSpecResponse"/>
+
+  <xs:element name="registerService" type="tns:registerService"/>
+
+  <xs:element name="registerServiceResponse" type="tns:registerServiceResponse"/>
+
+  <xs:element name="registerSpec" type="tns:registerSpec"/>
+
+  <xs:element name="registerSpecResponse" type="tns:registerSpecResponse"/>
+
+  <xs:element name="removeService" type="tns:removeService"/>
+
+  <xs:element name="removeServiceResponse" type="tns:removeServiceResponse"/>
+
+  <xs:element name="removeSpec" type="tns:removeSpec"/>
+
+  <xs:element name="removeSpecResponse" type="tns:removeSpecResponse"/>
+
+  <xs:complexType name="getAllService">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getAllServiceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="registerService">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:int"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg2" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg3" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="registerServiceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="removeService">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="removeServiceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="launchSpec">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg2" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg3" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg4" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="launchSpecResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getServiceFromRole">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getServiceFromRoleResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getMyService">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getMyServiceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getAllSpec">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getAllSpecResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="add">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:int"/>
+      <xs:element name="arg1" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="addResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getMySpec">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getMySpecResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="cancelSpec">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg2" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg3" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg4" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="cancelSpecResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="registerSpec">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg2" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg3" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="registerSpecResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="loadAllSpec">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="loadAllSpecResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getProvidedAppication">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getProvidedAppicationResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="delete">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:int"/>
+      <xs:element name="arg1" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="removeSpec">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="removeSpecResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

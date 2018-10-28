@@ -14,6 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.util.*;
+import com.util.Matrix.Matrix;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -75,23 +77,14 @@ import com.service.UserRoleService;
 import com.service.UserService;
 import com.service.UserSpecSerService;
 import com.service.VariableService;
-import com.util.BuiltInVar;
-import com.util.ConstantUtil;
-import com.util.DTreeNode;
-import com.util.GetRemoteService;
-import com.util.InteractWithRancherUtil;
-import com.util.ListSortUtil;
-import com.util.MuleXMLParser;
-import com.util.ParseYawlFile;
-import com.util.ServiceQos;
 import com.util.graph.CycleDetector;
 import com.util.graph.DirectedGraph;
 
 
 public class ServiceAction extends ActionSupport{
-	
+
 	private static final Logger log = LoggerFactory.getLogger(ServiceAction.class);
-	
+
 	private Service sr=new Service();
 	private SerService srs;
 	private RoleService rolesr;
@@ -103,8 +96,8 @@ public class ServiceAction extends ActionSupport{
 	private RoleSpecSerService roleSpecSr;
 	private UserService userSr;
 	private String applyString;
-	
-	
+
+
 	String default_maxload = "100";
 	InteractWithRancherUtil iwrUtil = new InteractWithRancherUtil();
 
@@ -114,20 +107,26 @@ public class ServiceAction extends ActionSupport{
 	private ServiceresultService srresultsr;
 	private Serviceresult srt;
 	private ServicerelationService srrelationsr;
-	
+
 	String serviceCost;
 	String serviceReliability;
 	String maxLoad;
 	String isExternal;
 	String option1;
 	String option2;
+	String servicePort;
+	String serviceScale;
+	String dockerImage;
+	String accessRule;
+	String team;
+
 	File myFile;
 	File uploadFile;
 	File combinationFile;
-	
+
 	String sch;
 	String nowuser;
-	
+
 	List<Service> services = new ArrayList<Service>();
 	List<Service> allsers = new ArrayList<Service>();
 	List<Service> acceptedservices = new ArrayList<Service>();
@@ -137,39 +136,39 @@ public class ServiceAction extends ActionSupport{
 	List<Service> providedservices = new ArrayList<Service>();
 	List<Service> calledservices = new ArrayList<Service>();
 	List<ServiceQos> allQos = new ArrayList<ServiceQos>();
-	
+
 	List<Condition> conditions = new ArrayList<Condition>();
 	List<Variable> variables = new ArrayList<Variable>();
-	
+
 	List<Condition> c = new ArrayList<Condition>();
 	List<Variable> v = new ArrayList<Variable>();
 	List<Role> roles = new ArrayList<Role>();
-	
+
 	List<DTreeNode> dtnodes = new ArrayList<DTreeNode>();
-	
+
 	List<Parameter> prts = new ArrayList<Parameter>();
-	
+
 	private JFreeChart chart;//这里变量名必须是chart，不能是其他变量名
-    private List<String> interest; //struts会自动类型转换，将页面传递过来的值存到List中去
-	
-    private String userviceid;
-    
-    private String inname;
-    private String intt;
-    private String inadd;
-    private String indesc;
-    private String intype;
-    private String inlevel;
-    private String inpts;
-    private String inrange;
-    private String inbusiness;
-    
-    private String inctns;
-    private String invars;
-    
-    private String serviceQoSOptimizationTarget;
-    
-	String serviceid = "";	
+	private List<String> interest; //struts会自动类型转换，将页面传递过来的值存到List中去
+
+	private String userviceid;
+
+	private String inname;
+	private String intt;
+	private String inadd;
+	private String indesc;
+	private String intype;
+	private String inlevel;
+	private String inpts;
+	private String inrange;
+	private String inbusiness;
+
+	private String inctns;
+	private String invars;
+
+	private String serviceQoSOptimizationTarget;
+
+	String serviceid = "";
 
 	private String queryserviceid = "";
 	private String queryServiceresult = "";
@@ -182,15 +181,15 @@ public class ServiceAction extends ActionSupport{
 	AttachmentService attachmentsr = new AttachmentService();
 	ServicelinksService serlinkssr = new ServicelinksService();
 	ServiceclassService serclasssr = new ServiceclassService();
-	
+
 	String specJson = "";
-	
-	
+
+
 	String selectedtype = "null";
 	String selectedbusiness = "null";
 	List<String> servicetypes = new ArrayList<String>();
 	List<String> servicebusinesses = new ArrayList<String>();
-	
+
 
 
 	public String queryservice(){
@@ -209,12 +208,12 @@ public class ServiceAction extends ActionSupport{
 		m.put("servicedesc", ser.getServiceDesc());
 		System.out.print(m.toString()+";;;;");
 		json.add(m);
-		queryServiceresult= json.toString();	
+		queryServiceresult= json.toString();
 		System.out.print(queryServiceresult+";;;;");
 		return SUCCESS;
 	}
-	
-	
+
+
 	public String addOutput()
 	{
 		try
@@ -236,17 +235,17 @@ public class ServiceAction extends ActionSupport{
 			return ERROR;
 		}
 	}
-	
+
 	/**
 	 * 服务注册
 	 * @return
 	 */
-	public String register(){
-		
+	/*public String register(){
+
 		Map<String, Object> session = ActionContext.getContext().getSession();
 		String loginUser = (String) session.get("user");
 		String loginPassword = (String) session.get("password");
-		
+
 		if(maxLoad.isEmpty() || maxLoad == null) maxLoad = default_maxload;
 		sr.setMaxLoad(Integer.valueOf(maxLoad));
 		sr.setIsExternal(Integer.valueOf(isExternal));
@@ -272,10 +271,10 @@ public class ServiceAction extends ActionSupport{
 		try{
     		String realpath = MuleConfig.getMuleAppPath() + "/" + sr.getServiceName();
 			realpath = realpath.replaceAll("\\\\", "/");
-			
+
             if (myFile != null && myFile.length() != 0) {
             	System.out.println("\n!!!!!realpath: "+realpath+"\n");
-            	
+
             	String filename = sr.getServiceName() + ".yawl";
                 File savefile = new File(new File(realpath), filename);
                 if (!savefile.getParentFile().exists())
@@ -321,7 +320,7 @@ public class ServiceAction extends ActionSupport{
 			}
     		return ERROR;
     	}
-		
+
     	this.srs.register(sr);
 		boolean callfail = false;
 		if(sr.getCallService() != null || (!sr.getCallService().isEmpty())){
@@ -397,7 +396,7 @@ public class ServiceAction extends ActionSupport{
 		    			}
 		    			containedServices += srs.getServiceidByServiename(servicename).getServiceId() + ",";
 		    		}
-		    		
+
 		    		System.out.println(containedServices);
 		    		sr.setCallService(containedServices);
 		    		srs.update(sr);
@@ -420,8 +419,8 @@ public class ServiceAction extends ActionSupport{
 	    	return SUCCESS;
 		}
 		return ERROR;
-	}
-	
+	}*/
+
 
 	public String allService()
 	{
@@ -438,7 +437,7 @@ public class ServiceAction extends ActionSupport{
 			return ERROR;
 		}
 	}
-	
+
 	public String approveService(){
 		List<Temp> tempList=tempSr.getAll();
 		JSONArray json=new JSONArray();
@@ -462,15 +461,17 @@ public class ServiceAction extends ActionSupport{
 		applyString=json.toString();
 		return SUCCESS;
 	}
-	
+
 	public String auditService()
 	{
 		try
 		{
 			services = srs.getUnService();
-			List<Service> exceptedServices = srs.getExceptedService();
-			services.retainAll(exceptedServices);
-			//System.out.println(services.size());
+
+			//以下两行代码是保留应用内部的微服务，目前暂不适用与rancher2.0
+			//List<Service> exceptedServices = srs.getExceptedService();
+			//services.retainAll(exceptedServices);
+
 			return SUCCESS;
 		}
 		catch(Exception e)
@@ -479,7 +480,7 @@ public class ServiceAction extends ActionSupport{
 			return ERROR;
 		}
 	}
-	
+
 	public String removeService()
 	{
 		services.clear();
@@ -499,7 +500,7 @@ public class ServiceAction extends ActionSupport{
 			return ERROR;
 		}
 	}
-	
+
 	public String serviceDetail()
 	{
 		try
@@ -513,7 +514,7 @@ public class ServiceAction extends ActionSupport{
 			return ERROR;
 		}
 	}
-	
+
 	public String acceptedService()
 	{
 		acceptedservices.clear();
@@ -531,7 +532,7 @@ public class ServiceAction extends ActionSupport{
 			return ERROR;
 		}
 	}
-	
+
 	public String calledservices()
 	{
 		calledservices.clear();
@@ -539,7 +540,7 @@ public class ServiceAction extends ActionSupport{
 		try
 		{
 			services = srs.getAll();
-			
+
 			calledservices = srs.getAcceptedService();
 			List<Service> cancalled = new ArrayList<Service>();
 			cancalled = srs.getAllService();
@@ -553,7 +554,7 @@ public class ServiceAction extends ActionSupport{
 			return ERROR;
 		}
 	}
-	
+
 	public String acceptService()
 	{
 		try
@@ -577,15 +578,15 @@ public class ServiceAction extends ActionSupport{
 			return ERROR;
 		}
 	}
-	
-	
+
+
 	public String deleteService()
 	{
 		try
 		{
 			sr = srs.getUniqueService(option1);
 			System.out.println(option1);
-			
+
 			List<Service> allser = new ArrayList<Service>();
 			allser = srs.getAll();
 			for(int i = 0; i < allser.size(); i++){
@@ -603,13 +604,23 @@ public class ServiceAction extends ActionSupport{
 					}
 				}
 			}
-			
+
 			List<Servicerelation> servicerelations = new ArrayList<Servicerelation>();
 			servicerelations = srrelationsr.getSrrelationDao().findByServiceId(Integer.parseInt(option1));
 			for(int i = 0; i < servicerelations.size(); i++){
 				srrelationsr.getSrrelationDao().delete(servicerelations.get(i));
 			}
-			
+
+			//针对同时部署在rancher上的服务deployment
+            if(sr.getIsExternal() == 0 && sr.getServiceType().equalsIgnoreCase("SERVICE")){
+                String serviceid = "deployment:" + sr.getTeam() + "-" + sr.getAccessRule() + ":" + sr.getServiceName();
+                boolean deleteResult = iwrUtil.deleteService(serviceid);
+                if(deleteResult == false){
+                    return ERROR;
+                }
+            }
+
+
 			//针对组合服务
 			if(sr.getCombineType() != null && sr.getCallService() != null){
 				List<Condition> conditions = new ArrayList<Condition>();
@@ -623,7 +634,7 @@ public class ServiceAction extends ActionSupport{
 					variablesr.getVariableDao().delete(variables.get(i));
 				}
 			}
-			
+
 			//针对流程
 			if(sr.getServiceType().equalsIgnoreCase("BUSINESS")){
 				String businessfile = sr.getBusinessFile();
@@ -640,118 +651,118 @@ public class ServiceAction extends ActionSupport{
 				}
 			}
 			//针对一般服务和应用
-			
-				List<Evaluation> evaluations = new ArrayList<Evaluation>();
-				evaluations = evaluationsr.getEvaluationDao().findByEvaluationService(Integer.parseInt(option1));
-				for(int i = 0; i < evaluations.size(); i++){
-					evaluationsr.getEvaluationDao().delete(evaluations.get(i));
+
+			List<Evaluation> evaluations = new ArrayList<Evaluation>();
+			evaluations = evaluationsr.getEvaluationDao().findByEvaluationService(Integer.parseInt(option1));
+			for(int i = 0; i < evaluations.size(); i++){
+				evaluationsr.getEvaluationDao().delete(evaluations.get(i));
+			}
+
+			List<Licence> licences = new ArrayList<Licence>();
+			licences = licencesr.getServiceLicence(Integer.parseInt(option1));
+			for(int i = 0; i < licences.size(); i++){
+				licencesr.getLicenceDao().delete(licences.get(i));
+			}
+
+			List<Parameter> parameters = new ArrayList<Parameter>();
+			parameters = parametersr.getServiceParameter(Integer.parseInt(option1));
+			for(int i = 0; i < parameters.size(); i++){
+				parametersr.deleteParamater(parameters.get(i));
+			}
+
+			List<Permissionservice> pss = new ArrayList<Permissionservice>();
+			pss = permissionservicesr.getPermissionserviceDao().findByServiceid(Integer.parseInt(option1));
+			for(int i = 0; i < pss.size(); i++){
+				permissionservicesr.getPermissionserviceDao().delete(pss.get(i));
+			}
+
+			List<RoleSpecSer> roleSpecSers = new ArrayList<RoleSpecSer>();
+			roleSpecSers = roleSpecSr.getRoleSpecSerDao().findSpecSerByServiceId(Integer.parseInt(option1));
+			for(int i = 0; i < roleSpecSers.size(); i++){
+				roleSpecSr.getRoleSpecSerDao().delete(roleSpecSers.get(i));
+			}
+
+			List<Runlog> runlogs = new ArrayList<Runlog>();
+			runlogs = runlogsr.getRunlogDao().findByServiceid(Integer.parseInt(option1));
+			for(int i = 0; i < runlogs.size(); i++){
+				runlogsr.deleteRunlog(runlogs.get(i));
+			}
+
+
+			List<Serviceresult> serviceresults = new ArrayList<Serviceresult>();
+			serviceresults = srresultsr.getSrresultDao().findByServiceid(Integer.parseInt(option1));
+			for(int i = 0; i < serviceresults.size(); i++){
+				srresultsr.getSrresultDao().delete(serviceresults.get(i));
+			}
+
+			List<Temp> temps = new ArrayList<Temp>();
+			temps = tempSr.findByServiceId(Integer.parseInt(option1));
+			for(int i = 0; i < temps.size(); i++){
+				tempSr.delete(temps.get(i));
+			}
+
+			List<UserSpecSer> userSpecSers = new ArrayList<UserSpecSer>();
+			userSpecSers = userSpecSr.getUserSpecSerDao().findSpecSerByServiceId(Integer.parseInt(option1));
+			for(int i = 0; i < userSpecSers.size(); i++){
+				userSpecSr.getUserSpecSerDao().delete(userSpecSers.get(i));
+			}
+
+			List<Servicelinks> serlinksSers = new ArrayList<Servicelinks>();
+			serlinksSers = serlinkssr.findByParentAppId(Integer.parseInt(option1));
+			for(int i = 0; i < serlinksSers.size(); i++){
+				serlinkssr.delete(serlinksSers.get(i));
+			}
+
+			ServiceclassId sclassId = new ServiceclassId(sr.getServiceType(), sr.getServiceTarget(), sr.getServiceRange());
+			Serviceclass serclass = serclasssr.findById(sclassId);
+			if(serclass != null){
+				if(serclass.getServicesnum() == 1){
+					serclasssr.delete(serclass);
 				}
-				
-				List<Licence> licences = new ArrayList<Licence>();
-				licences = licencesr.getServiceLicence(Integer.parseInt(option1));
-				for(int i = 0; i < licences.size(); i++){
-					licencesr.getLicenceDao().delete(licences.get(i));
-				}
-				
-				List<Parameter> parameters = new ArrayList<Parameter>();
-				parameters = parametersr.getServiceParameter(Integer.parseInt(option1));
-				for(int i = 0; i < parameters.size(); i++){
-					parametersr.deleteParamater(parameters.get(i));
-				}
-				
-				List<Permissionservice> pss = new ArrayList<Permissionservice>();
-				pss = permissionservicesr.getPermissionserviceDao().findByServiceid(Integer.parseInt(option1));
-				for(int i = 0; i < pss.size(); i++){
-					permissionservicesr.getPermissionserviceDao().delete(pss.get(i));
-				}
-				
-				List<RoleSpecSer> roleSpecSers = new ArrayList<RoleSpecSer>();
-				roleSpecSers = roleSpecSr.getRoleSpecSerDao().findSpecSerByServiceId(Integer.parseInt(option1));
-				for(int i = 0; i < roleSpecSers.size(); i++){
-					roleSpecSr.getRoleSpecSerDao().delete(roleSpecSers.get(i));
-				}
-				
-				List<Runlog> runlogs = new ArrayList<Runlog>();
-				runlogs = runlogsr.getRunlogDao().findByServiceid(Integer.parseInt(option1));
-				for(int i = 0; i < runlogs.size(); i++){
-					runlogsr.deleteRunlog(runlogs.get(i));
-				}
-				
-				
-				List<Serviceresult> serviceresults = new ArrayList<Serviceresult>();
-				serviceresults = srresultsr.getSrresultDao().findByServiceid(Integer.parseInt(option1));
-				for(int i = 0; i < serviceresults.size(); i++){
-					srresultsr.getSrresultDao().delete(serviceresults.get(i));
-				}
-				
-				List<Temp> temps = new ArrayList<Temp>();
-				temps = tempSr.findByServiceId(Integer.parseInt(option1));
-				for(int i = 0; i < temps.size(); i++){
-					tempSr.delete(temps.get(i));
-				}
-				
-				List<UserSpecSer> userSpecSers = new ArrayList<UserSpecSer>();
-				userSpecSers = userSpecSr.getUserSpecSerDao().findSpecSerByServiceId(Integer.parseInt(option1));
-				for(int i = 0; i < userSpecSers.size(); i++){
-					userSpecSr.getUserSpecSerDao().delete(userSpecSers.get(i));
-				}
-				
-				List<Servicelinks> serlinksSers = new ArrayList<Servicelinks>();
-				serlinksSers = serlinkssr.findByParentAppId(Integer.parseInt(option1));
-				for(int i = 0; i < serlinksSers.size(); i++){
-					serlinkssr.delete(serlinksSers.get(i));
-				}
-				
-				ServiceclassId sclassId = new ServiceclassId(sr.getServiceType(), sr.getServiceTarget(), sr.getServiceRange());
-				Serviceclass serclass = serclasssr.findById(sclassId);
-				if(serclass != null){
-					if(serclass.getServicesnum() == 1){
-						serclasssr.delete(serclass);
-					}
-					else{
-						serclass.setServicesnum(serclass.getServicesnum() - 1);
-						String[] services = serclass.getServices().split(",");
-						for(int i = 0 ; i < services.length; i++){
-							if(services[i] != null && services[i].equals(String.valueOf(option1))){
-								services[i] = "";
-								break;
-							}
+				else{
+					serclass.setServicesnum(serclass.getServicesnum() - 1);
+					String[] services = serclass.getServices().split(",");
+					for(int i = 0 ; i < services.length; i++){
+						if(services[i] != null && services[i].equals(String.valueOf(option1))){
+							services[i] = "";
+							break;
 						}
-						String new_services = "";
-						for(int i = 0 ; i < services.length; i++){
-							if(services[i] != ""){
-								new_services += "," + services[i];
-							}
+					}
+					String new_services = "";
+					for(int i = 0 ; i < services.length; i++){
+						if(services[i] != ""){
+							new_services += "," + services[i];
 						}
-						serclass.setServices(new_services);
-						serclasssr.update(serclass);
 					}
+					serclass.setServices(new_services);
+					serclasssr.update(serclass);
 				}
-				
-				String filepath = sr.getAttachments();
-				if(filepath != null){
-					List<Attachment> attaches = new ArrayList<Attachment>();
-					attaches = attachmentsr.findByFilepath(filepath);
-					for(int i = 0; i < attaches.size(); i++){
-						attachmentsr.deleteAttachment(attaches.get(i));
-					}
+			}
+
+			String filepath = sr.getAttachments();
+			if(filepath != null){
+				List<Attachment> attaches = new ArrayList<Attachment>();
+				attaches = attachmentsr.findByFilepath(filepath);
+				for(int i = 0; i < attaches.size(); i++){
+					attachmentsr.deleteAttachment(attaches.get(i));
 				}
-				
-				//若为rancher平台上部署的应用，也要把其内部的lb删除
-				if(sr.getServiceType().equalsIgnoreCase("application")){
-					String appname = sr.getServiceName();
-					Service lb_service = srs.getServiceidByServiename("lb-" + appname);
-					if(lb_service != null){
-						srs.deleteService(lb_service.getServiceId());
-					}
+			}
+
+			//若为rancher平台上部署的应用，也要把其内部的lb删除
+			if(sr.getServiceType().equalsIgnoreCase("application")){
+				String appname = sr.getServiceName();
+				Service lb_service = srs.getServiceidByServiename("lb-" + appname);
+				if(lb_service != null){
+					srs.deleteService(lb_service.getServiceId());
 				}
-				
-				//删除保存该服务的文件夹
-				File appdir = new File(MuleConfig.getMuleAppPath() + "/" + sr.getServiceName());
-				if(appdir.exists()){
-					FileUtils.deleteDirectory(appdir);
-				}
-			
+			}
+
+			//删除保存该服务的文件夹
+			File appdir = new File(MuleConfig.getMuleAppPath() + "/" + sr.getServiceName());
+			if(appdir.exists()){
+				FileUtils.deleteDirectory(appdir);
+			}
+
 			srs.unregister(sr);
 			return SUCCESS;
 		}
@@ -761,7 +772,7 @@ public class ServiceAction extends ActionSupport{
 			return ERROR;
 		}
 	}
-	
+
 	public String getApplicationService()
 	{
 		try
@@ -776,7 +787,7 @@ public class ServiceAction extends ActionSupport{
 			return ERROR;
 		}
 	}
-	
+
 	public String getAllService()
 	{
 		try
@@ -806,33 +817,33 @@ public class ServiceAction extends ActionSupport{
 			return ERROR;
 		}
 	}
-	
+
 	public String getPicture()
 	{
 		try
 		{
 			services = srs.getAll();
 			System.out.println(services.size());
-			
+
 			JFreeChart chart=ChartFactory.createPieChart("Service Type",getDataset(),true,true,false);
-	        //chart.setTitle(new TextTitle("某公司组织结构图",new Font("宋体",Font.BOLD+Font.ITALIC,20)));
+			//chart.setTitle(new TextTitle("某公司组织结构图",new Font("宋体",Font.BOLD+Font.ITALIC,20)));
 			System.out.println("rrrr");
-	        LegendTitle legend=chart.getLegend(0);//设置Legend
-	        //legend.setItemFont(new Font("宋体",Font.BOLD,14));
-	        PiePlot plot=(PiePlot) chart.getPlot();//设置Plot
-	        //plot.setLabelFont(new Font("隶书",Font.BOLD,16));
-	        String picturePath = ConstantUtil.getStatisticspicture();
-	        OutputStream os = new FileOutputStream(picturePath);//图片是文件格式的，故要用到FileOutputStream用来输出。
-	        //OutputStream os = new FileOutputStream("E:\\workspace\\myeclipse_projects\\SSH_Prototype_J2EE_5.0\\WebRoot\\images\\company.jpeg");//图片是文件格式的，故要用到FileOutputStream用来输出。
-	        ChartUtilities.writeChartAsJPEG(os, chart, 500, 400);
-	        //使用一个面向application的工具类，将chart转换成JPEG格式的图片。第3个参数是宽度，第4个参数是高度。
-	        
-	        os.close();//关闭输出流
-	        System.out.println("");
-	        //return chart;
-	        
-	        rankByRuntimes();
-			
+			LegendTitle legend=chart.getLegend(0);//设置Legend
+			//legend.setItemFont(new Font("宋体",Font.BOLD,14));
+			PiePlot plot=(PiePlot) chart.getPlot();//设置Plot
+			//plot.setLabelFont(new Font("隶书",Font.BOLD,16));
+			String picturePath = ConstantUtil.getStatisticspicture();
+			OutputStream os = new FileOutputStream(picturePath);//图片是文件格式的，故要用到FileOutputStream用来输出。
+			//OutputStream os = new FileOutputStream("E:\\workspace\\myeclipse_projects\\SSH_Prototype_J2EE_5.0\\WebRoot\\images\\company.jpeg");//图片是文件格式的，故要用到FileOutputStream用来输出。
+			ChartUtilities.writeChartAsJPEG(os, chart, 500, 400);
+			//使用一个面向application的工具类，将chart转换成JPEG格式的图片。第3个参数是宽度，第4个参数是高度。
+
+			os.close();//关闭输出流
+			System.out.println("");
+			//return chart;
+
+			rankByRuntimes();
+
 			return SUCCESS;
 		}
 		catch(Exception e)
@@ -841,7 +852,7 @@ public class ServiceAction extends ActionSupport{
 			return ERROR;
 		}
 	}
-	
+
 	public void rankByRuntimes(){
 		ranklistByRuntimes.clear();
 		List<Service> ss = new ArrayList<Service>();
@@ -859,50 +870,50 @@ public class ServiceAction extends ActionSupport{
 				ranklistByRuntimes.add(ss.get(i));
 			}
 		}
-		
+
 	}
-	
+
 	private DefaultPieDataset getDataset()
-    {
+	{
 		DefaultPieDataset dpd=new DefaultPieDataset(); //建立一个默认的饼图
-        int counter[] = {0,0,0,0};
-        services = srs.getAll();
-        for(int i = 0; i < services.size(); i++)
-        {
-        	String servicetype = services.get(i).getServiceType();
-        	if(servicetype.toLowerCase().contains("application"))
-        	{
-        		counter[0]++;
-        	}
-        	else if(servicetype.toLowerCase().contains("service"))
-        	{
-        		counter[1]++;
-        	}
-        	else if(servicetype.toLowerCase().contains("business"))
-        	{
-        		counter[2]++;
-        	}
-        	else if(servicetype.toLowerCase().contains("local"))
-        	{
-        		counter[3]++;
-        	}
-        }
-        if(services.size() != 0){
-        	dpd.setValue("APPLICATION " + counter[0], counter[0] * 100 / services.size());  //输入数据
-            dpd.setValue("SERVICE " + counter[1], counter[1] * 100 / services.size());
-            dpd.setValue("BUSINESS " + counter[2], counter[2] * 100 / services.size());
-            dpd.setValue("LOCAL " + counter[3], counter[3] * 100 / services.size());
-        }
-        else{
-        	dpd.setValue("APPLICATION " + counter[0], counter[0]);  //输入数据
-            dpd.setValue("SERVICE " + counter[1], counter[1]);
-            dpd.setValue("BUSINESS " + counter[2], counter[2]);
-            dpd.setValue("LOCAL " + counter[3], counter[3]);
-        }
-        System.out.println("APPLICATION " + counter[0]+"SERVICE " + counter[1]+"BUSINESS " + counter[2]+"LOCAL " + counter[3]);
-        return dpd;
-    }
-	
+		int counter[] = {0,0,0,0};
+		services = srs.getAll();
+		for(int i = 0; i < services.size(); i++)
+		{
+			String servicetype = services.get(i).getServiceType();
+			if(servicetype.toLowerCase().contains("application"))
+			{
+				counter[0]++;
+			}
+			else if(servicetype.toLowerCase().contains("service"))
+			{
+				counter[1]++;
+			}
+			else if(servicetype.toLowerCase().contains("business"))
+			{
+				counter[2]++;
+			}
+			else if(servicetype.toLowerCase().contains("local"))
+			{
+				counter[3]++;
+			}
+		}
+		if(services.size() != 0){
+			dpd.setValue("APPLICATION " + counter[0], counter[0] * 100 / services.size());  //输入数据
+			dpd.setValue("SERVICE " + counter[1], counter[1] * 100 / services.size());
+			dpd.setValue("BUSINESS " + counter[2], counter[2] * 100 / services.size());
+			dpd.setValue("LOCAL " + counter[3], counter[3] * 100 / services.size());
+		}
+		else{
+			dpd.setValue("APPLICATION " + counter[0], counter[0]);  //输入数据
+			dpd.setValue("SERVICE " + counter[1], counter[1]);
+			dpd.setValue("BUSINESS " + counter[2], counter[2]);
+			dpd.setValue("LOCAL " + counter[3], counter[3]);
+		}
+		System.out.println("APPLICATION " + counter[0]+"SERVICE " + counter[1]+"BUSINESS " + counter[2]+"LOCAL " + counter[3]);
+		return dpd;
+	}
+
 	public String conbineService()
 	{
 		try
@@ -919,9 +930,9 @@ public class ServiceAction extends ActionSupport{
 				for(int j = i + 1; j < services.size(); j++)
 				{
 					if(services.get(i).getServiceType().equals(services.get(j).getServiceType())
-					&&	services.get(i).getServiceTarget().equals(services.get(j).getServiceTarget())
-					&&	services.get(i).getServiceRange().equals(services.get(j).getServiceRange())
-					)
+							&&	services.get(i).getServiceTarget().equals(services.get(j).getServiceTarget())
+							&&	services.get(i).getServiceRange().equals(services.get(j).getServiceRange())
+							)
 					{
 						num.set(i, num.get(i) + 1);
 						num.set(j, num.get(j) + 1);
@@ -936,7 +947,7 @@ public class ServiceAction extends ActionSupport{
 					selected.add(services.get(i));
 				}
 			}
-			
+
 			return SUCCESS;
 		}
 		catch(Exception e)
@@ -945,7 +956,7 @@ public class ServiceAction extends ActionSupport{
 			return ERROR;
 		}
 	}
-	
+
 	public String combinedService()
 	{
 		try
@@ -960,13 +971,13 @@ public class ServiceAction extends ActionSupport{
 					Integer id = services.get(i).getServiceId();
 					c = conditionsr.getServiceCondition(id);
 					conditions.addAll(c);
-	
+
 					v =	variablesr.getServiceVariable(services.get(i).getServiceId());
 					variables.addAll(v);
 				}
 			}
 
-			
+
 			return SUCCESS;
 		}
 		catch(Exception e)
@@ -975,30 +986,31 @@ public class ServiceAction extends ActionSupport{
 			return ERROR;
 		}
 	}
-	
-	
-	public String searchService() 
+
+
+	public String searchService()
 	{
 		services = srs.getSearchService(sch);
-		
+
 		return SUCCESS;
 	}
 	public String myService(){
 		Map<String, Object> session = ActionContext.getContext().getSession();
 		if(session.get("admin").equals("true")){//管理员拥有所有的服务
-			services = srs.getExceptedService();
+			//services = srs.getExceptedService();
+            services = srs.getAll();
 		}else{
-			services=getMyService(Integer.parseInt(nowuser));
+			services = getMyService(Integer.parseInt(nowuser));
 		}
 		return SUCCESS;
 	}
-	
+
 	public List<Service> getMyService(int userid)
 	{
 		services.clear();
-		
+
 		nowuser = String.valueOf(userid);
-		
+
 		List<Integer> rs = new ArrayList<Integer>();
 		List<UserRole> urs = new ArrayList<UserRole>();
 		for(UserSpecSer uss:userSpecSr.findSpecSerByUserId(userid)){
@@ -1006,15 +1018,15 @@ public class ServiceAction extends ActionSupport{
 		}
 		//services=userSpecSr.findSpecSerByUserId(userid);
 		urs = userrolesr.getUserRole(userid);
-		
+
 		rs.clear();
 		/*for(int i = 0; i < urs.size(); i++)
 		{
 			rs.add(urs.get(i).getRole().getRoleId());
 		}*/
-		
+
 		rs = getApplicationRoles();
-		
+
 		List<Integer> ps = new ArrayList<Integer>();
 		List<Integer> ss = new ArrayList<Integer>();
 		ps.clear();
@@ -1048,24 +1060,24 @@ public class ServiceAction extends ActionSupport{
 			System.out.println(ss.get(i));
 		}
 		System.out.println(services.size());
-		
+
 		/*
 		//包括自己注册的服务
 		List<Service> provided = new ArrayList<Service>();
 		provided = srs.getProvidedService(String.valueOf(userid));
 		provided.removeAll(services);
 		services.addAll(provided);
-		
+
 		//同时要是审核通过的服务
 		List<Service> accepted = new ArrayList<Service>();
 		accepted = srs.getAcceptedService();
 		services.retainAll(accepted);*/
-		
+
 		System.out.println("services.size():"+services.size());
-		
+
 		return services;
 	}
-	
+
 	public List<Service> getServiceFromRole(int roleid)
 	{
 		List<Service> sers = new ArrayList<Service>();
@@ -1100,8 +1112,8 @@ public class ServiceAction extends ActionSupport{
 		System.out.println(sers.size());
 		return sers;
 	}
-	
-	
+
+
 	/**
 	 * 可靠性组合
 	 * @return
@@ -1122,7 +1134,7 @@ public class ServiceAction extends ActionSupport{
 		{
 			services = srs.getAllService();
 			services.retainAll(internalServices);      //服务组合只针对内部服务
-			
+
 			List<Integer> num = new ArrayList<Integer>();
 			for(int i = 0; i < services.size(); i++)
 			{
@@ -1152,7 +1164,7 @@ public class ServiceAction extends ActionSupport{
 					selected.add(services.get(i));
 				}
 			}
-			
+
 			for(int i = 0; i < selected.size(); i++)
 			{
 				List<Parameter> ps = parametersr.getServiceParameter(selected.get(i).getServiceId());
@@ -1161,7 +1173,7 @@ public class ServiceAction extends ActionSupport{
 					prts.add(ps.get(j));
 				}
 			}
-			
+
 			System.out.println(selected.size());
 			List<String> nodeContent = new ArrayList<String>();
 			List<Integer> nodeid = new ArrayList<Integer>();
@@ -1192,7 +1204,7 @@ public class ServiceAction extends ActionSupport{
 				nodeContent.add(selected.get(i).getServiceRange() + " use " + selected.get(i).getServiceId());
 				content.add(ct3);
 			}
-			
+
 			for(int i = 0; i < nodeid.size(); i++)
 			{
 				DTreeNode dn = new DTreeNode();
@@ -1201,14 +1213,14 @@ public class ServiceAction extends ActionSupport{
 				dn.setContent(nodeContent.get(i));
 				dtnodes.add(dn);
 			}
-			
+
 			for(int i = 0; i < dtnodes.size(); i++)
 			{
 				System.out.print(dtnodes.get(i).getSelf() + " ");
 				System.out.print(dtnodes.get(i).getFather() + " ");
 				System.out.print(dtnodes.get(i).getContent() + "\n");
 			}
-			
+
 			return SUCCESS;
 		}
 		catch(Exception e)
@@ -1217,7 +1229,7 @@ public class ServiceAction extends ActionSupport{
 			return ERROR;
 		}
 	}
-	
+
 	public String combineBService()
 	{
 		acceptedservices = srs.getAcceptedService();
@@ -1226,7 +1238,7 @@ public class ServiceAction extends ActionSupport{
 		List<Service> internalServices = new ArrayList<Service>();
 		internalServices = srs.getInternalService();
 		acceptedservices.retainAll(internalServices);
-		
+
 		allsers.clear();
 		allsers = srs.getAll();
 		try
@@ -1255,7 +1267,7 @@ public class ServiceAction extends ActionSupport{
 					}
 				}
 			}
-			
+
 			selected.clear();
 			for(int i = 0; i < services.size(); i++)
 			{
@@ -1264,7 +1276,7 @@ public class ServiceAction extends ActionSupport{
 					selected.add(services.get(i));
 				}
 			}
-			
+
 			List<String> nodeContent = new ArrayList<String>();
 			List<Integer> nodeid = new ArrayList<Integer>();
 			List<String> content = new ArrayList<String>();
@@ -1294,7 +1306,7 @@ public class ServiceAction extends ActionSupport{
 				nodeContent.add(selected.get(i).getServiceRange() + " use " + selected.get(i).getServiceId());
 				content.add(ct3);
 			}
-			
+
 			for(int i = 0; i < nodeid.size(); i++)
 			{
 				DTreeNode dn = new DTreeNode();
@@ -1303,7 +1315,7 @@ public class ServiceAction extends ActionSupport{
 				dn.setContent(nodeContent.get(i));
 				dtnodes.add(dn);
 			}
-			
+
 			for(int i = 0; i < dtnodes.size(); i++)
 			{
 				System.out.print(dtnodes.get(i).getSelf() + " ");
@@ -1318,7 +1330,7 @@ public class ServiceAction extends ActionSupport{
 			return ERROR;
 		}
 	}
-	
+
 	/**
 	 * 流程式组合
 	 * @return
@@ -1328,7 +1340,11 @@ public class ServiceAction extends ActionSupport{
 		services = srs.getAll();
 		return SUCCESS;
 	}
-	
+
+	/**
+	 * 添加可靠性组合服务
+	 * @return
+	 */
 	public String addCombineA()
 	{
 		String callservice = inpts.replaceAll("s", ",");
@@ -1337,7 +1353,7 @@ public class ServiceAction extends ActionSupport{
 			log.info("The selected subservices don't satisfy the combine condition!");
 			return ERROR;
 		}
-		
+
 		sr = new Service();
 		sr.setServiceAddress(inadd);
 		sr.setServiceTarget(intt);
@@ -1354,12 +1370,12 @@ public class ServiceAction extends ActionSupport{
 		sr.setServiceProvider(loginUser);
 		sr.setRunTimes(0);
 		sr.setFailTimes(0);
+		sr.setPreferredTarget("ServiceReliability"); //可靠性组合，偏好指标为可靠性
 		sr.setCombineType("CombineA");
 		sr.setIsExternal(0);
-		
+
 		sr.setCallService(callservice);
-		//srs.getSrDAO().save(sr);
-		
+
 		//创建组合服务也是注册服务，调用子服务，所以也要判断注册服务是否违反调用规则
 		this.srs.register(sr);
 		if(sr.getCallService() != null || (!sr.getCallService().isEmpty())){
@@ -1369,7 +1385,7 @@ public class ServiceAction extends ActionSupport{
 			}
 			else{
 				int sid = sr.getServiceId();
-				
+
 				String[] ss = inpts.split("s");
 				for(int i = 0; i < ss.length; i++)
 				{
@@ -1384,7 +1400,7 @@ public class ServiceAction extends ActionSupport{
 						subService.setServiceId(Integer.valueOf(ss[i]));
 						cc.setServiceBySubServiceId(subService);
 						conditionsr.getConditionDao().save(cc);
-						
+
 						Servicerelation srrealation = new Servicerelation();
 						srrealation.setServiceByServiceId(service);
 						srrealation.setServiceBySubServiceId(subService);
@@ -1392,7 +1408,7 @@ public class ServiceAction extends ActionSupport{
 						srrelationsr.getSrrelationDao().save(srrealation);  //保存服务关系
 					}
 				}
-				
+
 				System.out.print(BuiltInVar.getVarValue("year"));
 				return SUCCESS;
 			}
@@ -1403,7 +1419,11 @@ public class ServiceAction extends ActionSupport{
 			return ERROR;
 		}
 	}
-	
+
+	/**
+	 * 添加适用性组合服务
+	 * @return
+	 */
 	public String addCombineB()
 	{
 		String callservice = inpts.replaceAll("s", ",");
@@ -1412,7 +1432,7 @@ public class ServiceAction extends ActionSupport{
 			log.info("The selected subservices don't satisfy the combine condition!");
 			return ERROR;
 		}
-		
+
 		sr = new Service();
 		sr.setServiceAddress(inadd);
 		sr.setServiceTarget(intt);
@@ -1429,11 +1449,11 @@ public class ServiceAction extends ActionSupport{
 		sr.setServiceProvider(loginUser);
 		sr.setRunTimes(0);
 		sr.setFailTimes(0);
+		//适用性组合，无偏好指标
 		sr.setCombineType("CombineB");
 		sr.setIsExternal(0);
 		sr.setCallService(callservice);
-		//srs.getSrDAO().save(sr);
-		
+
 		//创建组合服务也是注册服务，调用子服务，所以也要判断注册服务是否违反调用规则
 		this.srs.register(sr);
 		if(sr.getCallService() != null || (!sr.getCallService().isEmpty())){
@@ -1444,7 +1464,7 @@ public class ServiceAction extends ActionSupport{
 			else{
 				try{
 					int sid = sr.getServiceId();
-					
+
 					String[] ss = inpts.split("s");      //添加的子服务
 					String[] vars = invars.split(";");
 					String[] ctns = inctns.split(";");
@@ -1462,16 +1482,16 @@ public class ServiceAction extends ActionSupport{
 							cc.setServiceBySubServiceId(subService);
 							cc.setCondtionExpression(ctns[i]);
 							conditionsr.getConditionDao().save(cc);     //保存运行条件
-									
+
 							Servicerelation srrealation = new Servicerelation();
 							srrealation.setServiceByServiceId(service);
 							srrealation.setServiceBySubServiceId(subService);
 							srrealation.setCondition(cc);
 							srrelationsr.getSrrelationDao().save(srrealation);  //保存服务关系
-									
+
 						}
 					}
-							
+
 					for(int i = 0; i < vars.length; i++)
 					{
 						if(vars[i].length() > 0)
@@ -1498,10 +1518,17 @@ public class ServiceAction extends ActionSupport{
 			return ERROR;
 		}
 	}
-	
+
+	/**
+	 * 添加流程式组合服务
+	 * @return
+	 */
 	public String addCombineC(){
 		try{
 			//checkCombineProcess();  //to do: 需要一个检查组合逻辑的函数, 分析流程结构
+			//如果是用editor定义流程，保存流程文件时会自动分析验证工作流结构合理性
+
+
 			Service combineprocess = new Service();
 			if (combinationFile != null && combinationFile.length() != 0) {
 				combineprocess.setServiceName(inname);
@@ -1512,61 +1539,46 @@ public class ServiceAction extends ActionSupport{
 				combineprocess.setCombineType("CombineC");
 				combineprocess.setRunTimes(0);
 				combineprocess.setFailTimes(0);
+				combineprocess.setPreferredTarget("serviceQoSOptimizationTarget"); //流程式组合，偏好指标为用户所选指标
 				combineprocess.setServiceProvider(option1);
 				combineprocess.setIsExternal(0);
 				combineprocess.setMaxLoad(Integer.parseInt(default_maxload));
 				combineprocess.setRelateBusiness(inbusiness);
 				combineprocess.setServiceState("NO");
 				combineprocess.setServiceType("BUSINESS");
-				
+
 				String realpath = MuleConfig.getMuleAppPath() + "/" + inname;
-            	System.out.println("\n!!!!!realpath: "+realpath+"\n");
-            	
-            	String filename = inname + ".yawl";
-                File savefile = new File(new File(realpath), filename);
-                if (!savefile.getParentFile().exists())
-                {
-                    savefile.getParentFile().mkdirs();
-                }
-                FileUtils.copyFile(combinationFile, savefile);
-                MuleXMLParser.parse(savefile);
-                ActionContext.getContext().put("message", "文件上传成功");
-                combineprocess.setBusinessFile(realpath + "/" + filename);
-            }
-            else{
-            	combineprocess.setBusinessFile(null);
-            }
-			
-			/*Double reliability = 
-			Double servciecost = 
-			Double servicetime = 
-			Double 
+				System.out.println("\n!!!!!realpath: "+realpath+"\n");
+
+				String filename = inname + ".yawl";
+				File savefile = new File(new File(realpath), filename);
+				if (!savefile.getParentFile().exists())
+				{
+					savefile.getParentFile().mkdirs();
+				}
+				FileUtils.copyFile(combinationFile, savefile);
+				MuleXMLParser.parse(savefile);
+				ActionContext.getContext().put("message", "文件上传成功");
+				combineprocess.setBusinessFile(realpath + "/" + filename);
+			}
+			else{
+				combineprocess.setBusinessFile(null);
+				return ERROR;
+			}
+
+			/*  分析流程结构获取子服务的各项QoS指标
+			Double reliability =
+			Double servciecost =
+			Double servicetime =
+			Double
 			combineprocess.set
 			*/
-			
-			
+
+
 			srs.register(combineprocess);
-			
-			if(serviceQoSOptimizationTarget != null){
-				if(serviceQoSOptimizationTarget.equalsIgnoreCase("ServiceReliability")){
-					computeServiceQos(combineprocess.getServiceId(), 0.5, 0.1, 0.1, 0.1, 0.1, 0.1);
-				}
-				else if(serviceQoSOptimizationTarget.equalsIgnoreCase("ServiceAvailability")){
-					computeServiceQos(combineprocess.getServiceId(), 0.1, 0.5, 0.1, 0.1, 0.1, 0.1);
-				}
-				else if(serviceQoSOptimizationTarget.equalsIgnoreCase("ServiceTime")){
-					computeServiceQos(combineprocess.getServiceId(), 0.1, 0.1, 0.5, 0.1, 0.1, 0.1);
-				}
-				else if(serviceQoSOptimizationTarget.equalsIgnoreCase("ServiceCost")){
-					computeServiceQos(combineprocess.getServiceId(), 0.1, 0.1, 0.1, 0.5, 0.1, 0.1);
-				}
-				else if(serviceQoSOptimizationTarget.equalsIgnoreCase("ServiceLoadDegree")){
-					computeServiceQos(combineprocess.getServiceId(), 0.1, 0.1, 0.1, 0.1, 0.5, 0.1);
-				}
-				else if(serviceQoSOptimizationTarget.equalsIgnoreCase("UserAvgEvaluation")){
-					computeServiceQos(combineprocess.getServiceId(), 0.1, 0.1, 0.1, 0.1, 0.1, 0.5);
-				}
-			}
+
+			computeServiceQos(combineprocess.getServiceId(),serviceQoSOptimizationTarget);
+
 			return SUCCESS;
 		}
 		catch(Exception e)
@@ -1575,8 +1587,8 @@ public class ServiceAction extends ActionSupport{
 			return ERROR;
 		}
 	}
-	
-	
+
+
 	/**
 	 * 判断要注册服务的调用关系是否符合规则
 	 * @return
@@ -1601,7 +1613,7 @@ public class ServiceAction extends ActionSupport{
 				}
 			}
 		}
-		
+
 		DirectedGraph<Integer> dg = getServiceGraph();     //判断服务调用图是否有环，以解决服务循环调用
 		/*dg.addNode(sr.getServiceId());                 //要注册的服务已临时存到服务列表里了
 		for(int i = 0; i < callservices.length; i++){
@@ -1617,9 +1629,9 @@ public class ServiceAction extends ActionSupport{
 		}
 		return true;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * 给所有服务建立有向图，表示服务之间的调用关系
 	 * @return
@@ -1633,7 +1645,7 @@ public class ServiceAction extends ActionSupport{
 			dg.addNode(service.getServiceId());
 			if(service.getCallService() != null){
 				String[] callservices = service.getCallService().split(",");
-				for(int j = 0; j < callservices.length; j++){ 
+				for(int j = 0; j < callservices.length; j++){
 					if(callservices[j].length() > 0){
 						dg.addNode(Integer.parseInt(callservices[j]));
 						dg.addEdge(service.getServiceId(), Integer.parseInt(callservices[j]));
@@ -1643,15 +1655,15 @@ public class ServiceAction extends ActionSupport{
 		}
 		return dg;
 	}
-	
-	
+
+
 	/**
 	 * 将注册服务的服务调用关系保存到数据库
 	 */
 	public void saveCallrelation(){
 		if(sr.getCallService() != null){
 			String[] callservices = sr.getCallService().split(",");
-			for(int i = 0; i < callservices.length; i++){ 
+			for(int i = 0; i < callservices.length; i++){
 				if(callservices[i].length() > 0){
 					Servicerelation srrel = new Servicerelation();
 					srrel.setServiceByServiceId(sr);
@@ -1661,8 +1673,8 @@ public class ServiceAction extends ActionSupport{
 			}
 		}
 	}
-	
-	
+
+
 	public String providedService(){
 		providedservices.clear();
 		//if(nowuser == "6")     管理员也没有权限去改
@@ -1675,7 +1687,7 @@ public class ServiceAction extends ActionSupport{
 			businesslist = srs.getBusinessService();
 			providedservices.removeAll(businesslist);  //暂时不考虑流程
 		}
-		
+
 		if(providedservices.size() == 0){
 			log.info("User "+ nowuser + " hadn't registered any service!");
 			return ERROR;
@@ -1683,7 +1695,7 @@ public class ServiceAction extends ActionSupport{
 		System.out.print(providedservices.size());
 		return SUCCESS;
 	}
-	
+
 	public List<Integer> getApplicationRoles(){
 		GetRemoteService grs = new GetRemoteService();
 		String positionresult = grs.getPosition(nowuser);
@@ -1692,23 +1704,23 @@ public class ServiceAction extends ActionSupport{
 			JSONArray json = JSONArray.fromObject(positionresult );
 			System.out.println(json.toString()+"="+positionresult+"\n");
 			if(json.size()>0){
-		    	for(int i=0;i<json.size();i++){// 閬嶅巻 jsonarray 鏁扮粍锛屾妸姣忎竴涓璞¤浆鎴?json 瀵硅薄
-		    		JSONObject job = json.getJSONObject(i);
+				for(int i=0;i<json.size();i++){// 閬嶅巻 jsonarray 鏁扮粍锛屾妸姣忎竴涓璞¤浆鎴?json 瀵硅薄
+					JSONObject job = json.getJSONObject(i);
 					System.out.print("positions:"+json.toString());
 					positions = job.getString("positions");
 					break;
-		    	}
-		    }
+				}
+			}
 		}
-	    
+
 		List<Integer> myroles = new ArrayList<Integer>();
 		List<Role> allroles = new ArrayList<Role>();
 		allroles = rolesr.getAllRole();
-	    
+
 		//String url = "http://localhost:3000/rolemap/getBusiRoleByOrganRole/" + nowuser + "&测试1组织系统&服务管理中心&" + positions;
 		//String rolesresult = grs.httpGet("http://localhost:3000/rolemap/getBusiRoleByOrganRole/");
 		//String url = "http://localhost:3000/rolemap/getBusiRoleByOrganRole/";
-	    String url = ConstantUtil.getGetbusirolebyorganroleurl();
+		String url = ConstantUtil.getGetbusirolebyorganroleurl();
 		String rolesresult = grs.postForm(url, nowuser, "测试1组织系统", "服务管理中心", positions);
 		//String rolesresult = "God";
 		System.out.println("rolesresult="+rolesresult+"\n") ;
@@ -1716,29 +1728,29 @@ public class ServiceAction extends ActionSupport{
 		for(int i = 0; i < roles.length; i++){
 			if(roles[i].isEmpty() == false){
 				for(int j = 0; j < allroles.size(); j++){
-		           	 if(roles[i].equals(allroles.get(j).getRoleName())){
-		           		 Role role = new Role();
-		           		 role = allroles.get(j);
-		           		 if(myroles.contains(role.getRoleId()) == false){
-		           			myroles.add(role.getRoleId());
-		           		 }
-		           		 
-			         }
-		        }
+					if(roles[i].equals(allroles.get(j).getRoleName())){
+						Role role = new Role();
+						role = allroles.get(j);
+						if(myroles.contains(role.getRoleId()) == false){
+							myroles.add(role.getRoleId());
+						}
+
+					}
+				}
 			}
-			
+
 		}
-	    return myroles;
+		return myroles;
 	}
-	
+
 	public String serviceByType(){
 		try{
 			services.clear();
 			services = srs.getAll();
-			
+
 			servicetypes.clear();
 			servicetypes = srs.getServiceType();
-			
+
 			selectedtype = "null";
 		}catch(Exception e){
 			e.printStackTrace();
@@ -1746,12 +1758,12 @@ public class ServiceAction extends ActionSupport{
 		}
 		return SUCCESS;
 	}
-	
-	public String ServiceOfSelectedType(){  
+
+	public String ServiceOfSelectedType(){
 		try{
 			servicetypes.clear();
 			servicetypes = srs.getServiceType();
-			
+
 			services.clear();
 			if(selectedtype.equalsIgnoreCase("ALL")){
 				services = srs.getAll();
@@ -1765,15 +1777,15 @@ public class ServiceAction extends ActionSupport{
 		}
 		return SUCCESS;
 	}
-	
+
 	public String serviceByBusiness(){
 		try{
 			services.clear();
 			services = srs.getAll();
-			
+
 			servicebusinesses.clear();
 			servicebusinesses = srs.getRelateBusiness();
-			
+
 			selectedbusiness = "null";
 		}catch(Exception e){
 			e.printStackTrace();
@@ -1781,16 +1793,16 @@ public class ServiceAction extends ActionSupport{
 		}
 		return SUCCESS;
 	}
-	
-	public String ServiceOfSelectedBusiness(){  
+
+	public String ServiceOfSelectedBusiness(){
 		try{
 			System.out.print(selectedbusiness+"\n");
-			
+
 			servicebusinesses.clear();
 			servicebusinesses = srs.getRelateBusiness();
-			
+
 			services.clear();
-			
+
 			if(selectedbusiness.equalsIgnoreCase("ALL")){
 				services = srs.getAll();
 			}
@@ -1803,7 +1815,7 @@ public class ServiceAction extends ActionSupport{
 		}
 		return SUCCESS;
 	}
-	
+
 	public boolean checkCombine(String callservices){
 		List<String> subsers = new ArrayList<String>();
 		List<Integer> fathers = new ArrayList<Integer>();
@@ -1815,13 +1827,13 @@ public class ServiceAction extends ActionSupport{
 				subsers.add(sers[i]);
 			}
 		}
-		
+
 		for(int j = 0; j < subsers.size(); j++){
 			for(int i = 0; i < dtnodes.size(); i++){
 				int father = dtnodes.get(i).getFather();
 				String content = dtnodes.get(i).getContent();
 				String sid = content.substring(content.lastIndexOf(" ")+1, content.length());
-				if(subsers.get(j).equalsIgnoreCase(sid)){ 
+				if(subsers.get(j).equalsIgnoreCase(sid)){
 					if(fathers.contains(father) == false){
 						fathers.add(father);
 					}
@@ -1831,7 +1843,7 @@ public class ServiceAction extends ActionSupport{
 				}
 			}
 		}
-		
+
 		if(subsers.size() == 0 && fathers.size() == 1){
 			return true;
 		}
@@ -1845,12 +1857,12 @@ public class ServiceAction extends ActionSupport{
 			return false;
 		}
 	}
-	
+
 	public String chooseRoleService(){
 		try{
 			services.clear();
 			services = srs.getAll();
-			
+
 			roles.clear();
 			roles = rolesr.getAllRole();
 			return SUCCESS;
@@ -1859,11 +1871,11 @@ public class ServiceAction extends ActionSupport{
 			e.printStackTrace();
 			return ERROR;
 		}
-		
+
 	}
-	
-	
-	
+
+
+
 	/**
 	 * 保存应用内的微服务调用关系
 	 * @param stackname
@@ -1871,104 +1883,103 @@ public class ServiceAction extends ActionSupport{
 	public void saveRelationInStack(String stackname){
 		Service stack = srs.getServiceidByServiename(stackname);
 		int appid = stack.getServiceId();
-		InteractWithRancherUtil iwrUtil = new InteractWithRancherUtil();
 		iwrUtil.getConfigOfStack(stackname);
 		try {
 			Yaml yaml = new Yaml();
 			File dockerfile = new File(MuleConfig.getMuleAppPath() + "/" + stackname + "/docker-compose.yml");
-	        if (dockerfile != null) {
-	        	//获取文件中的配置数据，将值转换为Map
-	        	Map map =(Map)yaml.load(new FileInputStream(dockerfile));
-	            String services = map.get("services").toString();
-	            Map servicesMap = (Map)map.get("services");
-	            Iterator it = servicesMap.entrySet().iterator();
-	            while(it.hasNext()){
-	            	String ser = it.next().toString();
-	            	String sername = ser.substring(0, ser.indexOf("="));
-	            	Map serMap = (Map)servicesMap.get(sername);
-	            	if(serMap.containsKey("links") || serMap.containsKey("depends_on")){
-	            		String links = "";
-	            		if(serMap.containsKey("links")){
-	            			links = serMap.get("links").toString();
-	            		}
-	            		else if(serMap.containsKey("depends_on")){
-	            			links = serMap.get("depends_on").toString();
-	            		}
-	            		if(links.contains("[")){
-	            			links = links.substring(1, links.lastIndexOf("]"));
-	            		}
-	            		if(links.contains(":")){
-	            			links = links.substring(0, links.lastIndexOf(":"));
-	            		}
-	            		Servicelinks serlinks = new Servicelinks();
-	            		serlinks.setParentAppId(appid);
-	            		Service service = new Service();
-	            		service = srs.getServiceidByServiename(sername);
-	            		serlinks.setServiceId(service.getServiceId());
-	            		Service subservice = new Service();
-	            		subservice = srs.getServiceidByServiename(links);
-	            		serlinks.setSubServiceId(subservice.getServiceId());
-	            		serlinkssr.save(serlinks);
-	            		System.out.println(links);
-	            	}
-	            }
-	        }
-	        
-	        File rancherfile = new File(MuleConfig.getMuleAppPath() + "/" + stackname + "/rancher-compose.yml");
-	        if (rancherfile != null) {
-	        	InputStream inputStream = new FileInputStream(rancherfile);
-                //获取文件中的配置数据，将值转换为Map
-	        	Map map =(Map)yaml.load(inputStream);
-	            String services = map.get("services").toString();
-	            Map servicesMap = (Map)map.get("services");
-	            Iterator it = servicesMap.entrySet().iterator();
-	            String lbservicename = "lb-" + stackname;
-	            while(it.hasNext()){
-	            	String ser = it.next().toString();
-	            	String sername = ser.substring(0, ser.indexOf("="));
-	            	if(sername.equals(lbservicename)){
-		            	Map serMap = (Map)servicesMap.get(lbservicename);
-		            	if(serMap.containsKey("lb_config")){
-		            		String linkservice = "";
-		            		Map lbMap = (Map)serMap.get("lb_config");
-			            	if(lbMap.containsKey("port_rules")){
-			            		List portList = (List) lbMap.get("port_rules");
-				            	for(int i = 0 ; i < portList.size(); i++){
-				            		String port = portList.get(i).toString();
-				            		if(port.contains("service=")){
-				            			port = port.replaceAll("[\\[\\]]", "");
-				            			String[] rules = port.split(",");
-				            			for(int j = 0; j < rules.length; j++){
-				            				if(rules[j].contains("service=")){
-				            					linkservice = rules[j].substring(rules[j].indexOf("=") + 1);
-								            	System.out.println(linkservice);
-								            	Servicelinks serlinks = new Servicelinks();
-							            		serlinks.setParentAppId(appid);
-							            		Service service = new Service();
-							            		service = srs.getServiceidByServiename(sername);
-							            		serlinks.setServiceId(service.getServiceId());
-							            		Service subservice = new Service();
-							            		subservice = srs.getServiceidByServiename(linkservice);
-							            		serlinks.setSubServiceId(subservice.getServiceId());
-							            		serlinkssr.save(serlinks);
-								            	break;
-				            				}
-				            			}
-						            	break;
-				            		}
-				            	}
-			            	}
-		            	}
-	            	}
-	            	
-	            }
-	            inputStream.close();//关闭读取rancher-compose.yml的文件流
-	        }
+			if (dockerfile != null) {
+				//获取文件中的配置数据，将值转换为Map
+				Map map =(Map)yaml.load(new FileInputStream(dockerfile));
+				String services = map.get("services").toString();
+				Map servicesMap = (Map)map.get("services");
+				Iterator it = servicesMap.entrySet().iterator();
+				while(it.hasNext()){
+					String ser = it.next().toString();
+					String sername = ser.substring(0, ser.indexOf("="));
+					Map serMap = (Map)servicesMap.get(sername);
+					if(serMap.containsKey("links") || serMap.containsKey("depends_on")){
+						String links = "";
+						if(serMap.containsKey("links")){
+							links = serMap.get("links").toString();
+						}
+						else if(serMap.containsKey("depends_on")){
+							links = serMap.get("depends_on").toString();
+						}
+						if(links.contains("[")){
+							links = links.substring(1, links.lastIndexOf("]"));
+						}
+						if(links.contains(":")){
+							links = links.substring(0, links.lastIndexOf(":"));
+						}
+						Servicelinks serlinks = new Servicelinks();
+						serlinks.setParentAppId(appid);
+						Service service = new Service();
+						service = srs.getServiceidByServiename(sername);
+						serlinks.setServiceId(service.getServiceId());
+						Service subservice = new Service();
+						subservice = srs.getServiceidByServiename(links);
+						serlinks.setSubServiceId(subservice.getServiceId());
+						serlinkssr.save(serlinks);
+						System.out.println(links);
+					}
+				}
+			}
+
+			File rancherfile = new File(MuleConfig.getMuleAppPath() + "/" + stackname + "/rancher-compose.yml");
+			if (rancherfile != null) {
+				InputStream inputStream = new FileInputStream(rancherfile);
+				//获取文件中的配置数据，将值转换为Map
+				Map map =(Map)yaml.load(inputStream);
+				String services = map.get("services").toString();
+				Map servicesMap = (Map)map.get("services");
+				Iterator it = servicesMap.entrySet().iterator();
+				String lbservicename = "lb-" + stackname;
+				while(it.hasNext()){
+					String ser = it.next().toString();
+					String sername = ser.substring(0, ser.indexOf("="));
+					if(sername.equals(lbservicename)){
+						Map serMap = (Map)servicesMap.get(lbservicename);
+						if(serMap.containsKey("lb_config")){
+							String linkservice = "";
+							Map lbMap = (Map)serMap.get("lb_config");
+							if(lbMap.containsKey("port_rules")){
+								List portList = (List) lbMap.get("port_rules");
+								for(int i = 0 ; i < portList.size(); i++){
+									String port = portList.get(i).toString();
+									if(port.contains("service=")){
+										port = port.replaceAll("[\\[\\]]", "");
+										String[] rules = port.split(",");
+										for(int j = 0; j < rules.length; j++){
+											if(rules[j].contains("service=")){
+												linkservice = rules[j].substring(rules[j].indexOf("=") + 1);
+												System.out.println(linkservice);
+												Servicelinks serlinks = new Servicelinks();
+												serlinks.setParentAppId(appid);
+												Service service = new Service();
+												service = srs.getServiceidByServiename(sername);
+												serlinks.setServiceId(service.getServiceId());
+												Service subservice = new Service();
+												subservice = srs.getServiceidByServiename(linkservice);
+												serlinks.setSubServiceId(subservice.getServiceId());
+												serlinkssr.save(serlinks);
+												break;
+											}
+										}
+										break;
+									}
+								}
+							}
+						}
+					}
+
+				}
+				inputStream.close();//关闭读取rancher-compose.yml的文件流
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 保存应用间的关联关系，通过共同的微服务产生关联
 	 * @param stackname
@@ -1995,82 +2006,106 @@ public class ServiceAction extends ActionSupport{
 					}
 				}
 			}
-			
+
 		}
 	}
-	
-	
+
+
 	/**
 	 * 计算组合服务的qos
 	 * @return
 	 */
-	private void computeComServiceQos(){
-		double maxReliability = srs.getMaxServiceReliability();
-		double minReliability = srs.getMinServiceReliability();
-		double maxServicecost = srs.getMaxServiceCost();
-		double minServicecost = srs.getMinServiceCost();
-		double maxServicetime = srs.getMaxServiceTime();
-		double minServicetime = srs.getMinServiceTime();
-		List<Service> allsers = new ArrayList<Service>();
-		allsers = srs.getAll();
-		for(int i = 0; i < allsers.size(); i++){
-			Service s = allsers.get(i);
-			//qos计算公式
-			double reliability = s.getServiceReliability();
-			double serviceCost = s.getServiceCost();
-			double serviceTime = Double.parseDouble(s.getServiceTime());
-			double w1 = 0.4, w2 = 0.3, w3 = 0.3;     //权重的取值？？？
-			double v1, v2, v3;
-			if(maxReliability == minReliability){
-				v1 = 1;
+	private ServiceQos computeComServiceQos(int serviceid){
+		Service s = srs.getUniqueService(String.valueOf(serviceid));
+		ServiceQos qos = new ServiceQos();
+		qos.setServiceId(serviceid);
+		qos.setServiceName(s.getServiceName());
+		qos.setServiceType(s.getServiceType());
+
+        if(s.getCombineType() != null){
+        	List<Service> sers = new ArrayList<Service>();//子服务列表
+        	//可靠性组合和适用性组合的子服务列表都是通过Condition获取的
+        	if(s.getCombineType().equalsIgnoreCase("CombineC") == false){
+				List<Condition> cons = conditionsr.getConditionDao().findByServiceId(serviceid);
+				for(int i = 0; i < cons.size(); i++){
+					sers.add(cons.get(i).getServiceBySubServiceId());
+				}
+				double reliability = 1.0, availability = 1.0, serviceTime = 0.0, serviceCost = 0.0, busyDegree =1.0, avgEvaluation = 0.0, qosValue = 0.0;
+				if(s.getCombineType().equalsIgnoreCase("CombineA")){
+					for(int i = 0; i < sers.size(); i++){
+						ServiceQos temp = computeServiceQos(sers.get(i).getServiceId(), "ServiceReliability");
+						reliability *= temp.getReliability();
+						availability *= temp.getAvailability();
+						serviceTime += temp.getServiceTime();
+						serviceCost += temp.getServiceCost();
+						busyDegree *= temp.getBusyDegree();
+						avgEvaluation += temp.getAvgEvaluation();
+						qosValue += temp.getServiceQos();
+					}
+				}
+				else if(s.getCombineType().equalsIgnoreCase("CombineB")){
+					for(int i = 0; i < sers.size(); i++){
+						ServiceQos temp = computeServiceQos(sers.get(i).getServiceId(), "");
+						reliability *= temp.getReliability();
+						availability *= temp.getAvailability();
+						serviceTime += temp.getServiceTime();
+						serviceCost += temp.getServiceCost();
+						busyDegree *= temp.getBusyDegree();
+						avgEvaluation += temp.getAvgEvaluation();
+						qosValue += temp.getServiceQos();
+					}
+				}
+				if(sers.size() > 0) {
+					serviceTime /= sers.size();
+					serviceCost /= sers.size();
+					avgEvaluation /= sers.size();
+					qosValue /= sers.size();
+				}
+				qos.setReliability(reliability);
+				qos.setAvailability(availability);
+				qos.setServiceTime(serviceTime);
+				qos.setServiceCost(serviceCost);
+				qos.setBusyDegree(busyDegree);
+				qos.setAvgEvaluation(avgEvaluation);
+				qos.setServiceQos(qosValue);
 			}
-			else{  //服务可靠性为正指标
-				v1 = (reliability - minReliability) / (maxReliability - minReliability);
+			else{   //流程式组合
+        		sers..
+				//流程结构呀。。。
+				//计算完每部分结构的QoS，更新服务的字段值
+
+				ServiceQos temp = computeServiceQos(sers.get(i).getServiceId(), s.getPreferredTarget());
+
+				//更新服务的QoS指标：可靠性
+				s.setServiceReliability(reliability);
+				srs.update(s);
 			}
-			if(maxServicecost == minServicecost){
-				v2 = 1;
-			}
-			else{   //服务成本为负指标
-				v2 = (maxServicecost - serviceCost) / (maxServicecost - minServicecost);
-			}
-			if(maxServicetime == minServicetime){
-				v3 = 1;
-			}
-			else{    //服务运行时间为负指标
-				v3 = (maxServicetime - serviceTime) / (maxServicetime - minServicetime);
-			}
-			double qos = w1 * v1 + w2 * v2 + w3 * v3; 
-			s.setServiceQos(qos);
-			srs.update(s);
 		}
+		return qos;
 	}
-	
+
+	/**
+	 *获取所有服务的QoS，没有偏好指标，取平均权重
+	 */
 	public String getAllServiceQos(){
 		allQos.clear();
 		List<Service> allsers = srs.getAll();
 		for(int i = 0; i < allsers.size(); i++){
 			Service s = allsers.get(i);
-			ServiceQos qos = new ServiceQos();
-			qos = computeServiceQos(s.getServiceId(), 0.167, 0.167, 0.167, 0.167, 0.167, 0.165);
+			ServiceQos qos = computeServiceQos(s.getServiceId(), null);
 			allQos.add(qos);
 		}
 		return SUCCESS;
 	}
-	
+
 	/**
 	 * 计算指定服务的Qos
-	 * @param serviceid
-	 * @param w1  服务可靠性的权重
-	 * @param w2  服务可用性的权重
-	 * @param w3 服务执行最大时间的权重
-	 * @param w4 服务成本的权重
-	 * @param w5 服务繁忙程度的权重
-	 * @param w6 用户平均评分的权重
+	 * @param serviceid     服务ID
+	 * @param preferredTarget  qos偏好指标
 	 * @return
 	 */
-	public ServiceQos computeServiceQos(int serviceid, Double w1, Double w2, Double w3, Double w4, Double w5, Double w6){
-		Service s = new Service();
-		s = srs.getUniqueService(String.valueOf(serviceid));
+	public ServiceQos computeServiceQos(int serviceid, String preferredTarget){
+		Service s = srs.getUniqueService(String.valueOf(serviceid));
 		double maxReliability = srs.getMaxServiceReliability();
 		double minReliability = srs.getMinServiceReliability();
 		double maxServicecost = srs.getMaxServiceCost();
@@ -2083,8 +2118,13 @@ public class ServiceAction extends ActionSupport{
 		double reliability = s.getServiceReliability();
 		double availability = 0.5;//从grassland获取，需要检测可用性，state为active
 		double serviceCost = s.getServiceCost();
-		double serviceTime = Double.parseDouble(s.getServiceTime());
+		double serviceTime = 0.0;
+		if(s.getServiceTime() != null){
+			serviceTime = Double.parseDouble(s.getServiceTime());
+		}
 		double avgEvaluation = evaluationsr.getAvgEvaluation(serviceid);
+		double original_avgEvaluation = avgEvaluation;
+		//QoS指标均一化
 		if(maxReliability == minReliability){
 			reliability = 1;
 		}
@@ -2109,28 +2149,80 @@ public class ServiceAction extends ActionSupport{
 		else{  //用户平均评分为正指标
 			avgEvaluation = (avgEvaluation - minAvgEvaluation) / (maxAvgEvaluation - minAvgEvaluation);
 		}
-		//计算服务的繁忙程度
+
+		//计算服务的繁忙程度，为负指标,转化成服务可用实例比例
+		int currentScale = 0;
 		int currentLoad = runlogsr.getServiceCurrentLoad(serviceid);
 		int maxload = s.getMaxLoad() != null? s.getMaxLoad() : Integer.parseInt(default_maxload);
-		InteractWithRancherUtil iwrUtil = new InteractWithRancherUtil();
-		String scaleStr = iwrUtil.getServiceScale(s.getServiceName());
-		JSONObject scaleObj = JSONObject.fromObject(scaleStr);
-		int currentScale = 0;
-		if(scaleObj != null && scaleObj.containsKey("currentScale")){
-			currentScale = scaleObj.getInt("currentScale");
+		//外部服务只有一个实例
+		if(s.getIsExternal() == 1){
+			currentScale = 1;
+		}
+		else{    //内部服务需要查询部署的实例数量
+			String deployId = "deployment:" + s.getTeam() + "-" + s.getAccessRule() + ":" + s.getServiceName();
+			String scaleStr = iwrUtil.getServiceScale(deployId);
+			currentScale = Integer.parseInt(scaleStr);
 		}
 		Double busyDegree = 0.0;
+		Double original_busyDegree = busyDegree;
 		if(currentScale != 0){
-			busyDegree = currentLoad * 1.0 / (currentScale * maxload);
+			original_busyDegree = currentLoad * 1.0 / (currentScale * maxload);
+			busyDegree = (currentScale * maxload - currentLoad) * 1.0 / (currentScale * maxload); //转化成服务可用负载比例
 		}
-		
-		Double qosValue = w1 * reliability + w2 * availability + w3 * serviceTime + w4 * serviceCost + w5 * busyDegree + w6 * avgEvaluation;
-		ServiceQos qos = new ServiceQos(s.getServiceId(), s.getServiceName(), s.getServiceType(), reliability, availability, serviceTime, serviceCost, busyDegree, avgEvaluation, qosValue);
-		/*s.setServiceQos(qosValue);
-		srs.update(s);*/  //需要保存Qos到数据库吗？？？
+
+		//QOS权重矩阵
+		AHP ahp = new AHP(6, preferredTarget);
+		Matrix weights = ahp.getWeights();
+		Double qosValue = weights.getData()[0][0] * reliability + weights.getData()[1][0] * availability + weights.getData()[2][0] * serviceTime + weights.getData()[3][0] * serviceCost + weights.getData()[4][0] * busyDegree + weights.getData()[5][0] * avgEvaluation;
+
+		//不用均一化后的值，给用户显示原始的值
+		ServiceQos qos = new ServiceQos(s.getServiceId(), s.getServiceName(), s.getServiceType(), s.getServiceReliability(), availability, Double.parseDouble(s.getServiceTime()), s.getServiceCost(), original_busyDegree, original_avgEvaluation, qosValue);
+
+
+
 		return qos;
 	}
-	
+
+	/**
+	 * 计算相同服务类内服务列表的服务QoS
+	 * @param serviceClassId
+	 * @param preferredTarget
+	 * @return
+	 */
+	public List<ServiceQos> computeServiceQosInClass(ServiceclassId serviceClassId, String preferredTarget){
+		List<ServiceQos>  serQoSs = new ArrayList<ServiceQos>();
+		String sersStr = serclasssr.findById(serviceClassId).getServices();
+		if(sersStr.isEmpty() == false){
+			String[] sers = sersStr.split(",");
+			for(int i = 0; i < sers.length; i++){
+				if(sers[i].isEmpty() == false){
+					Service s = srs.getUniqueService(sers[i]);
+					ServiceQos serviceQos = computeServiceQos(s.getServiceId(), preferredTarget);
+					serQoSs.add(serviceQos);
+				}
+			}
+		}
+		return serQoSs;
+	}
+
+	/**
+	 * 获取服务类的综合QoS，为其服务的平均QoS
+	 * @param serviceClassId
+	 * @param preferredTarget
+	 * @return
+	 */
+	public double getQosInClass(ServiceclassId serviceClassId, String preferredTarget){
+		double qosValue = 0;
+		List<ServiceQos>  serQoSs = computeServiceQosInClass(serviceClassId, preferredTarget);
+		for(int i = 0; i < serQoSs.size(); i++){
+			qosValue += serQoSs.get(i).getServiceQos();
+		}
+		if(serQoSs.size() != 0){
+			qosValue /= serQoSs.size();
+		}
+		return qosValue;
+	}
+
 	/**
 	 * 针对指定服务类（功能相同）内的各服务按综合QoS排序
 	 * @param serviceType
@@ -2138,7 +2230,7 @@ public class ServiceAction extends ActionSupport{
 	 * @param serviceRange
 	 * @return
 	 */
-	public List<ServiceQos> groupInServiceclass(String serviceType, String serviceTarget, String serviceRange){
+	/*public List<ServiceQos> groupInServiceclass(String serviceType, String serviceTarget, String serviceRange){
 		ServiceclassId classid = new ServiceclassId(serviceType, serviceTarget, serviceRange);
 		Serviceclass serclass = serclasssr.findById(classid);
 		String servicesInClass = serclass.getServices();
@@ -2152,13 +2244,13 @@ public class ServiceAction extends ActionSupport{
 			}
 		}
 		//按照服务综合Qos降序排序
-		ListSortUtil<ServiceQos> sortList = new ListSortUtil<ServiceQos>();  
-        sortList.sort(qosList, "serviceQos", "desc");
-        return qosList;
-        
-        //分组呢？？？
-	}
-	
+		ListSortUtil<ServiceQos> sortList = new ListSortUtil<ServiceQos>();
+		sortList.sort(qosList, "serviceQos", "desc");
+		return qosList;
+
+		//分组呢？？？
+	}*/
+
 	/**
 	 * 分析流程结构并保存到数据库
 	 * @param process
@@ -2170,9 +2262,9 @@ public class ServiceAction extends ActionSupport{
 		String loginPassword = (String) session.get("password");
 		ParseYawlFile yawl = new ParseYawlFile();
 		yawl.getSpecRoleOrUser(loginUser, loginPassword, processfile);
-		
+
 		//还需解析流程结构，按公式计算相关QoS指标属性。。。。引擎分析？？？？
-		
+
 		//取出子服务
 		Service s1, s2, s3;
 		Double reliability, servicecost, servicetime, avgEvaluation;
@@ -2182,37 +2274,37 @@ public class ServiceAction extends ActionSupport{
 		servicecost = s1.getServiceCost() + s2.getServiceCost() + s3.getServiceCost();
 		servicetime = Double.parseDouble(s1.getServiceTime()) + Double.parseDouble(s2.getServiceTime()) + Double.parseDouble(s3.getServiceTime());
 		avgEvaluation = Math.min(evaluationsr.getAvgEvaluation(s1.getServiceId()), evaluationsr.getAvgEvaluation(s2.getServiceId()), evaluationsr.getAvgEvaluation(s3.getServiceId()));
-		
+
 		Double p1, p2, p3;
 		//选择
 		reliability  = p1 * s1.getServiceReliability() + p2 * s2.getServiceReliability() + p3 * s3.getServiceReliability();
 		servicecost = p1 * s1.getServiceCost() + p2 * s2.getServiceCost() + p3 * s3.getServiceCost();
 		servicetime = p1 * Double.parseDouble(s1.getServiceTime()) + p2 * Double.parseDouble(s2.getServiceTime()) + p3 * Double.parseDouble(s3.getServiceTime());
 		avgEvaluation = p1 * evaluationsr.getAvgEvaluation(s1.getServiceId()) + p2 * evaluationsr.getAvgEvaluation(s2.getServiceId()) + p3 * evaluationsr.getAvgEvaluation(s3.getServiceId());
-		
+
 		//并行
 		reliability  = Math.min(s1.getServiceReliability(), s2.getServiceReliability(), s3.getServiceReliability());
 		servicecost = s1.getServiceCost() + s2.getServiceCost() + s3.getServiceCost();
 		servicetime = Math.max(Double.parseDouble(s1.getServiceTime()), Double.parseDouble(s2.getServiceTime()), Double.parseDouble(s3.getServiceTime()));
 		avgEvaluation = Math.min(evaluationsr.getAvgEvaluation(s1.getServiceId()), evaluationsr.getAvgEvaluation(s2.getServiceId()), evaluationsr.getAvgEvaluation(s3.getServiceId()));
-		
+
 		int iteration_num;
 		//循环
 		reliability  = Math.pow(s1.getServiceReliability(), iteration_num);
 		servicecost = iteration_num * s1.getServiceCost();
 		servicetime = iteration_num * Double.parseDouble(s1.getServiceTime());
 		avgEvaluation = evaluationsr.getAvgEvaluation(s1.getServiceId());
-		
+
 		to do ....
-		
+
 		//多个组合方案怎么保存？？？要有备选集
 		//若运行失败，重新分析提供方案？？
-		
+
 		//协调机制？？？
-		
+
 	}*/
-	
-	
+
+
 	public String getApplyService(){
 		int userid = Integer.parseInt(nowuser);
 		appliedservices.clear();
@@ -2245,8 +2337,136 @@ public class ServiceAction extends ActionSupport{
 		}
 		return SUCCESS;
 	}
-	
-	
+
+
+	/**
+	 * 服务注册
+	 * @return
+	 */
+	public String register(){
+		Map<String, Object> session = ActionContext.getContext().getSession();
+		String loginUser = (String) session.get("user");
+		String loginPassword = (String) session.get("password");
+
+		if(maxLoad.isEmpty() || maxLoad == null) maxLoad = default_maxload;
+		sr.setMaxLoad(Integer.valueOf(maxLoad));
+		sr.setIsExternal(Integer.parseInt(isExternal));
+		sr.setServiceState("NO");
+		sr.setRunTimes(0);
+		sr.setFailTimes(0);
+		sr.setTeam(team);
+		sr.setAccessRule(accessRule);
+		if(sr.getServiceTime().isEmpty()){
+			sr.setServiceTime("1");   //设置默认的服务最大请求时间，以毫秒为单位
+		}
+		sr.setServiceProvider(loginUser);
+		if(serviceReliability.isEmpty()){
+			sr.setServiceReliability(0.5); //设置服务可靠性的默认初始值
+		}
+		else{
+			sr.setServiceReliability(Double.parseDouble(serviceReliability));
+		}
+		if(serviceCost.isEmpty()){
+			sr.setServiceCost(1000); //设置服务成本，以人民币（元）为单位
+		}
+		else{
+			sr.setServiceCost(Double.parseDouble(serviceCost));
+		}
+		try{    //处理注册服务所需上传的文件
+			String realpath = MuleConfig.getMuleAppPath() + "/" + sr.getServiceName();
+			realpath = realpath.replaceAll("\\\\", "/");
+			System.out.println("\n!!!!!realpath: "+realpath+"\n");
+			if (myFile != null && myFile.length() != 0) {    //上传的myFile为业务流程文件
+				String filename = sr.getServiceName() + ".yawl";
+				File savefile = new File(new File(realpath), filename);
+				if (!savefile.getParentFile().exists())
+				{
+					savefile.getParentFile().mkdirs();
+				}
+				FileUtils.copyFile(myFile, savefile);
+				MuleXMLParser.parse(savefile);
+				ActionContext.getContext().put("message", "文件上传成功");
+				sr.setBusinessFile(realpath + "/" + filename);
+			}
+			else{
+				sr.setBusinessFile(null);
+			}
+			if (uploadFile != null && uploadFile.length() != 0) {     //上传的uploadFile为服务附件文件，可能是本地应用的EXE文件等
+				String filename = uploadFile.getName();
+				File savefile = new File(new File(realpath), filename);
+				if (!savefile.getParentFile().exists())
+				{
+					savefile.getParentFile().mkdirs();
+				}
+				FileUtils.copyFile(uploadFile, savefile);
+				MuleXMLParser.parse(savefile);
+				ActionContext.getContext().put("message", "文件上传成功");
+				sr.setAttachments(realpath + "/" + filename);
+			}
+			else{
+				sr.setAttachments(null);
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			//删除保存该服务的文件夹
+			File appdir = new File(MuleConfig.getMuleAppPath() + "/" + sr.getServiceName());
+			if(appdir.exists()){
+				try {
+					FileUtils.deleteDirectory(appdir);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+			return ERROR;
+		}
+
+		//搁置以下两部分的代码，需要按新方案重写
+		//1、对注册服务中的服务指定调用关系，以及原rancher中应用注册捎带其内部微服务注册的代码
+		//2、以及服务之间的这两种关系的保存
+
+		if(sr.getIsExternal() == 0){   //注册的是内部服务
+			if(sr.getServiceType().equalsIgnoreCase("SERVICE")){ //实现注册即部署
+				String namespace = team + "-" + accessRule;
+				String serviceResult = iwrUtil.deployService(sr.getServiceName(), namespace, serviceScale, dockerImage, servicePort);
+				if(serviceResult == null){
+					return ERROR;
+				}
+				else{
+					String serviceAddress = iwrUtil.getServiceAddress(serviceResult);
+					if(serviceAddress != null){
+						sr.setServiceAddress(serviceAddress);
+					}
+					else{
+						return ERROR;
+					}
+				}
+			}
+
+		}
+		else{    //注册的是外部服务
+
+		}
+		srs.register(sr);    //注册保存到数据库内
+
+		//将注册成功的服务归入相应的服务类内
+        ServiceclassId sclassId = new ServiceclassId(sr.getServiceType(), sr.getServiceTarget(), sr.getServiceRange());
+        if(serclasssr.isExisted(sclassId)){
+            Serviceclass serclass = serclasssr.findById(sclassId);
+            serclass.setServicesnum(serclass.getServicesnum() + 1);
+            serclass.setServices(serclass.getServices() + "," + sr.getServiceId());
+            serclasssr.update(serclass);
+        }
+        else{
+            Serviceclass serclass = new Serviceclass(sclassId, 1, "," + sr.getServiceId());
+            serclasssr.save(serclass);
+        }
+        return SUCCESS;
+	}
+
+
+
 	//  getter setter
 	public String getApplyString() {
 		return applyString;
@@ -2263,7 +2483,7 @@ public class ServiceAction extends ActionSupport{
 	public void setUserSr(UserService userSr) {
 		this.userSr = userSr;
 	}
-	
+
 	public RoleService getRolesr() {
 		return rolesr;
 	}
@@ -2288,7 +2508,7 @@ public class ServiceAction extends ActionSupport{
 		this.userSpecSr = userSpecSr;
 	}
 
-	
+
 	public RoleSpecSerService getRoleSpecSr() {
 		return roleSpecSr;
 	}
@@ -2296,7 +2516,7 @@ public class ServiceAction extends ActionSupport{
 	public void setRoleSpecSr(RoleSpecSerService roleSpecSr) {
 		this.roleSpecSr = roleSpecSr;
 	}
-    
+
 	public Serviceresult getSrt() {
 		return srt;
 	}
@@ -2368,7 +2588,7 @@ public class ServiceAction extends ActionSupport{
 	public void setInrange(String inrange) {
 		this.inrange = inrange;
 	}
-	
+
 
 	public String getInbusiness() {
 		return inbusiness;
@@ -2393,7 +2613,7 @@ public class ServiceAction extends ActionSupport{
 	public void setIntype(String intype) {
 		this.intype = intype;
 	}
-	
+
 	public String getInlevel() {
 		return inlevel;
 	}
@@ -2541,7 +2761,7 @@ public class ServiceAction extends ActionSupport{
 	public void setV(List<Variable> v) {
 		this.v = v;
 	}
-	
+
 	public List<Role> getRoles() {
 		return roles;
 	}
@@ -2561,7 +2781,7 @@ public class ServiceAction extends ActionSupport{
 	public void setMyFile(File myFile) {
 		this.myFile = myFile;
 	}
-	
+
 	public File getUploadFile() {
 		return uploadFile;
 	}
@@ -2586,6 +2806,46 @@ public class ServiceAction extends ActionSupport{
 		this.option2 = option2;
 	}
 
+	public String getServicePort() {
+		return servicePort;
+	}
+
+	public void setServicePort(String servicePort) {
+		this.servicePort = servicePort;
+	}
+
+	public String getServiceScale() {
+		return serviceScale;
+	}
+
+	public void setServiceScale(String serviceScale) {
+		this.serviceScale = serviceScale;
+	}
+
+	public String getDockerImage() {
+		return dockerImage;
+	}
+
+	public void setDockerImage(String dockerImage) {
+		this.dockerImage = dockerImage;
+	}
+
+	public String getAccessRule() {
+		return accessRule;
+	}
+
+	public void setAccessRule(String accessRule) {
+		this.accessRule = accessRule;
+	}
+
+	public String getTeam() {
+		return team;
+	}
+
+	public void setTeam(String team) {
+		this.team = team;
+	}
+
 	public void setSr(Service sr) {
 		this.sr = sr;
 	}
@@ -2597,7 +2857,7 @@ public class ServiceAction extends ActionSupport{
 	public void setSrs(SerService srs) {
 		this.srs = srs;
 	}
-	
+
 	public String getServiceCost() {
 		return serviceCost;
 	}
@@ -2621,7 +2881,7 @@ public class ServiceAction extends ActionSupport{
 	public String getMaxLoad() {
 		return maxLoad;
 	}
-	
+
 	public String getIsExternal() {
 		return isExternal;
 	}
@@ -2634,7 +2894,7 @@ public class ServiceAction extends ActionSupport{
 	public void setMaxLoad(String maxLoad) {
 		this.maxLoad = maxLoad;
 	}
-	
+
 	public List<Service> getServices() {
 		return services;
 	}
@@ -2642,7 +2902,7 @@ public class ServiceAction extends ActionSupport{
 	public void setServices(List<Service> services) {
 		this.services = services;
 	}
-	
+
 
 	public List<Service> getSelected() {
 		return selected;
@@ -2675,8 +2935,8 @@ public class ServiceAction extends ActionSupport{
 	public void setSrrelationsr(ServicerelationService srrelationsr) {
 		this.srrelationsr = srrelationsr;
 	}
-	
-	
+
+
 	public List<Service> getAllsers() {
 		return allsers;
 	}
@@ -2692,7 +2952,7 @@ public class ServiceAction extends ActionSupport{
 	public void setAcceptedservices(List<Service> acceptedservices) {
 		this.acceptedservices = acceptedservices;
 	}
-	
+
 
 	public List<Service> getAppliedservices() {
 		return appliedservices;
@@ -2721,7 +2981,7 @@ public class ServiceAction extends ActionSupport{
 	public void setRanklistByRuntimes(List<Service> ranklistByRuntimes) {
 		this.ranklistByRuntimes = ranklistByRuntimes;
 	}
-	
+
 	public List<Service> getProvidedservices() {
 		return providedservices;
 	}
@@ -2729,7 +2989,7 @@ public class ServiceAction extends ActionSupport{
 	public void setProvidedservices(List<Service> providedservices) {
 		this.providedservices = providedservices;
 	}
-	
+
 	public List<Service> getCalledservices() {
 		return calledservices;
 	}
@@ -2737,7 +2997,7 @@ public class ServiceAction extends ActionSupport{
 	public void setCalledservices(List<Service> calledservices) {
 		this.calledservices = calledservices;
 	}
-	
+
 	public String getServiceid() {
 		return serviceid;
 	}
@@ -2745,7 +3005,7 @@ public class ServiceAction extends ActionSupport{
 	public void setServiceid(String serviceid) {
 		this.serviceid = serviceid;
 	}
-	
+
 	public String getQueryserviceid() {
 		return queryserviceid;
 	}
@@ -2753,7 +3013,7 @@ public class ServiceAction extends ActionSupport{
 	public void setQueryserviceid(String queryserviceid) {
 		this.queryserviceid = queryserviceid;
 	}
-	
+
 	public String getQueryServiceresult() {
 		return queryServiceresult;
 	}
@@ -2761,8 +3021,8 @@ public class ServiceAction extends ActionSupport{
 	public void setQueryServiceresult(String queryServiceresult) {
 		this.queryServiceresult = queryServiceresult;
 	}
-	
-	
+
+
 	public EvaluationService getEvaluationsr() {
 		return evaluationsr;
 	}
@@ -2802,8 +3062,8 @@ public class ServiceAction extends ActionSupport{
 	public void setStrusr(SpecTaskRoleUserService strusr) {
 		this.strusr = strusr;
 	}
-	
-	
+
+
 	public AttachmentService getAttachmentsr() {
 		return attachmentsr;
 	}
@@ -2819,7 +3079,7 @@ public class ServiceAction extends ActionSupport{
 	public void setSpecJson(String specJson) {
 		this.specJson = specJson;
 	}
-	
+
 	public String getSelectedtype() {
 		return selectedtype;
 	}
@@ -2871,10 +3131,5 @@ public class ServiceAction extends ActionSupport{
 	public void setSerclasssr(ServiceclassService serclasssr) {
 		this.serclasssr = serclasssr;
 	}
-	
+
 }
-
-
-
-
-

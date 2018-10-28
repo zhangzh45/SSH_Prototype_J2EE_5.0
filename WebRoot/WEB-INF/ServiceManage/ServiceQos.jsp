@@ -107,6 +107,7 @@
 											<label><input type="checkbox" checked data-column="6">Service Cost</label>
 											<label><input type="checkbox" checked data-column="7">Service LoadDegree</label>
 											<label><input type="checkbox" checked data-column="8">User AvgEvaluation</label>
+											<label><input type="checkbox" checked data-column="9">Service Qos</label>
 										</div>
 									</div>
 
@@ -129,6 +130,7 @@
 											<th>Service Cost</th>
 											<th>Service LoadDegree</th>
 											<th>User AvgEvaluation</th>
+											<th>Service Qos</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -143,6 +145,7 @@
 												<td><s:property value="serviceCost"/></td>
 												<td><s:property value="busyDegree"/></td>
 												<td><s:property value="avgEvaluation"/></td>
+												<td><s:property value="serviceQos"/></td>
 											</tr>
 										</s:iterator>
 									</tbody>

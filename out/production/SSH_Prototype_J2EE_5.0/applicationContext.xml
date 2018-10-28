@@ -1,0 +1,793 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	 xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+					    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+					     http://www.springframework.org/schema/context
+          				 http://www.springframework.org/schema/context/spring-context-2.5.xsd
+           				http://www.springframework.org/schema/aop 
+          			 	http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+           				http://www.springframework.org/schema/tx 
+           				http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+     <context:annotation-config />
+    <context:component-scan base-package="com" >
+    <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/> 
+    </context:component-scan>
+      
+
+	<bean id="dataSource"
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName">
+            <value>com.mysql.jdbc.Driver</value>
+        </property>
+        <property name="url">
+            <value>jdbc:mysql://127.0.0.1:3306/enterpriseservicemanagementsystem?characterEncoding=UTF-8</value>
+        </property>
+        <property name="username">
+            <value>root</value>
+        </property>
+        <property name="password">
+            <value>3330428190</value>
+        </property>
+    </bean>
+    <!-- 事务管理器的配置 -->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+   		<property name="dataSource" ref="dataSource"></property>
+    </bean>
+    
+    <!-- 事务增强配置 -->
+     <tx:advice id="txAdvice" transaction-manager="txManager">
+     <!-- 事务属性定义 -->
+    <tx:attributes>
+    		<tx:method name="*" rollback-for="Exception"/>
+    	</tx:attributes>
+    </tx:advice>
+    
+    <!-- 通过AOP配置事务增强切面 -->
+     <aop:config>
+    	<aop:pointcut expression="execution(* com.*.*Service.*(..))" id="allMethods"/>
+    	<aop:advisor advice-ref="txAdvice" pointcut-ref="allMethods"/>
+    </aop:config>
+   
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource">
+        </property>
+     
+		<property name="hibernateProperties">
+            <value>
+                hibernate.dialect=org.hibernate.dialect.MySQLDialect
+               <!-- hibernate.hbm2ddl.auto=update
+                hibernate.show_sql=true
+                hibernate.format_sql=false   -->
+            </value>
+        </property>
+        
+        <property name="mappingResources">
+            <list>
+                <value>com/bean/Service.hbm.xml</value>
+                <value>com/bean/User.hbm.xml</value>
+                <value>com/bean/Role.hbm.xml</value>
+                <value>com/bean/Parameter.hbm.xml</value>
+                <value>com/bean/Licence.hbm.xml</value>
+                <value>com/bean/Evaluation.hbm.xml</value>
+                <value>com/bean/Permission.hbm.xml</value>
+                <value>com/bean/RolePermission.hbm.xml</value>
+                <value>com/bean/RoleSpecSer.hbm.xml</value>
+                <value>com/bean/Permissionservice.hbm.xml</value>
+                <value>com/bean/Condition.hbm.xml</value>
+                <value>com/bean/Variable.hbm.xml</value>
+                <value>com/bean/UserRole.hbm.xml</value>
+                <value>com/bean/Serviceresult.hbm.xml</value>
+                <value>com/bean/Serviceclass.hbm.xml</value>
+                <value>com/bean/Searchkeyword.hbm.xml</value>
+                <value>com/bean/Searchsite.hbm.xml</value>
+                <value>com/bean/Searchinf.hbm.xml</value>
+                <value>com/bean/Servicerelation.hbm.xml</value>
+                <value>com/bean/Servicelinks.hbm.xml</value>
+                <value>com/bean/UserSpecSer.hbm.xml</value>
+                <value>com/bean/Temp.hbm.xml</value>
+                <value>com/bean/Runlog.hbm.xml</value>
+                <value>com/bean/SpecTaskRoleUser.hbm.xml</value>
+                <value>com/bean/Specification.hbm.xml</value>
+                <value>com/bean/Attachment.hbm.xml</value>
+            </list>
+        </property>
+	</bean>
+	
+ 
+
+	<bean id="srDAO" class="com.bean.ServiceDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="srs" class="com.service.SerService">
+		<property name="srDAO">
+			<ref bean="srDAO" />
+		</property>
+	</bean>
+	<bean id="srAction" class="com.action.ServiceAction"  scope="prototype">
+		<property name="rolesr">
+			<ref bean="rolesr" />
+		</property>
+		<property name="srs">
+			<ref bean="srs" />
+		</property>
+		<property name="conditionsr">
+			<ref bean="conditionsr" />
+		</property>
+		<property name="variablesr">
+			<ref bean="variablesr" />
+		</property>
+		<property name="parametersr">
+			<ref bean="parametersr"/>
+		</property>
+		<property name="userrolesr">
+			<ref bean="userrolesr" />
+		</property>
+		<property name="rolepermissionsr">
+			<ref bean="rolepermissionsr" />
+		</property>
+		<property name="permissionservicesr">
+			<ref bean="permissionservicesr" />
+		</property>
+		<property name="srresultsr">
+			<ref bean="srresultsr" />
+		</property>
+		<property name="userSpecSr">
+			<ref bean="UserSpecSerService"/>
+		</property>
+		<property name="roleSpecSr">
+			<ref bean="RoleSpecSerService"/>
+		</property>
+		<property name="tempSr">
+			<ref bean="TempSer"/>
+		</property>
+		<property name="userSr">
+			<ref bean="usersr"/>
+		</property>
+		<property name="srrelationsr">
+			<ref bean="srrelationsr"/>
+		</property>
+		<property name="specsr">
+			<ref bean="specificationService"/>
+		</property>
+		<property name="strusr">
+			<ref bean="specTaskRoleUserService" />
+		</property>
+		<property name="evaluationsr">
+			<ref bean="evaluationsr" />
+		</property>
+		<property name="licencesr">
+			<ref bean="licencesr" />
+		</property>
+		<property name="runlogsr">
+			<ref bean="runlogsr" />
+		</property>
+		<property name="attachmentsr">
+			<ref bean="attachmentsr" />
+		</property>
+		<property name="serlinkssr">
+			<ref bean="ServicelinksService" />
+		</property>
+		<property name="serclasssr">
+			<ref bean="ServiceclassService" />
+		</property>
+	</bean>
+	
+	<bean id="serviceDao" class="com.bean.ServiceDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+		
+	<bean id="ServiceDAO" class="com.bean.ServiceDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+	<bean id="grs" class="com.util.GetRemoteService">
+	</bean>
+	
+	<bean id="UserDAO" class="com.bean.UserDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="userAction" class="com.action.UserAction">
+		<property name="usersr">
+			<ref bean="usersr" />
+		</property>
+		<property name="rolesr">
+			<ref bean="rolesr" />
+		</property>
+		<property name="userrolesr">
+			<ref bean="userrolesr" />
+		</property>
+		<property name="srs">
+			<ref bean="srs" />
+		</property>
+		<property name="grs">
+			<ref bean="grs" />
+		</property>
+	</bean>
+	<bean id="usersr" class="com.service.UserService">
+		<property name="userDao">
+			<ref bean="userDao" />
+		</property>
+	</bean>
+	<bean id="userDao" class="com.bean.UserDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+	<bean id="RoleDAO" class="com.bean.RoleDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="roleDao" class="com.bean.RoleDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="rolesr" class="com.service.RoleService">
+		<property name="roleDao">
+			<ref bean="roleDao" />
+		</property>
+	</bean>
+	<bean id="roleAction" class="com.action.RoleAction">
+		<property name="rolesr">
+			<ref bean="rolesr" />
+		</property>
+		<property name="userrolesr">
+			<ref bean="userrolesr" />
+		</property>
+		<property name="rolepermissionsr">
+			<ref bean="rolepermissionsr" />
+		</property>
+		<property name="roleSpecSr">
+			<ref bean="RoleSpecSerService"/>
+		</property>
+	</bean>
+	
+	<bean id="ParameterDAO" class="com.bean.ParameterDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="parameterDao" class="com.bean.ParameterDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="parametersr" class="com.service.ParameterService">
+		<property name="parameterDao">
+			<ref bean="parameterDao" />
+		</property>
+	</bean>
+	<bean id="parameterAction" class="com.action.ParameterAction">
+		<property name="sa">
+			<ref bean="srAction" />
+		</property>
+		<property name="parametersr">
+			<ref bean="parametersr" />
+		</property>
+		<property name="srresultsr">
+			<ref bean="srresultsr" />
+		</property>
+		<property name="conditionsr">
+			<ref bean="conditionsr" />
+		</property>
+		<property name="variablesr">
+			<ref bean="variablesr" />
+		</property>
+		<property name="runlogsr">
+			<ref bean="runlogsr" />
+		</property>
+		<property name="srrelationsr">
+			<ref bean="srrelationsr" />
+		</property>
+		<property name="srs">
+			<ref bean="srs" />
+		</property>
+		<property name="userrolesr">
+			<ref bean="userrolesr" />
+		</property>
+		<property name="rolepermissionsr">
+			<ref bean="rolepermissionsr" />
+		</property>
+		<property name="permissionservicesr">
+			<ref bean="permissionservicesr" />
+		</property>
+		<property name="userSpecSr">
+			<ref bean="UserSpecSerService"/>
+		</property>
+		<property name="roleSpecSr">
+			<ref bean="RoleSpecSerService"/>
+		</property>
+	</bean>
+	<bean id="LicenceDAO" class="com.bean.LicenceDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="licenceDao" class="com.bean.LicenceDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="licencesr" class="com.service.LicenceService">
+		<property name="licenceDao">
+			<ref bean="licenceDao" />
+		</property>
+	</bean>
+	<bean id="licenceAction" class="com.action.LicenceAction">
+		<property name="licencesr">
+			<ref bean="licencesr" />
+		</property>
+		<property name="srs">
+			<ref bean="srs" />
+		</property>
+	</bean>
+	<bean id="EvaluationDAO" class="com.bean.EvaluationDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="evaluationDao" class="com.bean.EvaluationDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="evaluationsr" class="com.service.EvaluationService">
+		<property name="evaluationDao">
+			<ref bean="evaluationDao" />
+		</property>
+	</bean>
+	<bean id="evaluationAction" class="com.action.EvaluationAction">
+		<property name="evaluationsr">
+			<ref bean="evaluationsr" />
+		</property>
+		<property name="srs">
+			<ref bean="srs" />
+		</property>
+	</bean>
+	<bean id="RolePermissionDAO" class="com.bean.RolePermissionDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+	<bean id="rolepermissionDao" class="com.bean.RolePermissionDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="rolepermissionsr" class="com.service.RolePermissionService">
+		<property name="rolepermissionDao">
+			<ref bean="rolepermissionDao" />
+		</property>
+	</bean>
+	<bean id="rolepermissionAction" class="com.action.RolePermissionAction">
+		<property name="rolepermissionsr">
+			<ref bean="rolepermissionsr" />
+		</property>
+	</bean>
+	
+	<bean id="PermissionDAO" class="com.bean.PermissionDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="permissionDao" class="com.bean.PermissionDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="permissionsr" class="com.service.PermissionService">
+		<property name="permissionDao">
+			<ref bean="permissionDao" />
+		</property>
+	</bean>
+	<bean id="permissionAction" class="com.action.PermissionAction">
+		<property name="permissionsr">
+			<ref bean="permissionsr" />
+		</property>
+		<property name="rolesr">
+			<ref bean="rolesr" />
+		</property>
+		<property name="srs">
+			<ref bean="srs" />
+		</property>
+		<property name="rolepermissionsr">
+			<ref bean="rolepermissionsr" />
+		</property>
+		<property name="permissionservicesr">
+			<ref bean="permissionservicesr" />
+		</property>
+	</bean>
+	<bean id="permissionserviceDao" class="com.bean.PermissionserviceDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="permissionservicesr" class="com.service.PermissionServiceService">
+		<property name="permissionserviceDao">
+			<ref bean="permissionserviceDao" />
+		</property>
+	</bean>
+	<bean id="permissionserviceAction" class="com.action.PermissionServiceAction">
+		<property name="permissionservicesr">
+			<ref bean="permissionservicesr" />
+		</property>
+	</bean>
+	<bean id="ConditionDAO" class="com.bean.ConditionDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+	<bean id="conditionDao" class="com.bean.ConditionDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="conditionsr" class="com.service.ConditionService">
+		<property name="conditionDao">
+			<ref bean="conditionDao" />
+		</property>
+	</bean>
+	<bean id="conditionAction" class="com.action.ConditionAction">
+		<property name="conditionsr">
+			<ref bean="conditionsr" />
+		</property>
+		<property name="variablesr">
+			<ref bean="variablesr" />
+		</property>
+		<property name="parametersr">
+			<ref bean="parametersr" />
+		</property>
+		<property name="srs">
+			<ref bean="srs" />
+		</property>
+		<property name="srrelationsr">
+			<ref bean="srrelationsr"/>
+		</property>
+		<property name="serlinkssr">
+			<ref bean="ServicelinksService" />
+		</property>
+	</bean>
+
+	<bean id="VariableDAO" class="com.bean.VariableDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="variableDao" class="com.bean.VariableDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="variablesr" class="com.service.VariableService">
+		<property name="variableDao">
+			<ref bean="variableDao" />
+		</property>
+	</bean>
+	<bean id="UserRoleDAO" class="com.bean.UserRoleDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+	<bean id="userroleDao" class="com.bean.UserRoleDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="userrolesr" class="com.service.UserRoleService">
+		<property name="userroleDao">
+			<ref bean="userroleDao" />
+		</property>
+	</bean>
+	<bean id="userroleAction" class="com.action.UserRoleAction">
+		<property name="userrolesr">
+			<ref bean="userrolesr" />
+		</property>
+	</bean>
+	
+	<bean id="ServiceresultDAO" class="com.bean.ServiceresultDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="srresultDao" class="com.bean.ServiceresultDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="srresultsr" class="com.service.ServiceresultService">
+		<property name="srresultDao">
+			<ref bean="srresultDao" />
+		</property>
+	</bean>
+	<bean id="SearchkeywordDAO" class="com.bean.SearchkeywordDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="skeywordDao" class="com.bean.SearchkeywordDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="skeywordsr" class="com.service.SearchkeywordService">
+		<property name="skeywordDao">
+			<ref bean="skeywordDao" />
+		</property>
+	</bean>
+	<bean id="skeywordAction" class="com.action.SearchkeywordAction">
+		<property name="skeywordsr">
+			<ref bean="skeywordsr" />
+		</property>
+		<property name="sinfsr">
+			<ref bean="sinfsr" />
+		</property>
+	</bean>
+	<bean id="SearchsiteDAO" class="com.bean.SearchsiteDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="searchsiteDao" class="com.bean.SearchsiteDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="searchsitesr" class="com.service.SearchsiteService">
+		<property name="searchsiteDao">
+			<ref bean="searchsiteDao" />
+		</property>
+	</bean>
+	<bean id="searchsiteAction" class="com.action.SearchsiteAction">
+		<property name="searchsitesr">
+			<ref bean="searchsitesr" />
+		</property>
+	</bean>
+	<bean id="SearchinfDAO" class="com.bean.SearchinfDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="sinfDao" class="com.bean.SearchinfDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="sinfsr" class="com.service.SearchinfService">
+		<property name="sinfDao">
+			<ref bean="sinfDao" />
+		</property>
+	</bean>
+	<bean id="sysuClient" class="com.server.ServiceInfo">
+		<property name="sa">
+			<ref bean="srAction" />
+		</property>
+		<property name="pa">
+			<ref bean="parameterAction" />
+		</property>
+		<property name="ser">
+			<ref bean="srs"/>
+		</property>
+		<property name="utiluss">
+			<ref bean="UserSpecSerService"/>
+		</property>
+		<property name="tempser">
+			<ref bean="TempSer"/>
+		</property>
+		<property name="conditionsr">
+			<ref bean="conditionsr"/>
+		</property>
+		<property name="specsr">
+			<ref bean="specificationService"/>
+		</property>
+		<property name="strusr">
+			<ref bean="specTaskRoleUserService"/>
+		</property>
+		<property name="runlogsr">
+			<ref bean="runlogsr" />
+		</property>
+	</bean>
+	<bean id="ServicerelationDAO" class="com.bean.ServicerelationDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="srrelationsr" class="com.service.ServicerelationService">
+		<property name="srrelationDao">
+			<ref bean="ServicerelationDAO" />
+		</property>
+	</bean>
+	<bean id="RoleSpecSerDAO" class="com.bean.RoleSpecSerDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="RoleSpecSerService" class="com.service.RoleSpecSerService">
+		<property name="roleSpecSerDao">
+			<ref bean="RoleSpecSerDAO"/>
+		</property>
+	</bean>
+	<bean id="RoleSpecSerAct" class="com.action.RoleSpecSerAction">
+		<property name="roleSpecSerService">
+			<ref bean="RoleSpecSerService"/>
+		</property>
+		<property name="roleService">
+			<ref bean="rolesr"/>
+		</property>
+		<property name="serService">
+			<ref bean="srs"/>
+		</property>
+		<property name="ussInrss">
+			<ref bean="UserSpecSerService"/>
+		</property>
+		<property name="tempInRss">
+			<ref bean="TempSer"/>
+		</property>
+	</bean>
+	<bean id="UserSpecSerDAO" class="com.bean.UserSpecSerDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="UserSpecSerService" class="com.service.UserSpecSerService">
+		<property name="userSpecSerDao">
+			<ref bean="UserSpecSerDAO"/>
+		</property>
+	</bean>
+
+	<bean id="TempDAO" class="com.bean.TempDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="TempSer" class="com.service.TempService">
+		<property name="tempdao" >
+			<ref bean="TempDAO"/>
+		</property>
+	</bean>
+	<bean id="TempAct" class="com.action.TempAction">
+		<property name="usstemp">
+			<ref bean="UserSpecSerService"/>
+		</property>
+		<property name="tempser">
+			<ref bean="TempSer"/>
+		</property>
+	</bean>
+	<bean id="RunlogDAO" class="com.bean.RunlogDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="runlogDao" class="com.bean.RunlogDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="runlogsr" class="com.service.RunlogService">
+		<property name="runlogDao">
+			<ref bean="runlogDao" />
+		</property>
+	</bean>
+	<bean id="runlogAction" class="com.action.RunlogAction">
+		<property name="runlogsr">
+			<ref bean="runlogsr" />
+		</property>
+	</bean>
+	<bean id="configAction" class="com.action.ConfigAction">
+		<property name="srs">
+			<ref bean="srs" />
+		</property>
+		<property name="licencesr">
+			<ref bean="licencesr"/>
+		</property>
+		<property name="parametersr">
+			<ref bean="parametersr"/>
+		</property>
+		<property name="srresultsr">
+			<ref bean="srresultsr" />
+		</property>
+	</bean>
+	
+	
+	
+	<bean id="specTaskRoleUserService" class="com.service.SpecTaskRoleUserService">
+		<property name="struDao">
+			<ref bean="SpecTaskRoleUserDAO" />
+		</property>
+	</bean>
+	
+	<bean id="SpecTaskRoleUserDAO"
+		class="com.bean.SpecTaskRoleUserDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+	<bean id="SpecificationDAO" class="com.bean.SpecificationDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="specificationDAO" class="com.bean.SpecificationDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="specificationService" class="com.service.SpecificationService">
+		<property name="specDao">
+			<ref bean="specificationDAO" />
+		</property>
+	</bean>
+	<bean id="parseYawl" class="com.util.ParseYawlFile">
+		<property name="strusr">
+			<ref bean="specTaskRoleUserService"/>
+		</property>
+		<property name="specsr">
+			<ref bean="specificationService"/>
+		</property>
+	</bean>
+	<bean id="attachmentDAO" class="com.bean.AttachmentDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="attachmentsr" class="com.service.AttachmentService">
+		<property name="attachmentDao">
+			<ref bean="attachmentDAO" />
+		</property>
+	</bean>
+	<bean id="PermissionserviceDAO" class="com.bean.PermissionserviceDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id = "ServiceInterface" class="com.service.interfce.ServiceInterface">
+		<property name="serviceAction">
+			<ref bean="srAction"/>
+		</property>
+	</bean>
+	<bean id ="specificationRoleInteface" class="com.service.interfce.SpecificationRoleInterface">
+		<property name="specTaskRoleUserService">
+			<ref bean="specTaskRoleUserService"/>
+		</property>
+	</bean>
+	<bean id="ServicelinksDAO" class="com.bean.ServicelinksDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="ServicelinksService" class="com.service.ServicelinksService">
+		<property name="srlinksDao">
+			<ref bean="ServicelinksDAO" />
+		</property>
+	</bean>
+	<bean id="ServiceclassDAO" class="com.bean.ServiceclassDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="ServiceclassService" class="com.service.ServiceclassService">
+		<property name="srclassDao">
+			<ref bean="ServiceclassDAO" />
+		</property>
+	</bean>
+	</beans>

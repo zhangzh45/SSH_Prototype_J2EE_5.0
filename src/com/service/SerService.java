@@ -52,12 +52,12 @@ public class SerService
 		return re;
 	}
 	
-	public List<Service> getAll()   //获取所有的服务。包括流程
+	public List<Service> getAll()   //获取所有的服务，包括流程
 	{
 		return (List<Service>)this.srDAO.findAll();  
 	}
 	
-	public List<Service> getExceptedService()   //获取除服务类型为service（微服务）以外的所有服务。包括流程
+	public List<Service> getExceptedService()   //获取除服务类型为service（微服务）以外的所有服务,包括流程
 	{
 		List<Service> all = (List<Service>)this.srDAO.findAll();  
 		List<Service> mservceis = (List<Service>)this.srDAO.findByServiceType("SERVICE");

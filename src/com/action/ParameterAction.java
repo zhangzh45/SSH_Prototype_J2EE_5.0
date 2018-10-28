@@ -485,10 +485,9 @@ public class ParameterAction extends ActionSupport
 						List<ServiceQos> subSerQos = new ArrayList<ServiceQos>();
 						for(int i = 0; i < cons.size(); i++)//计算每个子服务的Qos
 						{
-							Service sub = new Service();
-							sub = cons.get(i).getServiceBySubServiceId();
-							double w1 = 0.5, w2 = 0.1, w3 = 0.1, w4 = 0.1, w5 = 0.1, w6 = 0.1;   //可靠性的比重w1应占最大，获得综合Qos值
-							subSerQos.add(sa.computeServiceQos(sub.getServiceId(), w1, w2, w3, w4, w5, w6));
+							Service sub = cons.get(i).getServiceBySubServiceId();
+							//可靠性的比重应占最大，获得综合Qos值，偏好指标为ServiceReliability
+							subSerQos.add(sa.computeServiceQos(sub.getServiceId(), "ServiceReliability"));
 						}
 						//按照服务综合Qos降序排序
 						ListSortUtil<ServiceQos> sortList = new ListSortUtil<ServiceQos>();  
@@ -496,7 +495,7 @@ public class ParameterAction extends ActionSupport
 				        for(int j = 0; j < subSerQos.size(); j++){
 				        	cursid = subSerQos.get(j).getServiceId();
 							System.out.println(cursid + "!!!!!!!!!!!");
-							String callres = internalCallService(cursid, uidInt);
+							String callres = internalCallService(cursid, uidInt);  //继续递归调用，可能是嵌套的组合服务
 							if(callres.equalsIgnoreCase("success")) break;
 				        }
 					}
@@ -603,7 +602,7 @@ public class ParameterAction extends ActionSupport
 	/**
 	 * 保存运行服务成功的日志信息与连接URL
 	 * @param rl  当前对应的调用日志记录
-	 * @param cursid 实际调用的服务编号
+	 * @param cuisid 实际调用的服务编号
 	 */
 	public int saverunlog(Runlog rl, int callsid){
 		if(callsid == cursid){
@@ -783,10 +782,9 @@ public class ParameterAction extends ActionSupport
 						List<ServiceQos> subSerQos = new ArrayList<ServiceQos>();
 						for(int i = 0; i < cons.size(); i++)//计算每个子服务的Qos
 						{
-							Service sub = new Service();
-							sub = cons.get(i).getServiceBySubServiceId();
-							double w1 = 0.5, w2 = 0.1, w3 = 0.1, w4 = 0.1, w5 = 0.1, w6 = 0.1;   //可靠性的比重w1应占最大，获得综合Qos值
-							subSerQos.add(sa.computeServiceQos(sub.getServiceId(), w1, w2, w3, w4, w5, w6));
+							Service sub = cons.get(i).getServiceBySubServiceId();
+							//可靠性的比重w1应占最大，获得综合Qos值，偏好指标为ServiceReliability
+							subSerQos.add(sa.computeServiceQos(sub.getServiceId(), "ServiceReliability"));
 						}
 						//按照服务综合Qos降序排序
 						ListSortUtil<ServiceQos> sortList = new ListSortUtil<ServiceQos>();  
@@ -914,6 +912,7 @@ public class ParameterAction extends ActionSupport
 
    /**
     * 对企业内部服务的负载调用
+	* 需要根据新的服务监控、rancher新版本进行修改
     * @param serviceId
     */
    public boolean loadInternalService(int serviceId){
