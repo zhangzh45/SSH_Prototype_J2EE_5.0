@@ -4,7 +4,7 @@
 	"http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
-
+    <!--<constant name="struts.multipart.saveDir" value="E:/mule-standalone-3.3.1"/>-->
 	<constant name="struts.custom.i18n.resources" value="resource"/>
 
 	<constant name="struts.objectFactory" value="spring"></constant> 
@@ -262,7 +262,7 @@
         	<result name="success">/WEB-INF/ServiceManage/EvaluateAccepted.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
-        <action name="getMyEvaluate" class="evaluationAction" method="getMyEvaluate">
+        <action name="getMyEvcombineBServicealuate" class="evaluationAction" method="getMyEvaluate">
         	<result name="success">/WEB-INF/ServiceManage/EvaluateHistory.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
@@ -376,6 +376,10 @@
         </action>
         <action name="addCombineB" class="srAction" method="addCombineB">
         	<result name="success">/ServiceRequestSuccess.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="addCombineC" class="srAction" method="addCombineC">
+            <result name="success">/ServiceRequestSuccess.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
         <action name="userAndRole" class="userAction" method="userAndRole">

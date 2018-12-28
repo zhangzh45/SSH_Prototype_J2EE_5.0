@@ -744,6 +744,9 @@
 		<property name="specsr">
 			<ref bean="specificationService"/>
 		</property>
+		<property name="srs">
+			<ref bean="srs"/>
+		</property>
 	</bean>
 	<bean id="attachmentDAO" class="com.bean.AttachmentDAO">
 		<property name="sessionFactory">

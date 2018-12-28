@@ -109,7 +109,8 @@
 						<!-- END EXAMPLE TABLE PORTLET-->
 
 						<!-- BEGIN EXAMPLE TABLE PORTLET-->
-						<form name="form3" class="form-horizontal" method="post">
+						<form name="form3" class="form-horizontal" action="addCombineC.action" method="post" enctype="multipart/form-data">
+
 							<div>
 								<div class="portlet-body">
 									<div class="container-fluid">
@@ -159,11 +160,13 @@
 									
 									
 										<div id="Businessfile" class="control-group">
-										    <label class="control-label" for="inputCombinationFile"><s:text name="UploadSpecificationFile"></s:text></label>
+										    <label class="control-label" for="inputSpecificationFile"><s:text name="UploadSpecificationFile"></s:text></label>
 										    <div class="controls">
-												<input name="combinationFile" type="FILE" id="combinationFile" >
+												<input name="specificationFile" type="FILE" id="inputSpecificationFile" >
 											</div>
 										</div>
+
+
 									  	<div class="control-group">
 										    <label class="control-label" for="inputServiceQoSOptimizationTarget"><s:text name="ServiceQoSOptimizationTarget"></s:text></label>
 										    <div class="controls">
@@ -262,7 +265,7 @@
 		    }
 		
 		
-			var inputfile = document.getElementById("combinationFile").value;
+			var inputfile = document.getElementById("inputSpecificationFile").value;
 			if(inputfile == "" || inputfile == null)
 			{
 				alert("请上传流程文件");

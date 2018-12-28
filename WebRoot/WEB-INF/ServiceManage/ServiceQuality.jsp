@@ -147,13 +147,14 @@
 											<label><input type="checkbox" checked data-column="0">Service Id</label>
 											<label><input type="checkbox" checked data-column="1">Service Name</label>
 											<label><input type="checkbox" checked data-column="2">Service Address</label>
-											<label><input type="checkbox" checked data-column="3">Run Times</label>
-											<label><input type="checkbox" checked data-column="4">Fail Times</label>
-											<label><input type="checkbox" checked data-column="5">Qos</label>
-											<label><input type="checkbox" checked data-column="6">Score Number</label>
-											<label><input type="checkbox" checked data-column="7">Average score</label>
-											<label><input type="checkbox" checked data-column="8">Overall score</label>
-											<label><input type="checkbox" checked data-column="9">Run Logging</label>
+											<label><input type="checkbox" checked data-column="3">WSDL Location</label>
+											<label><input type="checkbox" checked data-column="4">Run Times</label>
+											<label><input type="checkbox" checked data-column="5">Fail Times</label>
+											<label><input type="checkbox" checked data-column="6">Qos</label>
+											<label><input type="checkbox" checked data-column="7">Score Number</label>
+											<label><input type="checkbox" checked data-column="8">Average score</label>
+											<label><input type="checkbox" checked data-column="9">Overall score</label>
+											<label><input type="checkbox" checked data-column="10">Run Logging</label>
 										</div>
 									</div>
 
@@ -170,6 +171,7 @@
 											<th>Service Id</th>
 											<th>Service Name</th>
 											<th>Service Address</th>
+											<th>WSDL Location</th>
 											<th>Run Times</th>
 											<th class="hidden-480">Fail Times</th>
 											<th class="hidden-480">Qos</th>
@@ -186,6 +188,7 @@
 												<td><s:property value="serviceId"/></td>
 												<td><s:property value="serviceName"/></td>
 												<td><s:property value="serviceAddress"/></td>
+												<td><s:property value="WSDLLocation"/></td>
 												<td><s:property value="runTime"/></td>
 												<td class="hidden-480"><s:property value="failTime"/></td>
 												<td class="hidden-480"><s:property value="Qos"/></td>

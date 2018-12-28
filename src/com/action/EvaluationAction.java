@@ -187,6 +187,7 @@ public class EvaluationAction extends ActionSupport
 				sq.setServiceId(allservices.get(i).getServiceId());
 				sq.setServiceName(allservices.get(i).getServiceName());
 				sq.setServiceAddress(allservices.get(i).getServiceAddress());
+				sq.setWSDLLocation(allservices.get(i).getWSDLLocation());
 				if(allservices.get(i).getRunTimes() == null)
 				{
 					sq.setRunTime(0);

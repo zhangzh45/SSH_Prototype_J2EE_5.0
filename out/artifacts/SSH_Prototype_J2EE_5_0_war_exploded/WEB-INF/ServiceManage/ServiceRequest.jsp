@@ -171,6 +171,12 @@
 							<input type="text" id="inputServiceAddress" name="sr.serviceAddress" placeholder="ServiceAddress">
 						</div>
 					</div>
+					<div class="control-group">
+						<label class="control-label" for="inputWSDLLocation"><s:text name="WSDLLocation"></s:text></label>
+						<div class="controls">
+							<input type="text" id="inputWSDLLocation" name="sr.WSDLLocation" placeholder="WSDLLocation">
+						</div>
+					</div>
 					<div class="control-group" name="internal">
 						<label class="control-label" for="inputServicePort"><s:text name="ServicePort"></s:text></label>
 						<div class="controls">
@@ -256,7 +262,7 @@
 					</div>
 
 
-					<div class="control-group" style="display:none">
+					<div class="control-group">
 						<label class="control-label" for="inputCallService"><s:text name="ServiceCalledServices"></s:text></label>
 						<div class="controls">
 							<table class="" style="" id="CallServiceTable">
@@ -276,9 +282,9 @@
 					</div>
 
 					<div id="Businessfile" style="display:none" class="control-group">
-						<label class="control-label" for="inputBusinessfile"><s:text name="UploadSpecificationFile"></s:text></label>
+						<label class="control-label" for="inputMyFile"><s:text name="UploadSpecificationFile"></s:text></label>
 						<div class="controls">
-							<input name="myFile" type="FILE" id="myFile" >
+							<input name="myFile" type="FILE" id="inputMyFile" >
 						</div>
 					</div>
 
@@ -493,7 +499,7 @@
         var servicetypeindex = servicetypeobj.selectedIndex;
         var servicetypevalue = servicetypeobj.options[servicetypeindex].value;
         if(servicetypevalue == "BUSINESS"){
-            var inputfile = document.getElementById("myFile").value;
+            var inputfile = document.getElementById("inputMyFile").value;
             if(inputfile == "" || inputfile == null)
             {
                 alert("请上传流程文件");
@@ -521,9 +527,9 @@
         document.getElementById("inputServiceLevel").value = servicelevelvalue;
 
 
-        //var callservicesobj = document.getElementsByName("callservices");
+        var callservicesobj = document.getElementsByName("callservices");
         var callstring = "";
-        /*for(var i = 0; i < callservicesobj.length; i++){
+        for(var i = 0; i < callservicesobj.length; i++){
             var callservice = callservicesobj[i];
             var callserviceindex = callservice.selectedIndex;
             var callservicevalue = callservice.options[callserviceindex].value;
@@ -538,7 +544,7 @@
                     callstring += callservicevalue;
                 }
             }
-        }*/
+        }
         document.getElementById("inputCallService").value = callstring;
 
         var isExternal = "0";

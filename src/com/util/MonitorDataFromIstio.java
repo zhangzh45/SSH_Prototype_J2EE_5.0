@@ -8,16 +8,52 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 
-///获取服务监控的运行时数据
-public class MonitorData
+//从istio获取服务监控的运行时数据
+//提供了接口获取服务的响应时间、运行次数等，需要添加查询字段
+//并需要对数据进行简单的处理，目前没有完整的数据，都是聚合后的统计数据
+
+
+//需要获取的QoS属性数据
+//可用性
+//繁忙程度
+//可靠性
+//响应时间
+//后面两项需要更新到service数据库中
+public class MonitorDataFromIstio
 {
 
 	//String searchRancherURL = "http://222.200.180.59:8080/v2-beta/projects/1a5/";
 	String searchRancherURL = ConstantUtil.getSearchrancherurl();
 	GetRemoteService grs = new GetRemoteService();
 
+	double availability;
+	double busyDegree;
 
-	public void getDataFromGrassland(){
+	public MonitorDataFromIstio() {
+	}
+
+	public MonitorDataFromIstio(double availability, double busyDegree) {
+		this.availability = availability;
+		this.busyDegree = busyDegree;
+	}
+
+	public double getAvailability() {
+		return availability;
+	}
+
+	public void setAvailability(double availability) {
+		this.availability = availability;
+	}
+
+	public double getBusyDegree() {
+		return busyDegree;
+	}
+
+	public void setBusyDegree(double busyDegree) {
+		this.busyDegree = busyDegree;
+	}
+
+	public void getDataFromIstio(){
 		//可靠性数据
 		//可用性数据
 		//响应时间

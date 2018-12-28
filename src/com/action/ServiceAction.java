@@ -8,11 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.util.*;
 import com.util.Matrix.Matrix;
@@ -122,7 +118,7 @@ public class ServiceAction extends ActionSupport{
 
 	File myFile;
 	File uploadFile;
-	File combinationFile;
+	File specificationFile;
 
 	String sch;
 	String nowuser;
@@ -234,6 +230,201 @@ public class ServiceAction extends ActionSupport{
 			e.printStackTrace();
 			return ERROR;
 		}
+	}
+
+	/**
+	 * 服务注册
+	 * @return
+	 */
+	public String register() {
+		Map<String, Object> session = ActionContext.getContext().getSession();
+		String loginUser = (String) session.get("user");
+		String loginPassword = (String) session.get("password");
+
+		if (maxLoad.isEmpty() || maxLoad == null) maxLoad = default_maxload;
+		sr.setMaxLoad(Integer.valueOf(maxLoad));
+		sr.setIsExternal(Integer.parseInt(isExternal));
+		sr.setServiceState("NO");
+		sr.setRunTimes(0);
+		sr.setFailTimes(0);
+		sr.setTeam(team);
+		sr.setAccessRule(accessRule);
+		if (sr.getServiceTime().isEmpty()) {
+			sr.setServiceTime("1");   //设置默认的服务最大请求时间，以毫秒为单位
+		}
+		sr.setServiceProvider(loginUser);
+		if (serviceReliability.isEmpty()) {
+			sr.setServiceReliability(0.5); //设置服务可靠性的默认初始值
+		} else {
+			sr.setServiceReliability(Double.parseDouble(serviceReliability));
+		}
+		if (serviceCost.isEmpty()) {
+			sr.setServiceCost(1000); //设置服务成本，以人民币（元）为单位
+		} else {
+			sr.setServiceCost(Double.parseDouble(serviceCost));
+		}
+		try {    //处理注册服务所需上传的文件
+			String realpath = MuleConfig.getMuleAppPath() + "/" + sr.getServiceName();
+			realpath = realpath.replaceAll("\\\\", "/");
+			System.out.println("\n!!!!!realpath: " + realpath + "\n");
+			if (myFile != null && myFile.length() != 0) {    //上传的myFile为业务流程文件
+				String filename = sr.getServiceName() + ".yawl";
+				File savefile = new File(new File(realpath), filename);
+				if (!savefile.getParentFile().exists()) {
+					savefile.getParentFile().mkdirs();
+				}
+				FileUtils.copyFile(myFile, savefile);
+				MuleXMLParser.parse(savefile);
+				ActionContext.getContext().put("message", "文件上传成功");
+				sr.setBusinessFile(realpath + "/" + filename);
+			} else {
+				sr.setBusinessFile(null);
+			}
+			if (uploadFile != null && uploadFile.length() != 0) {     //上传的uploadFile为服务附件文件，可能是本地应用的EXE文件等
+				String filename = uploadFile.getName();
+				File savefile = new File(new File(realpath), filename);
+				if (!savefile.getParentFile().exists()) {
+					savefile.getParentFile().mkdirs();
+				}
+				FileUtils.copyFile(uploadFile, savefile);
+				MuleXMLParser.parse(savefile);
+				ActionContext.getContext().put("message", "文件上传成功");
+				sr.setAttachments(realpath + "/" + filename);
+			} else {
+				sr.setAttachments(null);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			//删除保存该服务的文件夹
+			File appdir = new File(MuleConfig.getMuleAppPath() + "/" + sr.getServiceName());
+			if (appdir.exists()) {
+				try {
+					FileUtils.deleteDirectory(appdir);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+			return ERROR;
+		}
+
+		this.srs.register(sr);//注册保存到数据库内
+		boolean callfail = false;
+		if (sr.getCallService() != null || (!sr.getCallService().isEmpty())) {
+			if (!callVaild()) {
+				callfail = true;
+				this.srs.unregister(sr);
+				//删除保存该服务的文件夹
+				File appdir = new File(MuleConfig.getMuleAppPath() + "/" + sr.getServiceName());
+				if (appdir.exists()) {
+					try {
+						FileUtils.deleteDirectory(appdir);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				return ERROR;
+			}
+		}
+		if (callfail == false) {
+			saveCallrelation();
+			System.out.println("ok!");
+			if (myFile != null) {
+				try {
+					ParseYawlFile yawl = new ParseYawlFile();   //解析流程，保存到数据库中
+					yawl.getSpecRoleOrUser(loginUser, loginPassword, sr.getBusinessFile());
+					//删除本次上传的文件
+					myFile = null;
+				} catch (Exception e) {
+					e.printStackTrace();
+					this.srs.unregister(sr);
+					//删除保存该服务的文件夹
+					File appdir = new File(MuleConfig.getMuleAppPath() + "/" + sr.getServiceName());
+					if (appdir.exists()) {
+						try {
+							FileUtils.deleteDirectory(appdir);
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}
+					return ERROR;
+				}
+			}
+			if (uploadFile != null) {
+				String filepath = sr.getAttachments();
+				ParseYawlFile yawl = new ParseYawlFile();
+				String filecontent = yawl.readfile(filepath);
+				Attachment attachment = new Attachment(filepath, filecontent);
+				attachmentsr.addAttachment(attachment);
+				//删除本次上传的文件
+				uploadFile = null;
+			}
+		}
+
+
+		//搁置以下两部分的代码，需要按新方案重写
+        //1、对注册服务中的服务指定调用关系，以及原rancher中应用注册捎带其内部微服务注册的代码
+        //2、以及服务之间的这两种关系的保存
+
+        if (sr.getIsExternal() == 0) {   //注册的是内部服务
+		    if (sr.getServiceType().equalsIgnoreCase("SERVICE")) { //实现服务注册即部署
+		        String namespace = team + "-" + accessRule;
+		        String serviceResult = iwrUtil.deployService(sr.getServiceName(), namespace, serviceScale, dockerImage, servicePort);
+		        if (serviceResult == null) {
+		            return ERROR;
+		        } else {
+		            String serviceAddress = iwrUtil.getServiceAddress(serviceResult);
+		            if (serviceAddress != null) {
+		                sr.setServiceAddress(serviceAddress);
+		            } else {
+		                return ERROR;
+		            }
+		        }
+		        srs.update(sr);
+		    }
+		    if (sr.getServiceType().equalsIgnoreCase("APPLICATION")) {//若注册的是应用，其后端的微服务也要进行注册
+		        String servicesOfStack = iwrUtil.getServicesOfStack(sr.getServiceName());
+		        String containedServices = ",";
+		        if (servicesOfStack != null) {
+		            JSONArray services_arr = JSONArray.fromObject(servicesOfStack);
+		            for (int i = 0; i < services_arr.size(); i++) {
+		                JSONObject serviceobj = new JSONObject();
+		                serviceobj = services_arr.getJSONObject(i);
+		                String servicename = serviceobj.getString("servicename");
+		                if (srs.getServiceidByServiename(servicename) == null) { //存在同名的微服务不再重复注册
+		                    Service microSer = new Service();
+		                    microSer.setFailTimes(0);
+		                    microSer.setIsExternal(0);
+		                    microSer.setRunTimes(0);
+		                    microSer.setServiceDesc(serviceobj.getString("servicedes"));
+		                    microSer.setServiceName(servicename);
+		                    //microSer.setServiceState("NO");
+                            microSer.setServiceType("SERVICE");
+                            srs.register(microSer);
+		                }
+		                containedServices += srs.getServiceidByServiename(servicename).getServiceId() + ",";
+		            }
+
+		            System.out.println(containedServices);
+		            sr.setCallService(containedServices);
+		            srs.update(sr);
+		            saveRelationInStack(sr.getServiceName());//保存应用内的服务关联关系
+                    saveRelationBetweenStacks(sr.getServiceName());//保存应用间的服务关联关系
+                }
+		    }
+		}
+
+		//将注册成功的服务归入相应的服务类内
+        ServiceclassId sclassId = new ServiceclassId(sr.getServiceType(), sr.getServiceTarget(), sr.getServiceRange());
+		if (serclasssr.isExisted(sclassId)) {
+		    Serviceclass serclass = serclasssr.findById(sclassId);
+		    serclass.setServicesnum(serclass.getServicesnum() + 1);
+		    serclass.setServices(serclass.getServices() + "," + sr.getServiceId());
+		    serclasssr.update(serclass);
+		} else {
+		    Serviceclass serclass = new Serviceclass(sclassId, 1, "," + sr.getServiceId());
+		    serclasssr.save(serclass);
+		}
+		return SUCCESS;
 	}
 
 	/**
@@ -1520,17 +1711,15 @@ public class ServiceAction extends ActionSupport{
 	}
 
 	/**
-	 * 添加流程式组合服务
+	 * 添加（用editor定义的）流程式组合服务
 	 * @return
 	 */
 	public String addCombineC(){
 		try{
-			//checkCombineProcess();  //to do: 需要一个检查组合逻辑的函数, 分析流程结构
-			//如果是用editor定义流程，保存流程文件时会自动分析验证工作流结构合理性
-
-
+			//用editor定义流程，保存流程文件时会自动分析验证工作流结构合理性
+            System.out.println("\n!!!!!in: ");
 			Service combineprocess = new Service();
-			if (combinationFile != null && combinationFile.length() != 0) {
+			if (specificationFile != null && specificationFile.length() != 0) {
 				combineprocess.setServiceName(inname);
 				combineprocess.setServiceRange(inrange);
 				combineprocess.setServiceTarget(intt);
@@ -1556,7 +1745,7 @@ public class ServiceAction extends ActionSupport{
 				{
 					savefile.getParentFile().mkdirs();
 				}
-				FileUtils.copyFile(combinationFile, savefile);
+				FileUtils.copyFile(specificationFile, savefile);
 				MuleXMLParser.parse(savefile);
 				ActionContext.getContext().put("message", "文件上传成功");
 				combineprocess.setBusinessFile(realpath + "/" + filename);
@@ -1566,18 +1755,32 @@ public class ServiceAction extends ActionSupport{
 				return ERROR;
 			}
 
-			/*  分析流程结构获取子服务的各项QoS指标
-			Double reliability =
-			Double servciecost =
-			Double servicetime =
-			Double
-			combineprocess.set
-			*/
+            //分析组合流程中所调用的服务，并计算其QoS属性（目前按顺序结构来计算），保存到数据库中
+            Double reliability = 1.0;
+            Double servicecost = 0.0;
+            Double servicetime = 0.0;
+            ParseYawlFile yawl = new ParseYawlFile();
+            Map<Service, Integer> invokedServices = yawl.analyseCombinedBusiness(combineprocess.getBusinessFile());
+            Set<Service> services = invokedServices.keySet();
+            Iterator it = services.iterator();
+            while(it.hasNext()){
+                Service s = (Service)it.next();
+                int times = invokedServices.get(s);
+                System.out.println("invoke:"+s.getServiceId()+" " + times);
+                reliability *= Math.pow(s.getServiceReliability(),times);
+                servicecost += s.getServiceCost();
+                servicetime += Double.parseDouble(s.getServiceTime()) * times;
+            }
+            combineprocess.setServiceReliability(reliability);
+            combineprocess.setServiceCost(servicecost);
+            combineprocess.setServiceTime(String.valueOf(servicetime));
+            srs.register(combineprocess);
 
-
-			srs.register(combineprocess);
-
-			computeServiceQos(combineprocess.getServiceId(),serviceQoSOptimizationTarget);
+			//同时保存到流程表中
+            Map<String, Object> session = ActionContext.getContext().getSession();
+            String loginUser = (String) session.get("user");
+            String loginPassword = (String) session.get("password");
+			yawl.getSpecRoleOrUser(loginUser, loginPassword, combineprocess.getBusinessFile());
 
 			return SUCCESS;
 		}
@@ -1589,11 +1792,10 @@ public class ServiceAction extends ActionSupport{
 	}
 
 
-	/**
-	 * 判断要注册服务的调用关系是否符合规则
-	 * @return
-	 */
-	public boolean callVaild(){
+		/**
+		 * 判断要注册服务的调用关系是否符合规则
+		 */
+		public boolean callVaild(){
 		//String callservices = sr.getCallService();
 		String[] callservices = sr.getCallService().split(",");
 		System.out.print("callservices.length：" +callservices.length+"\n");
@@ -1615,13 +1817,13 @@ public class ServiceAction extends ActionSupport{
 		}
 
 		DirectedGraph<Integer> dg = getServiceGraph();     //判断服务调用图是否有环，以解决服务循环调用
-		/*dg.addNode(sr.getServiceId());                 //要注册的服务已临时存到服务列表里了
+		dg.addNode(sr.getServiceId());                 //要注册的服务已临时存到服务列表里了
 		for(int i = 0; i < callservices.length; i++){
 			if(callservices[i].length() > 0){
 				dg.addNode(Integer.parseInt(callservices[i]));
 				dg.addEdge(sr.getServiceId(), Integer.parseInt(callservices[i]));
 			}
-		}*/
+		}
 		CycleDetector<Integer> cd = new CycleDetector<Integer>(dg);
 		if(cd.containsCycle()){
 			log.info("Register service " + sr.getServiceName() + " failed because it called service circularly!");
@@ -2022,7 +2224,9 @@ public class ServiceAction extends ActionSupport{
 		qos.setServiceName(s.getServiceName());
 		qos.setServiceType(s.getServiceType());
 
-        if(s.getCombineType() != null){
+		double reliability = 1.0, availability = 1.0, serviceTime = 0.0, serviceCost = 0.0, busyDegree =1.0, avgEvaluation = 0.0, qosValue = 0.0;
+
+		if(s.getCombineType() != null){
         	List<Service> sers = new ArrayList<Service>();//子服务列表
         	//可靠性组合和适用性组合的子服务列表都是通过Condition获取的
         	if(s.getCombineType().equalsIgnoreCase("CombineC") == false){
@@ -2030,7 +2234,6 @@ public class ServiceAction extends ActionSupport{
 				for(int i = 0; i < cons.size(); i++){
 					sers.add(cons.get(i).getServiceBySubServiceId());
 				}
-				double reliability = 1.0, availability = 1.0, serviceTime = 0.0, serviceCost = 0.0, busyDegree =1.0, avgEvaluation = 0.0, qosValue = 0.0;
 				if(s.getCombineType().equalsIgnoreCase("CombineA")){
 					for(int i = 0; i < sers.size(); i++){
 						ServiceQos temp = computeServiceQos(sers.get(i).getServiceId(), "ServiceReliability");
@@ -2070,36 +2273,64 @@ public class ServiceAction extends ActionSupport{
 				qos.setServiceQos(qosValue);
 			}
 			else{   //流程式组合
-        		sers..
-				//流程结构呀。。。
-				//计算完每部分结构的QoS，更新服务的字段值
-
-				ServiceQos temp = computeServiceQos(sers.get(i).getServiceId(), s.getPreferredTarget());
-
-				//更新服务的QoS指标：可靠性
-				s.setServiceReliability(reliability);
-				srs.update(s);
+				//分析组合流程中所调用的服务，并计算其QoS属性（目前按顺序结构来计算）
+				ParseYawlFile yawl = new ParseYawlFile();
+				Map<Service, Integer> invokedServices = yawl.analyseCombinedBusiness(s.getBusinessFile());
+				Set<Service> services = invokedServices.keySet();
+				Iterator it = services.iterator();
+				int alltimes = 0;
+				while(it.hasNext()){
+					Service task = (Service)it.next();
+					int times = invokedServices.get(task);
+					alltimes += times;
+					System.out.println("invoke:"+task.getServiceId()+" " + times);
+					ServiceQos temp = computeServiceQos(task.getServiceId(), task.getPreferredTarget());
+					availability *= Math.pow(temp.getAvailability(), times);
+					busyDegree *= Math.pow(temp.getBusyDegree(), times);
+					avgEvaluation += temp.getAvgEvaluation() * times;
+					qosValue += temp.getServiceQos()* times;
+					//其他属性在注册时已更新
+				}
+				if(alltimes > 0) {
+					avgEvaluation /= alltimes;
+					qosValue /= alltimes;
+				}
+				qos.setReliability(s.getServiceReliability());
+				qos.setAvailability(availability);
+				qos.setServiceTime(Double.parseDouble(s.getServiceTime()));
+				qos.setServiceCost(s.getServiceCost());
+				qos.setBusyDegree(busyDegree);
+				qos.setAvgEvaluation(avgEvaluation);
+				qos.setServiceQos(qosValue);
 			}
 		}
 		return qos;
 	}
 
 	/**
-	 *获取所有服务的QoS，没有偏好指标，取平均权重
+	 * 获取所有服务的QoS，
+	 * 简单服务没有偏好指标，取平均权重
+	 * 组合服务按照偏好指标计算QoS
 	 */
 	public String getAllServiceQos(){
 		allQos.clear();
 		List<Service> allsers = srs.getAll();
 		for(int i = 0; i < allsers.size(); i++){
 			Service s = allsers.get(i);
-			ServiceQos qos = computeServiceQos(s.getServiceId(), null);
+			ServiceQos qos = new ServiceQos();
+			if(s.getCombineType() == null){
+				qos = computeServiceQos(s.getServiceId(), null);
+			}
+			else{
+				qos = computeComServiceQos(s.getServiceId());
+			}
 			allQos.add(qos);
 		}
 		return SUCCESS;
 	}
 
 	/**
-	 * 计算指定服务的Qos
+	 * 计算简单服务的Qos
 	 * @param serviceid     服务ID
 	 * @param preferredTarget  qos偏好指标
 	 * @return
@@ -2115,15 +2346,34 @@ public class ServiceAction extends ActionSupport{
 		double maxAvgEvaluation = evaluationsr.getMaxAvgEvaluation();
 		double minAvgEvaluation = evaluationsr.getMinAvgEvaluation();
 		//qos计算公式
+		MonitorDataFromIstio monitorData = new MonitorDataFromIstio();//从Istio获取可用性和繁忙程度
 		double reliability = s.getServiceReliability();
-		double availability = 0.5;//从grassland获取，需要检测可用性，state为active
 		double serviceCost = s.getServiceCost();
-		double serviceTime = 0.0;
+		double serviceTime = 100.0;
 		if(s.getServiceTime() != null){
 			serviceTime = Double.parseDouble(s.getServiceTime());
 		}
 		double avgEvaluation = evaluationsr.getAvgEvaluation(serviceid);
 		double original_avgEvaluation = avgEvaluation;
+		double availability = 1.0;
+		double busyDegree = 1.0;
+		if(s.getIsExternal() == 0){ //内部开发的服务
+			availability = monitorData.getAvailability();
+			busyDegree = monitorData.getBusyDegree();
+		}
+		else{  //外部服务只有一个实例
+			//计算服务的繁忙程度，为负指标,转化成服务可用实例比例
+			int currentScale = 1;
+			int currentLoad = runlogsr.getServiceCurrentLoad(serviceid);
+			int maxload = s.getMaxLoad() != null? s.getMaxLoad() : Integer.parseInt(default_maxload);
+			/*else{    //内部服务需要查询部署的实例数量
+				String deployId = "deployment:" + s.getTeam() + "-" + s.getAccessRule() + ":" + s.getServiceName();
+				String scaleStr = iwrUtil.getServiceScale(deployId);
+				currentScale = Integer.parseInt(scaleStr);
+			}*/
+			busyDegree = currentLoad * 1.0 / (currentScale * maxload);
+		}
+
 		//QoS指标均一化
 		if(maxReliability == minReliability){
 			reliability = 1;
@@ -2149,26 +2399,8 @@ public class ServiceAction extends ActionSupport{
 		else{  //用户平均评分为正指标
 			avgEvaluation = (avgEvaluation - minAvgEvaluation) / (maxAvgEvaluation - minAvgEvaluation);
 		}
-
-		//计算服务的繁忙程度，为负指标,转化成服务可用实例比例
-		int currentScale = 0;
-		int currentLoad = runlogsr.getServiceCurrentLoad(serviceid);
-		int maxload = s.getMaxLoad() != null? s.getMaxLoad() : Integer.parseInt(default_maxload);
-		//外部服务只有一个实例
-		if(s.getIsExternal() == 1){
-			currentScale = 1;
-		}
-		else{    //内部服务需要查询部署的实例数量
-			String deployId = "deployment:" + s.getTeam() + "-" + s.getAccessRule() + ":" + s.getServiceName();
-			String scaleStr = iwrUtil.getServiceScale(deployId);
-			currentScale = Integer.parseInt(scaleStr);
-		}
-		Double busyDegree = 0.0;
-		Double original_busyDegree = busyDegree;
-		if(currentScale != 0){
-			original_busyDegree = currentLoad * 1.0 / (currentScale * maxload);
-			busyDegree = (currentScale * maxload - currentLoad) * 1.0 / (currentScale * maxload); //转化成服务可用负载比例
-		}
+		double original_busyDegree = busyDegree;
+		busyDegree = 1.0 - busyDegree;   //转化成服务可用负载比例，正指标
 
 		//QOS权重矩阵
 		AHP ahp = new AHP(6, preferredTarget);
@@ -2177,9 +2409,6 @@ public class ServiceAction extends ActionSupport{
 
 		//不用均一化后的值，给用户显示原始的值
 		ServiceQos qos = new ServiceQos(s.getServiceId(), s.getServiceName(), s.getServiceType(), s.getServiceReliability(), availability, Double.parseDouble(s.getServiceTime()), s.getServiceCost(), original_busyDegree, original_avgEvaluation, qosValue);
-
-
-
 		return qos;
 	}
 
@@ -2253,7 +2482,7 @@ public class ServiceAction extends ActionSupport{
 
 	/**
 	 * 分析流程结构并保存到数据库
-	 * @param process
+	 * @param
 	 */
 	/*public void analyzeProcess(Service process){
 		String processfile = process.getBusinessFile();
@@ -2337,134 +2566,6 @@ public class ServiceAction extends ActionSupport{
 		}
 		return SUCCESS;
 	}
-
-
-	/**
-	 * 服务注册
-	 * @return
-	 */
-	public String register(){
-		Map<String, Object> session = ActionContext.getContext().getSession();
-		String loginUser = (String) session.get("user");
-		String loginPassword = (String) session.get("password");
-
-		if(maxLoad.isEmpty() || maxLoad == null) maxLoad = default_maxload;
-		sr.setMaxLoad(Integer.valueOf(maxLoad));
-		sr.setIsExternal(Integer.parseInt(isExternal));
-		sr.setServiceState("NO");
-		sr.setRunTimes(0);
-		sr.setFailTimes(0);
-		sr.setTeam(team);
-		sr.setAccessRule(accessRule);
-		if(sr.getServiceTime().isEmpty()){
-			sr.setServiceTime("1");   //设置默认的服务最大请求时间，以毫秒为单位
-		}
-		sr.setServiceProvider(loginUser);
-		if(serviceReliability.isEmpty()){
-			sr.setServiceReliability(0.5); //设置服务可靠性的默认初始值
-		}
-		else{
-			sr.setServiceReliability(Double.parseDouble(serviceReliability));
-		}
-		if(serviceCost.isEmpty()){
-			sr.setServiceCost(1000); //设置服务成本，以人民币（元）为单位
-		}
-		else{
-			sr.setServiceCost(Double.parseDouble(serviceCost));
-		}
-		try{    //处理注册服务所需上传的文件
-			String realpath = MuleConfig.getMuleAppPath() + "/" + sr.getServiceName();
-			realpath = realpath.replaceAll("\\\\", "/");
-			System.out.println("\n!!!!!realpath: "+realpath+"\n");
-			if (myFile != null && myFile.length() != 0) {    //上传的myFile为业务流程文件
-				String filename = sr.getServiceName() + ".yawl";
-				File savefile = new File(new File(realpath), filename);
-				if (!savefile.getParentFile().exists())
-				{
-					savefile.getParentFile().mkdirs();
-				}
-				FileUtils.copyFile(myFile, savefile);
-				MuleXMLParser.parse(savefile);
-				ActionContext.getContext().put("message", "文件上传成功");
-				sr.setBusinessFile(realpath + "/" + filename);
-			}
-			else{
-				sr.setBusinessFile(null);
-			}
-			if (uploadFile != null && uploadFile.length() != 0) {     //上传的uploadFile为服务附件文件，可能是本地应用的EXE文件等
-				String filename = uploadFile.getName();
-				File savefile = new File(new File(realpath), filename);
-				if (!savefile.getParentFile().exists())
-				{
-					savefile.getParentFile().mkdirs();
-				}
-				FileUtils.copyFile(uploadFile, savefile);
-				MuleXMLParser.parse(savefile);
-				ActionContext.getContext().put("message", "文件上传成功");
-				sr.setAttachments(realpath + "/" + filename);
-			}
-			else{
-				sr.setAttachments(null);
-			}
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			//删除保存该服务的文件夹
-			File appdir = new File(MuleConfig.getMuleAppPath() + "/" + sr.getServiceName());
-			if(appdir.exists()){
-				try {
-					FileUtils.deleteDirectory(appdir);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-			}
-			return ERROR;
-		}
-
-		//搁置以下两部分的代码，需要按新方案重写
-		//1、对注册服务中的服务指定调用关系，以及原rancher中应用注册捎带其内部微服务注册的代码
-		//2、以及服务之间的这两种关系的保存
-
-		if(sr.getIsExternal() == 0){   //注册的是内部服务
-			if(sr.getServiceType().equalsIgnoreCase("SERVICE")){ //实现注册即部署
-				String namespace = team + "-" + accessRule;
-				String serviceResult = iwrUtil.deployService(sr.getServiceName(), namespace, serviceScale, dockerImage, servicePort);
-				if(serviceResult == null){
-					return ERROR;
-				}
-				else{
-					String serviceAddress = iwrUtil.getServiceAddress(serviceResult);
-					if(serviceAddress != null){
-						sr.setServiceAddress(serviceAddress);
-					}
-					else{
-						return ERROR;
-					}
-				}
-			}
-
-		}
-		else{    //注册的是外部服务
-
-		}
-		srs.register(sr);    //注册保存到数据库内
-
-		//将注册成功的服务归入相应的服务类内
-        ServiceclassId sclassId = new ServiceclassId(sr.getServiceType(), sr.getServiceTarget(), sr.getServiceRange());
-        if(serclasssr.isExisted(sclassId)){
-            Serviceclass serclass = serclasssr.findById(sclassId);
-            serclass.setServicesnum(serclass.getServicesnum() + 1);
-            serclass.setServices(serclass.getServices() + "," + sr.getServiceId());
-            serclasssr.update(serclass);
-        }
-        else{
-            Serviceclass serclass = new Serviceclass(sclassId, 1, "," + sr.getServiceId());
-            serclasssr.save(serclass);
-        }
-        return SUCCESS;
-	}
-
 
 
 	//  getter setter
@@ -2654,17 +2755,15 @@ public class ServiceAction extends ActionSupport{
 		this.indesc = indesc;
 	}
 
-	public File getCombinationFile() {
-		return combinationFile;
-	}
+    public File getSpecificationFile() {
+        return specificationFile;
+    }
 
+    public void setSpecificationFile(File specificationFile) {
+        this.specificationFile = specificationFile;
+    }
 
-	public void setCombinationFile(File combinationFile) {
-		this.combinationFile = combinationFile;
-	}
-
-
-	public String getServiceQoSOptimizationTarget() {
+    public String getServiceQoSOptimizationTarget() {
 		return serviceQoSOptimizationTarget;
 	}
 

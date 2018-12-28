@@ -35,6 +35,7 @@ public class ServiceDAO extends HibernateDaoSupport {
 	public static final String SERVICE_COST = "serviceCost";
 	public static final String SERVICE_STATE = "serviceState";
 	public static final String SERVICE_ADDRESS = "serviceAddress";
+	public static final String WSDL_Location = "WSDLLocation";
 	public static final String SERVICE_VERSION = "serviceVersion";
 	public static final String SERVICE_MAKER = "serviceMaker";
 	public static final String SERVICE_TIME = "serviceTime";
@@ -159,6 +160,10 @@ public class ServiceDAO extends HibernateDaoSupport {
 
 	public List findByServiceAddress(Object serviceAddress) {
 		return findByProperty(SERVICE_ADDRESS, serviceAddress);
+	}
+
+	public List findByWSDLLocation(Object WSDLLocation) {
+		return findByProperty(WSDL_Location, WSDLLocation);
 	}
 
 	public List findByServiceVersion(Object serviceVersion) {

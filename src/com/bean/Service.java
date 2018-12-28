@@ -24,6 +24,7 @@ public class Service implements java.io.Serializable {
 	private double serviceCost;
 	private String serviceState;
 	private String serviceAddress;
+	private String WSDLLocation;
 	private String serviceVersion;
 	private String serviceMaker;
 	private String serviceTime;
@@ -60,20 +61,8 @@ public class Service implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Service(String serviceName, String serviceDesc, Integer maxLoad,
-				   String serviceType, String serviceLevel, String relateBusiness,
-				   String serviceTarget, String serviceRange,
-				   double serviceReliability, double serviceCost, String serviceState,
-				   String serviceAddress, String serviceVersion, String serviceMaker,
-				   String serviceTime, Integer runTimes, Integer failTimes,
-				   String preferredTarget, String serviceHost, String serviceQuery,
-				   String callService, String serviceProvider, String appRoleUrl,
-				   String combineType, String businessFile, String attachments,
-				   String team, String accessRule, Integer isExternal, Set variables,
-				   Set userSpecSers, Set servicerelationsForServiceId,
-				   Set conditionsForSubServiceId, Set conditionsForServiceId,
-				   Set serviceresults, Set permissionservices, Set parameters,
-				   Set roleSpecSers, Set servicerelationsForSubServiceId, Set licences) {
+	public Service(Integer serviceId, String serviceName, String serviceDesc, Integer maxLoad, String serviceType, String serviceLevel, String relateBusiness, String serviceTarget, String serviceRange, double serviceReliability, double serviceCost, String serviceState, String serviceAddress, String WSDLLocation, String serviceVersion, String serviceMaker, String serviceTime, Integer runTimes, Integer failTimes, String preferredTarget, String serviceHost, String serviceQuery, String callService, String serviceProvider, String appRoleUrl, String combineType, String businessFile, String attachments, String team, String accessRule, Integer isExternal) {
+		this.serviceId = serviceId;
 		this.serviceName = serviceName;
 		this.serviceDesc = serviceDesc;
 		this.maxLoad = maxLoad;
@@ -86,6 +75,7 @@ public class Service implements java.io.Serializable {
 		this.serviceCost = serviceCost;
 		this.serviceState = serviceState;
 		this.serviceAddress = serviceAddress;
+		this.WSDLLocation = WSDLLocation;
 		this.serviceVersion = serviceVersion;
 		this.serviceMaker = serviceMaker;
 		this.serviceTime = serviceTime;
@@ -103,18 +93,10 @@ public class Service implements java.io.Serializable {
 		this.team = team;
 		this.accessRule = accessRule;
 		this.isExternal = isExternal;
-		this.variables = variables;
-		this.userSpecSers = userSpecSers;
-		this.servicerelationsForServiceId = servicerelationsForServiceId;
-		this.conditionsForSubServiceId = conditionsForSubServiceId;
-		this.conditionsForServiceId = conditionsForServiceId;
-		this.serviceresults = serviceresults;
-		this.permissionservices = permissionservices;
-		this.parameters = parameters;
-		this.roleSpecSers = roleSpecSers;
-		this.servicerelationsForSubServiceId = servicerelationsForSubServiceId;
-		this.licences = licences;
 	}
+
+
+
 
 	// Property accessors
 
@@ -220,6 +202,14 @@ public class Service implements java.io.Serializable {
 
 	public void setServiceAddress(String serviceAddress) {
 		this.serviceAddress = serviceAddress;
+	}
+
+	public String getWSDLLocation() {
+		return WSDLLocation;
+	}
+
+	public void setWSDLLocation(String WSDLLocation) {
+		this.WSDLLocation = WSDLLocation;
 	}
 
 	public String getServiceVersion() {

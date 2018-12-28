@@ -46,6 +46,9 @@
         <property name="serviceAddress" type="string">
             <column name="ServiceAddress" />
         </property>
+        <property name="WSDLLocation" type="string">
+            <column name="WSDLLocation" />
+        </property>
         <property name="serviceVersion" type="string">
             <column name="ServiceVersion" length="45" />
         </property>

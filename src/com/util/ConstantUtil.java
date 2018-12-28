@@ -17,7 +17,7 @@ public class ConstantUtil {
 	//rancher2.0上部署和暴露服务的指定主机IP
 	private static final String nodeIP = "222.200.180.59";
 
-	//rancher2.0上部署服务的指定主机ID
+	//rancher2.0上部署服务的指定主机IDima
 	private static final String nodeId = "c-vhcnl:m-77eb26772e5a";
 
 	//部署服务的参数默认json字符串

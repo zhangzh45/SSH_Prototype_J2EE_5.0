@@ -9,6 +9,7 @@ public class ServiceQuality
 	private Integer serviceId;
 	private String serviceName;
 	private String serviceAddress;
+	private String WSDLLocation;
 	private Integer runTime;
 	private Integer failTime;
 	private Double Qos;
@@ -34,6 +35,15 @@ public class ServiceQuality
 	public void setServiceAddress(String serviceAddress) {
 		this.serviceAddress = serviceAddress;
 	}
+
+	public String getWSDLLocation() {
+		return WSDLLocation;
+	}
+
+	public void setWSDLLocation(String WSDLLocation) {
+		this.WSDLLocation = WSDLLocation;
+	}
+
 	public Integer getRunTime() {
 		return runTime;
 	}

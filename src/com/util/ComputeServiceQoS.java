@@ -10,7 +10,7 @@ public class ComputeServiceQoS {
     ServiceQos qos = new ServiceQos();
 
     public String construct(){
-
+        return null;
     }
 
     //均一化各项指标
@@ -50,7 +50,7 @@ public class ComputeServiceQoS {
         double availability = 0.0;
         if(construct != null){
             if(construct.equalsIgnoreCase("sequence")){
-                availability = aSer.get() * bSer.getServiceReliability();
+                availability = aSer.getServiceReliability() * bSer.getServiceReliability();
             }
             else if(construct.equalsIgnoreCase("parallel split")){
                 availability = aSer.getServiceReliability() * bSer.getServiceReliability();
@@ -133,10 +133,10 @@ public class ComputeServiceQoS {
     }
 
     public double getLoadDegree(){
-
+          return 0.0;
     }
 
     public double getUserAvgEvaluation(){
-
+        return 0.0;
     }
 }

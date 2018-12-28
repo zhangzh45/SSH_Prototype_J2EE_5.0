@@ -13,7 +13,7 @@ public class ConstructAnalyse {
     ServiceQos qos = new ServiceQos();
 
     public String construct(){
-
+         return null;
     }
 
 
@@ -56,7 +56,7 @@ public class ConstructAnalyse {
         double availability = 0.0;
         if(construct != null){
             if(construct.equalsIgnoreCase("sequence")){
-                availability = aSer.get() * bSer.getServiceReliability();
+                availability = aSer.getServiceReliability() * bSer.getServiceReliability();
             }
             else if(construct.equalsIgnoreCase("parallel split")){
                 availability = aSer.getServiceReliability() * bSer.getServiceReliability();
@@ -142,7 +142,7 @@ public class ConstructAnalyse {
         double loadDegree = 0.0;
         if(construct != null){
             if(construct.equalsIgnoreCase("sequence")){
-                loadDegree = aSer.get() * bSer.getServiceReliability();
+                loadDegree = aSer.getServiceReliability() * bSer.getServiceReliability();
             }
             else if(construct.equalsIgnoreCase("parallel split")){
                 loadDegree = aSer.getServiceReliability() * bSer.getServiceReliability();
@@ -167,6 +167,6 @@ public class ConstructAnalyse {
     }
 
     public double getUserAvgEvaluation(){
-
+          return 0.0;
     }
 }
