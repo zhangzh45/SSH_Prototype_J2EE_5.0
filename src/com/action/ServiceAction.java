@@ -1718,6 +1718,9 @@ public class ServiceAction extends ActionSupport{
 		try{
 			//用editor定义流程，保存流程文件时会自动分析验证工作流结构合理性
             System.out.println("\n!!!!!in: ");
+			Map<String, Object> session = ActionContext.getContext().getSession();
+			String loginUser = (String) session.get("user");
+			String loginPassword = (String) session.get("password");
 			Service combineprocess = new Service();
 			if (specificationFile != null && specificationFile.length() != 0) {
 				combineprocess.setServiceName(inname);
@@ -1728,8 +1731,8 @@ public class ServiceAction extends ActionSupport{
 				combineprocess.setCombineType("CombineC");
 				combineprocess.setRunTimes(0);
 				combineprocess.setFailTimes(0);
-				combineprocess.setPreferredTarget("serviceQoSOptimizationTarget"); //流程式组合，偏好指标为用户所选指标
-				combineprocess.setServiceProvider(option1);
+				combineprocess.setPreferredTarget(serviceQoSOptimizationTarget); //流程式组合，偏好指标为用户所选指标
+				combineprocess.setServiceProvider(loginUser);
 				combineprocess.setIsExternal(0);
 				combineprocess.setMaxLoad(Integer.parseInt(default_maxload));
 				combineprocess.setRelateBusiness(inbusiness);
@@ -1777,9 +1780,6 @@ public class ServiceAction extends ActionSupport{
             srs.register(combineprocess);
 
 			//同时保存到流程表中
-            Map<String, Object> session = ActionContext.getContext().getSession();
-            String loginUser = (String) session.get("user");
-            String loginPassword = (String) session.get("password");
 			yawl.getSpecRoleOrUser(loginUser, loginPassword, combineprocess.getBusinessFile());
 
 			return SUCCESS;

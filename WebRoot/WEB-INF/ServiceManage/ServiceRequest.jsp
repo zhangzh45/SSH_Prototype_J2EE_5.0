@@ -336,7 +336,8 @@
 
 						<button type="button" class="btn blue" onclick="changevalue()" ><s:text name="Submit"></s:text></button>
 
-						<button type="button" class="btn"><s:text name="Cancel"></s:text></button></div>
+						<button type="button" class="btn"><s:text name="Cancel"></s:text></button>
+					</div>
 
 				</form>
 

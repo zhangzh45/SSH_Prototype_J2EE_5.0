@@ -201,8 +201,8 @@
 										</div>
 										
 									  	<div class="form-actions">
-									  		<button class="btn btn-primary" type="submit" onclick="submit()">提交</button>
-											<button class="btn" type="button">清空</button>
+									  		<button type="button" class="btn blue" onclick="changevalue()"><s:text name="Submit"></s:text></button>
+											<button type="button" class="btn" ><s:text name="Cancel"></s:text></button>
 									  	</div>
 									</div>
 								</div>
@@ -247,7 +247,7 @@
 			}
 		}
 		
-		function submit(){
+		function changevalue(){
 			var inputServiceName = document.getElementById("inputServiceName").value;
 			if(inputServiceName=="" || inputServiceName==null)
 		    {
@@ -284,11 +284,14 @@
 			var servicelevelindex = servicelevelobj.selectedIndex;
 			var servicelevelvalue = servicelevelobj.options[servicelevelindex].value;
 			document.getElementById("inputServiceLevel").value = servicelevelvalue;
+			//alert(document.getElementById("inputServiceLevel").value);
+
 			
 			var serviceqosobj = document.getElementById("ServiceQoSOptimizationTarget");
 			var serviceqosindex = serviceqosobj.selectedIndex;
 			var serviceqosvalue = serviceqosobj.options[serviceqosindex].value;
 			document.getElementById("inputServiceQoSOptimizationTarget").value = serviceqosvalue;
+            //alert(document.getElementById("inputServiceQoSOptimizationTarget").value);
 			
 			form3.action='addCombineC.action';
 			form3.submit();
