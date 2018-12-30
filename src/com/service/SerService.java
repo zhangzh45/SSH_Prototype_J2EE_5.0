@@ -144,9 +144,9 @@ public class SerService
 	public List<Service> getCombinedService()
 	{
 		List<Service> re = new ArrayList<Service>();
-		re.addAll(this.srDAO.findByCombineType("Combine"));
 		re.addAll(this.srDAO.findByCombineType("CombineA"));
 		re.addAll(this.srDAO.findByCombineType("CombineB"));
+		re.addAll(this.srDAO.findByCombineType("CombineC"));
 		return re;
 	}
 	

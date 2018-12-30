@@ -74,7 +74,7 @@
 				//alert(jq2.length);
 				if(jq2.length == 1){
 					//alert(document.getElementById('relationFather').value);
-					$('#topoRegion').html("该服务不是组合服务！");
+					//$('#topoRegion').html("该服务不是组合服务！");
 				}
 				else{
 					var first = jq2.item(1).value + conditions.item(1).value;
@@ -157,12 +157,24 @@
 				<!-- <input name="btn" type="button" class="btn" onclick="document.getElementById('table1').style.display=''" value="详情"> -->
 			<!--  </div> -->
 			 <div class="input-group">
-      			<input type="text" class="form-control" name="relationFather" value="">
+				 <div class="control-group">
+					 <label class="control-label" for="inputCombinedService"></label>
+					 <div class="controls" >
+						 <select name="comservices" id="inputCombinedService">  <!-- 审核通过的组合服务 -->
+							 <s:iterator value="combinedservices" status="L" var="combinedservices">
+								 <option><s:property value="serviceId"/></option>
+							 </s:iterator>
+						 </select>
+					 </div>
+				 </div>
+
       			<span class="input-group-btn">
-        			<button class="btn btn-default" type="button" onclick="form1.submit()"><s:text name="RelationGraph"></s:text></button>
+        			<button class="btn btn-default" type="button" onclick="submitValue()"><s:text name="RelationGraph"></s:text></button>
         			<button class="btn btn-default" type="button" onclick="document.getElementById('table1').style.display=''"><s:text name="Details"></s:text></button>
       			</span>
     		</div><!-- /input-group -->
+
+			<input id="relationFather" name="relationFather" type="hidden" value="">
     		
 		</form>
         <div id="topoRegion">
@@ -175,6 +187,28 @@
 				<input name="cid" type="hidden" value="<s:property value="conditionId"/>">
 			</s:iterator>
 		</div>
+
+
+
+		<div>
+			<table>
+				<s:iterator value="callrelations" status="L" var="callrelations">
+					<tr>
+						<td><input name="lsonid" type="hidden" value="<s:property value="sonid"/>"></td>
+						<td><input name="lsontype" type="hidden" value="<s:property value="sontype"/>"></td>
+						<td><input name="lfathertype" type="hidden" value="<s:property value="fathertype"/>"></td>
+						<td><input name="lfatherid" type="hidden" value="<s:property value="fatherid"/>"></td>
+						<td><input name="lfatheraddress" type="hidden" value="<s:property value="fatheraddress"/>"></td>
+						<td><input name="lsonaddress" type="hidden" value="<s:property value="sonaddress"/>"></td>
+						<td><input name="lfathername" type="hidden" value="<s:property value="fathername"/>"></td>
+						<td><input name="lsonname" type="hidden" value="<s:property value="sonname"/>"></td>
+						<!-- <input name="ldesc" type="hidden" value="<s:property value="desc"/>"> -->
+					</tr>
+				</s:iterator>
+
+			</table>
+		</div>
+
 		<div>
 			<s:iterator value="relations" status="L" var="relations">
 				<input name="lsonid" type="hidden" value="<s:property value="sonid"/>">
@@ -188,22 +222,25 @@
 		<div>
 			<table class="table table-condensed" style="display:none" id="table1">
 				<thead>
-					<tr>
-						<th>Service Id</th>
-						<th>Conditions</th>
-						<th>Parameters</th>
-						<!-- <th>操作</th> -->
-					</tr>
+				<tr>
+					<th>Service Id</th>
+					<th>Service Name</th>
+					<th>Service Type</th>
+					<th>Relate Business</th>
+					<th>Service Address</th>
+				</tr>
 				</thead>
 				<tbody>
-					<s:iterator value="relations" status="L">
-						<tr>
-							<td><s:property value="sonid"/></td>
-							<td><s:property value="condition"/></td>
-							<td><s:property value="parameter"/></td>
-							<!-- <td><button type="button" class="btn btn-primary" onclick="window.location.href='<s:property value="serviceAddress"/>'">URL &raquo;</button></td> -->
-						</tr>
-					</s:iterator>
+				<s:iterator value="calldetails" status="L">
+					<tr>
+						<td><s:property value="fatherid"/></td>
+						<td><s:property value="fathername"/></td>
+						<td><s:property value="fathertype"/></td>
+						<td><s:property value="fatherbusiness"/></td>
+						<td><s:property value="fatheraddress"/></td>
+						<!-- <td><button type="button" class="btn btn-primary" onclick="window.location.href='<s:property value="serviceAddress"/>'">URL &raquo;</button></td> -->
+					</tr>
+				</s:iterator>
 				</tbody>
 			</table>
 		</div>
@@ -216,7 +253,7 @@
 									     <h3 id="myModalLabel">Service Details</h3>
 									  </div>
 									  <div class="modal-body">
-									  	<table id="table1">
+									  	<table id="table2">
 									  		<tr>
 									  			<td>
 											     	Service Id<input type="text" id="msid" name="msid" value="" style="width:250px" readOnly="true">
@@ -266,9 +303,93 @@
 									</div>
 	
 						<input id="option1" name="option1" type="hidden" value="">  <!-- 运行服务的id -->
-						<input id="userid" name="userid" type="hidden" value=<%=request.getSession().getAttribute("user")%>> 
-				</form>
-		
+						<input id="userid" name="userid" type="hidden" value=<%=request.getSession().getAttribute("user")%>>
+
+
+
+		</form>
+
+<script>
+
+    jsPlumb.bind("ready", function() {
+
+        // 鎷撴墤鏁版嵁缁撴瀯鏍硅妭鐐逛綅缃缃�
+        var rootPosition = [200, 200];
+        var sonids = document.getElementsByName("lsonid");
+        //alert(document.getElementsByName("lsonid").item(0).value);
+        var sontypes = document.getElementsByName("lsontype");
+        var fatherids = document.getElementsByName("lfatherid");
+        var fathertypes = document.getElementsByName("lfathertype");
+
+        var fatheraddress = document.getElementsByName("lfatheraddress");
+        var sonaddress = document.getElementsByName("lsonaddress");
+        var fathernames = document.getElementsByName("lfathername");
+        var sonnames = document.getElementsByName("lsonname");
+
+
+        if(fatherids.length == 0 && document.getElementById('relationFather').value !== ""){
+            //alert(document.getElementById('relationFather').value);
+            $('#topoRegion').html("该服务没有调用其他服务！");
+        }
+        else{
+            var nodeTypeArray = ['APPLICATION', 'SERVICE', 'BUSINESS', 'LOCAL'];
+            var topoData = {
+                type: fathertypes.item(0).value,
+                key: fatherids.item(0).value + "_" + fathernames.item(0).value,
+                rel: [
+                    {
+                        type: sontypes.item(0).value,
+                        key: sonids.item(0).value + "_" + sonnames.item(0).value,
+                        data: {'url': sonaddress.item(0).value}
+                    },
+                ],
+                data: {'url': fatheraddress.item(0).value}
+            };
+
+            drawTopo(topoData, rootPosition, nodeTypeArray);
+            for(var i = 1; i < fatherids.length; i++)
+            {
+                //alert(sontypes.item(i).value);
+                var newTopoData = {
+                    type: fathertypes.item(i).value,
+                    key: fatherids.item(i).value + "_" + fathernames.item(i).value,
+                    rel: [
+                        {
+                            type: sontypes.item(i).value,
+                            key: sonids.item(i).value + "_" + sonnames.item(i).value,
+                            data: {'url': sonaddress.item(i).value}
+                        },
+                    ],
+                    data: {'url': fatheraddress.item(i).value}
+                };
+                var mergedTopoData = mergeNewTopo(topoData, newTopoData);
+                if(mergedTopoData == topoData){
+                    drawTopo(newTopoData, rootPosition, nodeTypeArray);
+                }
+                else{
+                    $('#topoRegion').empty();
+                    drawTopo(mergedTopoData, rootPosition, nodeTypeArray);
+                }
+                topoData = mergedTopoData;
+            }
+        }
+    });
+
+	function submitValue() {
+        var comserviceobj = document.getElementById("inputCombinedService");
+        var comserviceindex = comserviceobj.selectedIndex;
+        var comservicevalue = comserviceobj.options[comserviceindex].value;
+        document.getElementById("relationFather").value = comservicevalue;
+        //alert(comservicevalue);
+        form1.submit();
+    }
+
+
+
+</script>
+
+
+
 	</body>
 </html>
 

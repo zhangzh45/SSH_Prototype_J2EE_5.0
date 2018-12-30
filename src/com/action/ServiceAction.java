@@ -1312,7 +1312,7 @@ public class ServiceAction extends ActionSupport{
 	public String combineAService()
 	{
 		acceptedservices = srs.getAcceptedService();
-		List<Service> ser = srs.getAllService();
+		List<Service> ser = srs.getAll();
 		acceptedservices.retainAll(ser);
 		List<Service> internalServices = new ArrayList<Service>();
 		internalServices = srs.getInternalService();
@@ -1323,7 +1323,7 @@ public class ServiceAction extends ActionSupport{
 		prts.clear();
 		try
 		{
-			services = srs.getAllService();
+			services = srs.getAll();
 			services.retainAll(internalServices);      //服务组合只针对内部服务
 
 			List<Integer> num = new ArrayList<Integer>();
@@ -1424,7 +1424,7 @@ public class ServiceAction extends ActionSupport{
 	public String combineBService()
 	{
 		acceptedservices = srs.getAcceptedService();
-		List<Service> ser = srs.getAllService();
+		List<Service> ser = srs.getAll();
 		acceptedservices.retainAll(ser);
 		List<Service> internalServices = new ArrayList<Service>();
 		internalServices = srs.getInternalService();
@@ -1434,7 +1434,7 @@ public class ServiceAction extends ActionSupport{
 		allsers = srs.getAll();
 		try
 		{
-			services = srs.getAllService();
+			services = srs.getAll();
 			services.retainAll(internalServices);
 			dtnodes.clear();
 			List<Integer> num = new ArrayList<Integer>();
@@ -1782,6 +1782,9 @@ public class ServiceAction extends ActionSupport{
 			//同时保存到流程表中
 			yawl.getSpecRoleOrUser(loginUser, loginPassword, combineprocess.getBusinessFile());
 
+			//保存流程式组合中父流程与调用服务的关系到condition表中
+            saveCombineCCondition(combineprocess, invokedServices);
+
 			return SUCCESS;
 		}
 		catch(Exception e)
@@ -1791,6 +1794,30 @@ public class ServiceAction extends ActionSupport{
 		}
 	}
 
+    /**
+     * 保存流程式组合中父流程与调用服务的关系到condition表中
+     * @param combineprocess
+     * @param invokedServices
+     */
+	public void saveCombineCCondition(Service combineprocess, Map<Service, Integer> invokedServices){
+        Set<Service> services = invokedServices.keySet();
+        Iterator it = services.iterator();
+		Service currentService = new Service();
+        if(it.hasNext()){ //保存流程调用第一个服务的调用关系
+			currentService = (Service)it.next();
+			Condition condition = new Condition(combineprocess, currentService);
+			conditionsr.getConditionDao().save(condition);
+		}
+        while(it.hasNext()){
+			//并将其内部的服务之间的调用关系保存到servicelinks表中,暂按顺序结构的逻辑，即当前服务调用下一服务
+			Service nextService = (Service)it.next();
+			Condition condition = new Condition(combineprocess, nextService);
+			conditionsr.getConditionDao().save(condition);
+			Servicelinks serLink = new Servicelinks(currentService.getServiceId(), nextService.getServiceId(),combineprocess.getServiceId());
+			serlinkssr.save(serLink);
+			currentService = nextService;
+		}
+    }
 
 		/**
 		 * 判断要注册服务的调用关系是否符合规则

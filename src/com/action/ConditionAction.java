@@ -54,6 +54,7 @@ public class ConditionAction extends ActionSupport
 	
 	List<Service> services = new ArrayList<Service>();
 	List<Service> allservices = new ArrayList<Service>();
+	List<Service> combinedservices = new ArrayList<Service >();
 	
 	List<Condition> conditions = new ArrayList<Condition>();
 	List<Servicerelation> srrelations = new ArrayList<Servicerelation>();
@@ -285,7 +286,15 @@ public class ConditionAction extends ActionSupport
 	public void setSrrelations(List<Servicerelation> srrelations) {
 		this.srrelations = srrelations;
 	}
-	
+
+	public List<Service> getCombinedservices() {
+		return combinedservices;
+	}
+
+	public void setCombinedservices(List<Service> combinedservices) {
+		this.combinedservices = combinedservices;
+	}
+
 	List<DTreeNode> dtnodes = new ArrayList<DTreeNode>();
 	List<Service> selected = new ArrayList<Service>();
 	
@@ -401,46 +410,25 @@ public class ConditionAction extends ActionSupport
 	
 	public String relationDetail()
 	{
-		int father = Integer.parseInt(relationFather);
-		
-		List<Condition> sons = new ArrayList<Condition>();
-		
-		sons = conditionsr.getServiceCondition(father);
-		relations.clear();
-		RelationInf ref = new RelationInf();
-		ref.setSonid(Integer.toString((father)));
-		ref.setType(srs.getServiceType(father));
-		ref.setAddress(srs.getUniqueService(Integer.toString(father)).getServiceAddress());
-		relations.add(ref);
-		
-		for(int i = 0; i < sons.size(); i++)
-		{
-			int sonid = sons.get(i).getServiceBySubServiceId().getServiceId();
-			
-			RelationInf re = new RelationInf();
-			
-			re.setSonid(Integer.toString(sonid));
-			re.setType(srs.getServiceType(sonid));
-			re.setAddress(srs.getUniqueService(Integer.toString(sonid)).getServiceAddress());
-			re.setDesc(srs.getUniqueService(Integer.toString(sonid)).getServiceDesc());
-			re.setCondition(sons.get(i).getCondtionExpression());
-			
-			String pas = "";
-			List<Parameter> ps = new ArrayList<Parameter>();
-			ps = parametersr.getServiceParameter(sonid);
-			for(int j = 0; j < ps.size(); j++)
-			{
-				if(j == ps.size() - 1){
-					pas += ps.get(j).getParametername();
-				}else{
-					pas += ps.get(j).getParametername();
-					pas += ",";
-				}
+		System.out.println("relationFather:"+relationFather);
+		int fatherid = Integer.parseInt(relationFather);  //选择的是组合服务
+		Service fatherService = srs.getUniqueService(relationFather);
+		callrelations.clear();
+		calldetails.clear();
+		CallRelationInf fatherSerCri = new CallRelationInf(relationFather, fatherService.getServiceType(), fatherService.getRelateBusiness(), fatherService.getServiceName(), fatherService.getServiceAddress());
+		calldetails.add(fatherSerCri);
+		//处理组合服务中的父服务与子服务间的关系，从condition表获取
+		List<Condition> conditions = conditionsr.getConditionDao().findByServiceId(fatherid);
+		for(int i = 0 ; i < conditions.size(); i++) {
+			Condition condition = conditions.get(i);
+			Service subSer = condition.getServiceBySubServiceId();
+			String subSerId = String.valueOf(subSer.getServiceId());
+			CallRelationInf subSerCri = new CallRelationInf(subSerId, subSer.getServiceType(), subSer.getRelateBusiness(), subSer.getServiceName(), subSer.getServiceAddress());
+			if (calldetails.contains(subSerCri) == false) {
+				calldetails.add(subSerCri);
 			}
-			re.setParameter(pas);
-			
-			relations.add(re);
-			
+			CallRelationInf cri = new CallRelationInf(relationFather, subSerId, fatherService.getServiceType(), subSer.getServiceType(), fatherService.getRelateBusiness(), subSer.getRelateBusiness(), fatherService.getServiceName(), subSer.getServiceName());
+			callrelations.add(cri);
 		}
 		return SUCCESS;
 	}
@@ -531,7 +519,7 @@ public class ConditionAction extends ActionSupport
 		try
 		{
 			services.clear();
-			services = srs.getAllService();
+			services = srs.getAll();
 			dtnodes.clear();
 			//selected.addAll(services);
 			List<Integer> num = new ArrayList<Integer>();
@@ -618,6 +606,12 @@ public class ConditionAction extends ActionSupport
 			e.printStackTrace();
 			return ERROR;
 		}
+	}
+
+	public String getCombinedService(){
+		combinedservices.clear();
+		combinedservices = srs.getCombinedService();
+		return SUCCESS;
 	}
 	
 	/**
@@ -830,332 +824,113 @@ public class ConditionAction extends ActionSupport
 	}
 	
 	/**
-	 * 查找父服务的所有调用关系
+	 * 查找服务调用关系
 	 * @return
 	 */
 	public String callRelationDetail(){   //非递归遍历
 		callrelations.clear();
 		calldetails.clear();
-		String fatherid = relationFather;
-		System.out.print("relationFather:"+relationFather+"\n");
-		
-		
-		CallRelationInf fathercri = new CallRelationInf();
-		fathercri.setSonid(fatherid);
-		/*if(srs.getUniqueService(fatherid).getServiceType() == null){
-			fathercri.setSontype(toNodeType(srs.getUniqueService(fatherid).getServiceType()));
-		}*/
-		fathercri.setSontype(toNodeType(srs.getUniqueService(fatherid).getServiceType()));
-		fathercri.setSonaddress(srs.getUniqueService(fatherid).getServiceAddress() == null? "" : srs.getUniqueService(fatherid).getServiceAddress());
-		fathercri.setSonbusiness(srs.getUniqueService(fatherid).getRelateBusiness() == null? "" : srs.getUniqueService(fatherid).getRelateBusiness());
-		String param = "";
-		List<Parameter> ps = new ArrayList<Parameter>();
-		ps = parametersr.getServiceParameter(Integer.parseInt(fatherid));
-		for(int j = 0; j < ps.size(); j++)
-		{
-			if(ps.get(j).getParametername() == null){
-				ps.get(j).setParametername("parametername is null");
-			}
-			if(j == ps.size() - 1){
-				param += ps.get(j).getParametername();
-			}else{
-				param += ps.get(j).getParametername();
-				param += ",";
-			}
+		if(serviceGranularity.equalsIgnoreCase("single")){  //查看输入服务的调用关系
+			String fatherid = relationFather;
+			Service fatherService = srs.getUniqueService(fatherid);
+			System.out.print("relationFather:"+relationFather+"\n");
+			callrelations = getSingleServiceRelations(fatherService);
 		}
-		fathercri.setSonparameter(param == null? "" : param);
-		calldetails.add(fathercri);
-		
-		
-		Set<String> subsrlist = new HashSet<String>();   //用集合,去掉重复元素，提高查找效率
-		//callrelations.clear();
-		List<Servicerelation> maps = new ArrayList<Servicerelation>();
-		maps = srrelationsr.getSrrelationDao().findByServiceId(Integer.parseInt(fatherid));
-		System.out.print(maps.size()+"\n");
-		
-		for(int i = 0; i < maps.size(); i++){
-			String fathertype = srs.getUniqueService(fatherid).getServiceType();
-			fathertype = toNodeType(fathertype);
-			Service subservice = new Service();
-			subservice = maps.get(i).getServiceBySubServiceId();
-			String sid = String.valueOf(subservice.getServiceId());
-			String sontype = subservice.getServiceType();
-			sontype = toNodeType(sontype);
-			
-			String fatheraddress = srs.getUniqueService(fatherid).getServiceAddress() == null? "" : srs.getUniqueService(fatherid).getServiceAddress();
-			String fatherparam = "";
-			List<Parameter> fatherps = new ArrayList<Parameter>();
-			fatherps = parametersr.getServiceParameter(Integer.parseInt(fatherid));
-			for(int j = 0; j < fatherps.size(); j++)
-			{
-				if(fatherps.get(j).getParametername() == null){
-					fatherps.get(j).setParametername("parametername is null");
-				}
-				if(j == fatherps.size() - 1){
-					fatherparam += fatherps.get(j).getParametername();
-				}else{
-					fatherparam += fatherps.get(j).getParametername();
-					fatherparam += ",";
-				}
-			}
-			fatherparam = fatherparam == null? "" : fatherparam;
-			
-			String sonaddress =  subservice.getServiceAddress() == null? "" : subservice.getServiceAddress();
-			String sonparam = "";
-			List<Parameter> sonps = new ArrayList<Parameter>();
-			sonps = parametersr.getServiceParameter(Integer.parseInt(sid));
-			for(int j = 0; j < sonps.size(); j++)
-			{
-				if(sonps.get(j).getParametername() == null){
-					sonps.get(j).setParametername("parametername is null");
-				}
-				if(j == sonps.size() - 1){
-					sonparam += sonps.get(j).getParametername();
-				}else{
-					sonparam += sonps.get(j).getParametername();
-					sonparam += ",";
-				}
-			}
-			sonparam = sonparam == null? "" : sonparam;
-			String fatherbusiness = srs.getUniqueService(fatherid).getRelateBusiness() == null? "" : srs.getUniqueService(fatherid).getRelateBusiness();
-			String sonbusiness = subservice.getRelateBusiness() == null? "" : subservice.getRelateBusiness();
-			
-			CallRelationInf cri = new CallRelationInf(fatherid, sid, fathertype, sontype, fatherbusiness, sonbusiness, fatheraddress, sonaddress, fatherparam, sonparam);
-			System.out.print(cri.getSonbusiness());
-			callrelations.add(cri);
-			subsrlist.add(sid);
+		else if(serviceGranularity.equalsIgnoreCase("all")){ //查看所有服务的调用关系
+			callrelations = getAllServiceRelations();
 		}
-		
-		while(!subsrlist.isEmpty()){
-			List<Servicerelation> sons = new ArrayList<Servicerelation>();
-			//String fid = subsrlist.removeFirst();
-			String fid = "";
-			Iterator<String> it = subsrlist.iterator();
-			if(it.hasNext()){
-				//System.out.println(((String)it.next()));
-				fid = it.next();
-				subsrlist.remove(fid);
-			}
-			String fathertype = srs.getUniqueService(fid).getServiceType();
-			fathertype = toNodeType(fathertype);
-			String fatheraddress = srs.getUniqueService(fid).getServiceAddress() == null? "" : srs.getUniqueService(fid).getServiceAddress();
-			String fatherbusiness = srs.getUniqueService(fid).getRelateBusiness() == null? "" : srs.getUniqueService(fid).getRelateBusiness();
-			String fatherparam = "";
-			List<Parameter> fatherps = new ArrayList<Parameter>();
-			fatherps = parametersr.getServiceParameter(Integer.parseInt(fid));
-			for(int j = 0; j < fatherps.size(); j++)
-			{
-				if(fatherps.get(j).getParametername() == null){
-					fatherps.get(j).setParametername("parametername is null");
-				}
-				if(j == fatherps.size() - 1){
-					fatherparam += fatherps.get(j).getParametername();
-				}else{
-					fatherparam += fatherps.get(j).getParametername();
-					fatherparam += ",";
-				}
-			}
-			fatherparam = fatherparam == null? "" : fatherparam;
-			sons = srrelationsr.getSrrelationDao().findByServiceId(Integer.parseInt(fid));
-			for(int i = 0; i < sons.size(); i++){
-				Service subservice = new Service();
-				subservice = sons.get(i).getServiceBySubServiceId();
-				String sid = String.valueOf(subservice.getServiceId());
-				String sontype = subservice.getServiceType();
-				sontype = toNodeType(sontype);
-				String sonaddress =  subservice.getServiceAddress() == null? "" : subservice.getServiceAddress();
-				String sonparam = "";
-				List<Parameter> sonps = new ArrayList<Parameter>();
-				sonps = parametersr.getServiceParameter(Integer.parseInt(fid));
-				for(int j = 0; j < sonps.size(); j++)
-				{
-					if(sonps.get(j).getParametername() == null){
-						sonps.get(j).setParametername("parametername is null");
-					}
-					if(j == sonps.size() - 1){
-						sonparam += sonps.get(j).getParametername();
-					}else{
-						sonparam += sonps.get(j).getParametername();
-						sonparam += ",";
-					}
-				}
-				sonparam = sonparam == null? "" : sonparam;
-				CallRelationInf cri = new CallRelationInf(fid, sid, fathertype, sontype, fatheraddress, sonaddress, fatherparam, sonparam);
-				callrelations.add(cri);
-				subsrlist.add(sid);
-			}
-			CallRelationInf subcri = new CallRelationInf();
-			subcri.setSonid(fid);
-			subcri.setSontype(fathertype);
-			subcri.setSonaddress(fatheraddress);
-			subcri.setSonparameter(fatherparam);
-			subcri.setSonbusiness(fatherbusiness);
-			for(int i = 0; i < calldetails.size(); i++){         //调用子服务去重
-				if(calldetails.contains(subcri) == false){
-					calldetails.add(subcri);
-					break;
-				}
-			}
+		System.out.print("calldetails:"+calldetails.size());
+		System.out.print("callrelations:"+callrelations.size());
+		for(int i = 0; i < callrelations.size();i++){
+			System.out.print("callrelations:"+callrelations.get(i).getFatherid()+":"+callrelations.get(i).getSonid());
 		}
-		
-		if(serviceGranularity != null){          //选择显示的服务关系粒度
-			System.out.print(serviceGranularity);
-			if(serviceGranularity.equalsIgnoreCase("single")){    //针对单个服务的服务关系
-				List<Servicelinks> links = new ArrayList<Servicelinks>();
-				links = serlinkssr.findByParentAppId(Integer.parseInt(relationFather));
-				System.out.println(links.size());
-				for(int j = 0; j < links.size(); j++){
-					Servicelinks serlinks = links.get(j);
-					Service ser = srs.getUniqueService(serlinks.getServiceId().toString());
-					CallRelationInf linkrel = new CallRelationInf();
-					linkrel.setFatherid(ser.getServiceId().toString());
-					linkrel.setFatheraddress(ser.getServiceAddress());
-					linkrel.setFathertype(ser.getServiceType());
-					linkrel.setFathername(ser.getServiceName());
-					Service subser = srs.getUniqueService(serlinks.getSubServiceId().toString());
-					linkrel.setSonid(subser.getServiceId().toString());
-					linkrel.setSonaddress(subser.getServiceAddress());
-					linkrel.setSontype(subser.getServiceType());
-					linkrel.setSonname(subser.getServiceName());
-					callrelations.add(linkrel);
-				}
-			}
-			else if(serviceGranularity.equalsIgnoreCase("related")){     //针对选择服务及其相关服务的服务关系
-				List<Service> sers = new ArrayList<Service>();
-				sers.add(srs.getUniqueService(relationFather));
-				List<Servicerelation> serrels = new ArrayList<Servicerelation>();
-				serrels = srrelationsr.getAllServicerelation();
-				for(int i = 0; i < sers.size(); i++){
-					Service ser = sers.get(i);
-					i--;
-					sers.remove(ser);
-					for(int j = 0; j < serrels.size(); j++){
-						Servicerelation serrel = serrels.get(i);
-						if(serrel.getServiceByServiceId().getServiceId() == ser.getServiceId()){
-							Service subser = serrel.getServiceBySubServiceId();
-							if(!sers.contains(subser)){
-								sers.add(subser);
-							}
-							CallRelationInf linkrel = new CallRelationInf();
-							linkrel.setFatherid(ser.getServiceId().toString());
-							linkrel.setFatheraddress(ser.getServiceAddress());
-							linkrel.setFathertype(ser.getServiceType());
-							linkrel.setFathername(ser.getServiceName());
-							linkrel.setSonid(subser.getServiceId().toString());
-							linkrel.setSonaddress(subser.getServiceAddress());
-							linkrel.setSontype(subser.getServiceType());
-							linkrel.setSonname(subser.getServiceName());
-							linkrel.setDesc(serrel.getLinkServiceId().toString());
-							if(!callrelations.contains(linkrel)){
-								callrelations.add(linkrel);
-							}
-						}
-						else if(serrel.getServiceBySubServiceId().getServiceId() == ser.getServiceId()){
-							Service subser = serrel.getServiceByServiceId();
-							if(!sers.contains(subser)){
-								sers.add(subser);
-							}
-							CallRelationInf linkrel = new CallRelationInf();
-							linkrel.setFatherid(ser.getServiceId().toString());
-							linkrel.setFatheraddress(ser.getServiceAddress());
-							linkrel.setFathertype(ser.getServiceType());
-							linkrel.setFathername(ser.getServiceName());
-							linkrel.setSonid(subser.getServiceId().toString());
-							linkrel.setSonaddress(subser.getServiceAddress());
-							linkrel.setSontype(subser.getServiceType());
-							linkrel.setSonname(subser.getServiceName());
-							linkrel.setDesc(serrel.getLinkServiceId().toString());//desc字段用于标记相同的微服务
-							if(!callrelations.contains(linkrel)){
-								callrelations.add(linkrel);
-							}
-						}
-					}
-				}
-				for(int i = 0; i < callrelations.size(); i++){
-					String sameServices = "";
-					for(int j = i + 1; j < callrelations.size(); j++){
-						if(callrelations.get(i).getFatherid() == callrelations.get(j).getFatherid()  //合并多个相同的微服务
-								&& callrelations.get(i).getSonid() == callrelations.get(j).getSonid()){
-							if(sameServices != ""){
-								sameServices = "," + callrelations.get(i).getDesc() + "," + callrelations.get(j).getDesc();
-							}
-							else{
-								sameServices = callrelations.get(i).getDesc() + "," + callrelations.get(j).getDesc();
-							}
-							callrelations.remove(j);
-							j--;
-						}
-					}
-					callrelations.get(i).setDesc(sameServices);
-				}
-			}
-			else if(serviceGranularity.equalsIgnoreCase("all")){   //针对所有的服务关系
-				List<Service> sers = new ArrayList<Service>();
-				sers = srs.getServiceByType("APPLICATION");
-				List<Servicerelation> serrels = new ArrayList<Servicerelation>();
-				serrels = srrelationsr.getAllServicerelation();
-				for(int i = 0; i < sers.size(); i++){
-					Service ser = sers.get(i);
-					for(int j = 0; j < serrels.size(); j++){
-						Servicerelation serrel = serrels.get(j);
-						if(serrel.getServiceByServiceId().getServiceId() == ser.getServiceId()){
-							Service subser = serrel.getServiceBySubServiceId();
-							CallRelationInf linkrel = new CallRelationInf();
-							linkrel.setFatherid(ser.getServiceId().toString());
-							linkrel.setFatheraddress(ser.getServiceAddress());
-							linkrel.setFathertype(ser.getServiceType());
-							linkrel.setFathername(ser.getServiceName());
-							linkrel.setSonid(subser.getServiceId().toString());
-							linkrel.setSonaddress(subser.getServiceAddress());
-							linkrel.setSontype(subser.getServiceType());
-							linkrel.setSonname(subser.getServiceName());
-							linkrel.setDesc(serrel.getLinkServiceId().toString());//desc字段用于标记相同的微服务
-							if(!callrelations.contains(linkrel)){
-								callrelations.add(linkrel);
-							}
-						}
-						else if(serrel.getServiceBySubServiceId().getServiceId() == ser.getServiceId()){
-							Service subser = serrel.getServiceByServiceId();
-							CallRelationInf linkrel = new CallRelationInf();
-							linkrel.setFatherid(ser.getServiceId().toString());
-							linkrel.setFatheraddress(ser.getServiceAddress());
-							linkrel.setFathertype(ser.getServiceType());
-							linkrel.setFathername(ser.getServiceName());
-							linkrel.setSonid(subser.getServiceId().toString());
-							linkrel.setSonaddress(subser.getServiceAddress());
-							linkrel.setSontype(subser.getServiceType());
-							linkrel.setSonname(subser.getServiceName());
-							linkrel.setDesc(serrel.getLinkServiceId().toString());//desc字段用于标记相同的微服务
-							if(!callrelations.contains(linkrel)){
-								callrelations.add(linkrel);
-							}
-						}
-						serrels.remove(j);
-						j--;
-					}
-				}
-				for(int i = 0; i < callrelations.size(); i++){
-					String sameServices = "";
-					for(int j = i + 1; j < callrelations.size(); j++){
-						if(callrelations.get(i).getFatherid() == callrelations.get(j).getFatherid()
-								&& callrelations.get(i).getSonid() == callrelations.get(j).getSonid()){
-							if(sameServices != ""){
-								sameServices = "," + callrelations.get(i).getDesc() + "," + callrelations.get(j).getDesc();
-							}
-							else{
-								sameServices = callrelations.get(i).getDesc() + "," + callrelations.get(j).getDesc();
-							}
-							callrelations.remove(j);
-							j--;
-						}
-					}
-					callrelations.get(i).setDesc(sameServices);
-				}
-			}
-		}
-		System.out.print(callrelations.size());
 		return SUCCESS;
 	}
+
+	/**
+	 * 获取指定服务的调用关系
+	 * @param fatherService
+	 * @return
+	 */
+	public List<CallRelationInf> getSingleServiceRelations(Service fatherService){
+		List<CallRelationInf> results = new ArrayList<CallRelationInf>();
+		String fatherSerId = String.valueOf(fatherService.getServiceId());
+		CallRelationInf fatherCri = new CallRelationInf(fatherSerId, fatherService.getServiceType(), fatherService.getRelateBusiness(),fatherService.getServiceName(),fatherService.getServiceAddress());
+		if(calldetails.contains(fatherCri) == false){
+			calldetails.add(fatherCri);
+		}
+
+		//处理注册显式定义的调用关系、应用与其内部服务的调用关系，从service表的callservice字段获取
+		String callServices = fatherService.getCallService();
+		if(callServices != null && callServices.length() > 0){
+			String[] callservice = callServices.split(",");
+			for(int i = 0; i < callservice.length; i++){
+				if(callservice[i] != null && callservice[i].isEmpty() == false){
+					Service calledSer = srs.getUniqueService(callservice[i]);
+					String calledSerId = String.valueOf(calledSer.getServiceId());
+					CallRelationInf calledSerCri = new CallRelationInf(calledSerId, calledSer.getServiceType(), calledSer.getRelateBusiness(),calledSer.getServiceName(),calledSer.getServiceAddress());
+					if(calldetails.contains(calledSerCri) == false){
+						calldetails.add(calledSerCri);
+					}
+					CallRelationInf cri = new CallRelationInf(fatherSerId, calledSerId, fatherService.getServiceType(), calledSer.getServiceType(), fatherService.getRelateBusiness(), calledSer.getRelateBusiness(), fatherService.getServiceName(), calledSer.getServiceName());
+					results.add(cri);
+				}
+			}
+		}
+
+		//处理应用/流程内部的服务之间的调用关系，从servicelinks表获取
+		List<Servicelinks> serLinks = serlinkssr.findByServiceId(fatherService.getServiceId());
+		for(int i = 0 ;i < serLinks.size(); i++){
+			Service calledSer = srs.getUniqueService(String.valueOf(serLinks.get(i).getSubServiceId()));
+			String calledSerId = String.valueOf(calledSer.getServiceId());
+			CallRelationInf calledSerCri = new CallRelationInf(calledSerId, calledSer.getServiceType(), calledSer.getRelateBusiness(),calledSer.getServiceName(),calledSer.getServiceAddress());
+			if(calldetails.contains(calledSerCri) == false){
+				calldetails.add(calledSerCri);
+			}
+			CallRelationInf cri = new CallRelationInf(fatherSerId, calledSerId, fatherService.getServiceType(), calledSer.getServiceType(), fatherService.getRelateBusiness(), calledSer.getRelateBusiness(), fatherService.getServiceName(), calledSer.getServiceName());
+			results.add(cri);
+		}
+
+		//处理组合服务中的父服务与子服务间的关系，从condition表获取
+		if(fatherService.getCombineType() != null){  //说明是组合服务
+			List<Condition> conditions = conditionsr.getConditionDao().findByServiceId(fatherService.getServiceId());
+			for(int i = 0 ; i < conditions.size(); i++){
+				Condition condition = conditions.get(i);
+				Service subSer = condition.getServiceBySubServiceId();
+				String subSerId = String.valueOf(subSer.getServiceId());
+				CallRelationInf subSerCri = new CallRelationInf(subSerId, subSer.getServiceType(), subSer.getRelateBusiness(),subSer.getServiceName(),subSer.getServiceAddress());
+				if(calldetails.contains(subSerCri) == false){
+					calldetails.add(subSerCri);
+				}
+				CallRelationInf cri = new CallRelationInf(fatherSerId, subSerId, fatherService.getServiceType(), subSer.getServiceType(), fatherService.getRelateBusiness(), subSer.getRelateBusiness(), fatherService.getServiceName(), subSer.getServiceName());
+				results.add(cri);
+			}
+		}
+		return results;
+	}
+
+	/**
+	 * 获取所有服务的调用关系
+	 * @return
+	 */
+	public List<CallRelationInf> getAllServiceRelations(){
+		List<CallRelationInf> results = new ArrayList<CallRelationInf>();
+		List<Service> allServices = srs.getAll();
+		for(int i = 0; i < allServices.size(); i++){
+			Service singleService = allServices.get(i);
+			List<CallRelationInf> tempResults = getSingleServiceRelations(singleService);
+			/*  拓扑图显示不了单节点
+			if(tempResults.isEmpty()){ //该服务没有调用其他服务,因此调用的服务为null
+				CallRelationInf cri = new CallRelationInf(String.valueOf(singleService.getServiceId()), null, singleService.getServiceType(), null, singleService.getRelateBusiness(), null, singleService.getServiceName(), null);
+				results.add(cri);
+			}*/
+			//无重复并集
+			tempResults.removeAll(results);
+			results.addAll(tempResults);
+		}
+		return results;
+	}
+
 	
 	/*
 	 * 将服务类型转换成前台调用拓扑图节点的类型

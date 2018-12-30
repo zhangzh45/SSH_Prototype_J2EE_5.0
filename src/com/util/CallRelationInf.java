@@ -107,13 +107,19 @@ public class CallRelationInf {
 	
 	public CallRelationInf() {
 	}
-	
-	
-	
+
+	public CallRelationInf(String fatherid, String fathertype, String fatherbusiness, String fathername, String fatheraddress) {
+		this.fatherid = fatherid;
+		this.fathertype = fathertype;
+		this.fatherbusiness = fatherbusiness;
+		this.fathername = fathername;
+		this.fatheraddress = fatheraddress;
+	}
+
 	public CallRelationInf(String fatherid, String sonid, String fathertype,
-			String sontype, String fatherbusiness, String sonbusiness,
-			String fatheraddress, String sonaddress, String fatherparameter,
-			String sonparameter, String condition, String desc) {
+						   String sontype, String fatherbusiness, String sonbusiness,
+						   String fatheraddress, String sonaddress, String fatherparameter,
+						   String sonparameter, String condition, String desc) {
 		super();
 		this.fatherid = fatherid;
 		this.sonid = sonid;
@@ -139,8 +145,8 @@ public class CallRelationInf {
 		this.fatheraddress = fatheraddress;
 		this.sonaddress = sonaddress;
 	}
-	
-	
+
+
 	
 	public CallRelationInf(String fatherid, String sonid, String fathertype,
 			String sontype, String fatherbusiness, String sonbusiness,
@@ -158,24 +164,19 @@ public class CallRelationInf {
 		this.fatherparameter = fatherparameter;
 		this.sonparameter = sonparameter;
 	}
-	
-	public CallRelationInf(String fatherid, String sonid, String fathertype,
-			String sontype, String fatheraddress, String sonaddress,
-			String fatherparameter, String sonparameter) {
-		super();
+
+	public CallRelationInf(String fatherid, String sonid, String fathertype, String sontype, String fatherbusiness, String sonbusiness, String fathername, String sonname) {
 		this.fatherid = fatherid;
 		this.sonid = sonid;
 		this.fathertype = fathertype;
 		this.sontype = sontype;
-		this.fatheraddress = fatheraddress;
-		this.sonaddress = sonaddress;
-		this.fatherparameter = fatherparameter;
-		this.sonparameter = sonparameter;
+		this.fatherbusiness = fatherbusiness;
+		this.sonbusiness = sonbusiness;
+		this.fathername = fathername;
+		this.sonname = sonname;
 	}
-	
-	
-	
-	@Override  
+
+	@Override
 	public boolean equals(Object obj) {  
 		CallRelationInf sri = (CallRelationInf)obj;  
 		if(fatherid == null){

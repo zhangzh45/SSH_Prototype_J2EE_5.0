@@ -85,15 +85,15 @@
 				else{
 					var nodeTypeArray = ['APPLICATION', 'SERVICE', 'BUSINESS', 'LOCAL'];
 					var topoData = {
-						type: fathertypes.item(0).value, 
-						key: fatherids.item(0).value + "_" + fathernames.item(0).value, 
+						type: fathertypes.item(0).value,
+						key: fatherids.item(0).value + "_" + fathernames.item(0).value,
 						rel: [
 						     {
 						    	 type: sontypes.item(0).value,
 						    	 key: sonids.item(0).value + "_" + sonnames.item(0).value,
 						    	 data: {'url': sonaddress.item(0).value}
 						     },
-						], 
+						],
 						data: {'url': fatheraddress.item(0).value}
 					};
 					
@@ -140,9 +140,9 @@
 			 	<div class="control-group">
 					<label class="control-label" for="inputServiceGranularity"><s:text name="SelectServiceGranularity"></s:text></label>
 					<div class="controls">
-						<select id="ServiceGranularity"  onchange="selectServiceGranularity()">
+						<select id="inputServiceGranularity"  onchange="selectServiceGranularity()">
 							<option><s:text name="SingleService"></s:text></option>
-							<option><s:text name="RelatedServices"></s:text></option>
+							<!--<option><s:text name="RelatedServices"></s:text></option>-->
 							<option><s:text name="AllServices"></s:text></option>
 						</select>
 					</div>
@@ -195,21 +195,20 @@
 				<thead>
 					<tr>
 						<th>Service Id</th>
+						<th>Service Name</th>
 						<th>Service Type</th>
 						<th>Relate Business</th>
 						<th>Service Address</th>
-						<th>Parameters</th>
-						<!-- <th>操作</th> -->
 					</tr>
 				</thead>
 				<tbody>
 					<s:iterator value="calldetails" status="L">
 						<tr>
-							<td><s:property value="sonid"/></td>
-							<td><s:property value="sontype"/></td>
-							<td><s:property value="sonbusiness"/></td>
-							<td><s:property value="sonaddress"/></td>
-							<td><s:property value="sonparameter"/></td>
+							<td><s:property value="fatherid"/></td>
+							<td><s:property value="fathername"/></td>
+							<td><s:property value="fathertype"/></td>
+							<td><s:property value="fatherbusiness"/></td>
+							<td><s:property value="fatheraddress"/></td>
 							<!-- <td><button type="button" class="btn btn-primary" onclick="window.location.href='<s:property value="serviceAddress"/>'">URL &raquo;</button></td> -->
 						</tr>
 					</s:iterator>
@@ -226,7 +225,7 @@
 									    <h3 id="myModalLabel">Service Details</h3>
 									  </div>
 									  <div class="modal-body">
-									  	<table id="table1">
+									  	<table id="table2">
 									  		<tr>
 									  			<td>
 											     	Service Id<input type="text" id="msid" name="msid" value="" style="width:250px" readOnly="true">
@@ -320,14 +319,14 @@
 	
 	
 	function selectServiceGranularity(){
-			var serviceGranularityobj = document.getElementById("ServiceGranularity");
+			var serviceGranularityobj = document.getElementById("inputServiceGranularity");
 			var serviceGranularityindex = serviceGranularityobj.selectedIndex;
-			alert(serviceGranularityindex);
 			if(serviceGranularityindex == 0){
 				document.getElementById("serviceGranularity").value="single";
-			}else if(serviceGranularityindex == 1){
-				document.getElementById("serviceGranularity").value="related";
-			}else if(serviceGranularityindex == 2){
+			/*}else if(serviceGranularityindex == 1){
+				document.getElementById("serviceGranularity").value="related";*/   //不需要查看相关服务的调用关系，相关服务的概念不明确？
+			}
+			else if(serviceGranularityindex == 1){
 				document.getElementById("serviceGranularity").value="all";
 			}
 	}

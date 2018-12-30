@@ -699,7 +699,7 @@
 					</a>
 					<ul class="sub-menu">
 					    <li >
-							<a onclick="form1.action='busyClass.action';form1.submit()"><s:text name="ServiceCompositionRelation"></s:text></a>
+							<a onclick="form1.action='getCombineRelation.action';form1.submit()"><s:text name="ServiceCompositionRelation"></s:text></a>
 						</li>
 						<li>
 							<a onclick="form1.action='combineAService.action'; form1.submit();"><s:text name="ReliabilityCombination"></s:text></a>

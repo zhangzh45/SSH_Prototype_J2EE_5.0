@@ -27,6 +27,12 @@ public class Condition implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
+	public Condition(Service serviceByServiceId,  Service serviceBySubServiceId) {
+		this.serviceByServiceId = serviceByServiceId;
+		this.serviceBySubServiceId = serviceBySubServiceId;
+	}
+
+
 	public Condition(Integer conditionId, Service serviceByServiceId,
 			Service serviceBySubServiceId) {
 		this.conditionId = conditionId;

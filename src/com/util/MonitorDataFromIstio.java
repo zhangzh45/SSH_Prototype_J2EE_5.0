@@ -38,6 +38,7 @@ public class MonitorDataFromIstio
 	}
 
 	public double getAvailability() {
+		availability = 0.99;
 		return availability;
 	}
 
@@ -46,6 +47,7 @@ public class MonitorDataFromIstio
 	}
 
 	public double getBusyDegree() {
+		busyDegree = 0.1;
 		return busyDegree;
 	}
 
