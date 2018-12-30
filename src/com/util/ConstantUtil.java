@@ -27,16 +27,16 @@ public class ConstantUtil {
 	private static final String demoEndpoint = "http://127.0.0.1:8020/demo/EmployeeServerInterfacePort?wsdl";
 
 	//从sysuclient端获取所有角色的URL
-	private static final String getAllRoleURL = "http://127.0.0.1:8090/sysuClient/new/getAllRole.action";
+	private static final String getAllRoleURL = "http://127.0.0.1:8030/sysuClient/new/getAllRole.action";
 
 	//统计图片的存放文件路径
-	private static final String statisticsPicture = "E:\\workspace\\myeclipse_projects\\SSH_Prototype_J2EE_5.0\\WebRoot\\images\\company.jpeg";
+	private static final String statisticsPicture = "E:\\workspace\\idea_projects\\SSH_Prototype_J2EE_5.0\\WebRoot\\images\\company.jpeg";
 
 	//映射中心的根据组织角色获取业务角色的URL
 	private static final String getBusiRoleByOrganRoleURL = "http://localhost:3000/rolemap/getBusiRoleByOrganRole/";
 
 	//获取流程角色的URL，必须填本机IP的地址
-	private static final String getSpecRoleURL = "http:\\\\172.18.49.245:8090\\SSH_Prototype_J2EE_5.0\\getSpecRoleFromSpec.action?specid=";
+	private static final String getSpecRoleURL = "http:\\\\localhost:8090\\SSH_Prototype_J2EE_5.0\\getSpecRoleFromSpec.action?specid=";
 
 	//利用层次分析法AHP确定QoS各属性权重中，平均随机一致性指标RI的取值（根据判断矩阵的维数决定，此处维数n=6）
 	private static final double  ri = 1.26;

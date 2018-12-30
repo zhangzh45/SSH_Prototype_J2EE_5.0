@@ -698,7 +698,7 @@ public  class ServiceInfo
 					
 					SimpleService service = new SimpleService();
 					service.setId(specid);
-					service.setName(specname);
+					service.setName(s.getServiceName());
 					service.setType(s.getServiceType());
 					service.setAppRoleUrl(getSpecRoleURL);
 					res.add(service);

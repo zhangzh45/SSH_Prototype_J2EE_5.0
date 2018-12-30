@@ -269,22 +269,24 @@ public class ParseYawlFile {
 		
 		GetRemoteService grs = new GetRemoteService();
 		String roles = grs.getAllRole(loginUser, loginPassword);
-		roles = roles.substring(1, roles.length() - 1);
-		roles = roles.replaceAll("\\\\", "");
 		System.out.println("roles:"+roles);
-		JSONArray arr;
 		try {
-			arr = new JSONArray(roles);
-			
-			if(arr.length() > 0){
-				for(int i = 0; i < arr.length(); i++){
-					JSONObject obj = new JSONObject();
-					obj = (JSONObject) arr.get(i);
-					if(obj.has(roleId)){
-						System.out.println("rolename:"+(String) obj.get(roleId));
-						return (String) obj.get(roleId);
+			if(roles != null && roles.length() > 1){
+				roles = roles.substring(1, roles.length() - 1);
+				roles = roles.replaceAll("\\\\", "");
+				if(roles != null){
+					JSONArray arr = new JSONArray(roles);
+					if(arr.length() > 0){
+						for(int i = 0; i < arr.length(); i++){
+							JSONObject obj = new JSONObject();
+							obj = (JSONObject) arr.get(i);
+							if(obj.has(roleId)){
+								System.out.println("rolename:"+(String) obj.get(roleId));
+								return (String) obj.get(roleId);
+							}
+
+						}
 					}
-					
 				}
 			}
 		} catch (JSONException e) {
