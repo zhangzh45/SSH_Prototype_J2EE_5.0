@@ -430,6 +430,7 @@ public class ConditionAction extends ActionSupport
 			CallRelationInf cri = new CallRelationInf(relationFather, subSerId, fatherService.getServiceType(), subSer.getServiceType(), fatherService.getRelateBusiness(), subSer.getRelateBusiness(), fatherService.getServiceName(), subSer.getServiceName());
 			callrelations.add(cri);
 		}
+		System.out.println(callrelations.size());
 		return SUCCESS;
 	}
 	

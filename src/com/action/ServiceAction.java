@@ -250,11 +250,11 @@ public class ServiceAction extends ActionSupport{
 		sr.setTeam(team);
 		sr.setAccessRule(accessRule);
 		if (sr.getServiceTime().isEmpty()) {
-			sr.setServiceTime("1");   //设置默认的服务最大请求时间，以毫秒为单位
+			sr.setServiceTime("0.1");   //设置默认的服务最大请求时间，以秒为单位
 		}
 		sr.setServiceProvider(loginUser);
 		if (serviceReliability.isEmpty()) {
-			sr.setServiceReliability(0.5); //设置服务可靠性的默认初始值
+			sr.setServiceReliability(0.9); //设置服务可靠性的默认初始值
 		} else {
 			sr.setServiceReliability(Double.parseDouble(serviceReliability));
 		}
@@ -2297,7 +2297,6 @@ public class ServiceAction extends ActionSupport{
 				qos.setServiceCost(serviceCost);
 				qos.setBusyDegree(busyDegree);
 				qos.setAvgEvaluation(avgEvaluation);
-				qos.setServiceQos(qosValue);
 			}
 			else{   //流程式组合
 				//分析组合流程中所调用的服务，并计算其QoS属性（目前按顺序结构来计算）
@@ -2328,8 +2327,10 @@ public class ServiceAction extends ActionSupport{
 				qos.setServiceCost(s.getServiceCost());
 				qos.setBusyDegree(busyDegree);
 				qos.setAvgEvaluation(avgEvaluation);
-				qos.setServiceQos(qosValue);
 			}
+			qosValue = (double) Math.round(qosValue * 10000) / 10000; //保留4位小数
+			System.out.println(qosValue);
+			qos.setServiceQos(qosValue);
 		}
 		return qos;
 	}
@@ -2383,10 +2384,10 @@ public class ServiceAction extends ActionSupport{
 		double avgEvaluation = evaluationsr.getAvgEvaluation(serviceid);
 		double original_avgEvaluation = avgEvaluation;
 		double availability = 1.0;
-		double busyDegree = 1.0;
+		double busyDegree = 0.1;
 		if(s.getIsExternal() == 0){ //内部开发的服务
-			availability = monitorData.getAvailability();
-			busyDegree = monitorData.getBusyDegree();
+			availability = monitorData.getAvailability(s.getServiceName());
+			busyDegree = monitorData.getBusyDegree(s.getServiceName());
 		}
 		else{  //外部服务只有一个实例
 			//计算服务的繁忙程度，为负指标,转化成服务可用实例比例
@@ -2433,6 +2434,8 @@ public class ServiceAction extends ActionSupport{
 		AHP ahp = new AHP(6, preferredTarget);
 		Matrix weights = ahp.getWeights();
 		Double qosValue = weights.getData()[0][0] * reliability + weights.getData()[1][0] * availability + weights.getData()[2][0] * serviceTime + weights.getData()[3][0] * serviceCost + weights.getData()[4][0] * busyDegree + weights.getData()[5][0] * avgEvaluation;
+		qosValue = (double) Math.round(qosValue * 10000) / 10000; //保留4位小数
+		System.out.println(qosValue);
 
 		//不用均一化后的值，给用户显示原始的值
 		ServiceQos qos = new ServiceQos(s.getServiceId(), s.getServiceName(), s.getServiceType(), s.getServiceReliability(), availability, Double.parseDouble(s.getServiceTime()), s.getServiceCost(), original_busyDegree, original_avgEvaluation, qosValue);

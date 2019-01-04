@@ -41,7 +41,12 @@ public class ConstantUtil {
 	//利用层次分析法AHP确定QoS各属性权重中，平均随机一致性指标RI的取值（根据判断矩阵的维数决定，此处维数n=6）
 	private static final double  ri = 1.26;
 
-	public static String getSearchrancherurl() {
+	//istio中获取服务遥测数据prometheus的URL
+    private static final String  prometheus = "http://222.200.180.59:32339/api/v1/query?query=";
+    //prometheus = "http://222.200.180.59:32339/api/v1/query?query=istio_requests_total{destination_app=\"helloworld\", response_code=\"200\"}";
+    //istio中获取服务请求总数的方法名，可在后面添加查询字段“istio_requests_total{destination_app=\"helloworld\"}”
+
+    public static String getSearchrancherurl() {
 		return searchRancherURL;
 	}
 
@@ -88,4 +93,9 @@ public class ConstantUtil {
 	public static double getRi() {
 		return ri;
 	}
+
+    public static String getPrometheus() {
+        return prometheus;
+    }
+
 }

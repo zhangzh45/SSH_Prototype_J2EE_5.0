@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.util.*;
 import net.sf.json.JSONObject;
 
 import org.slf4j.Logger;
@@ -35,11 +36,6 @@ import com.service.ServiceresultService;
 import com.service.UserRoleService;
 import com.service.UserSpecSerService;
 import com.service.VariableService;
-import com.util.GetRemoteService;
-import com.util.ListSortUtil;
-import com.util.InteractWithRancherUtil;
-import com.util.ServiceQos;
-import com.util.ServiceReliability;
 
 import com.calculater.ExpressionCalculater;
 
@@ -451,6 +447,7 @@ public class ParameterAction extends ActionSupport
 			s.setFailTimes(s.getFailTimes() + 1);
 			srs.update(s);
 			computeServiceReliabillity(sidInt);
+			computeServiceTime(sidInt);
 			return ERROR;
 		}
 		try
@@ -540,6 +537,7 @@ public class ParameterAction extends ActionSupport
 				}
 				saverunlog(rl, sidInt);
 				computeServiceReliabillity(sidInt);
+				computeServiceTime(sidInt);
 				return SUCCESS;
 			}
 			else{   //暂时不执行流程
@@ -553,6 +551,7 @@ public class ParameterAction extends ActionSupport
 			srs.update(s);
 			saverunlog(rl, e);
 			computeServiceReliabillity(sidInt);
+			computeServiceTime(sidInt);
 			return ERROR;
 		}
 	}
@@ -602,7 +601,7 @@ public class ParameterAction extends ActionSupport
 	/**
 	 * 保存运行服务成功的日志信息与连接URL
 	 * @param rl  当前对应的调用日志记录
-	 * @param cuisid 实际调用的服务编号
+	 * @param callsid 实际调用的服务编号
 	 */
 	public int saverunlog(Runlog rl, int callsid){
 		if(callsid == cursid){
@@ -632,6 +631,7 @@ public class ParameterAction extends ActionSupport
 		}
 		runlogsr.update(rl);
 		computeServiceReliabillity(callsid);
+		computeServiceTime(callsid);
 		return responsecode;
 	}
 	
@@ -891,16 +891,16 @@ public class ParameterAction extends ActionSupport
 	 */
    public int connecturl(String urlStr, int callsid){  
 	   try{
-		   int isExternal = srs.getIsExternal(callsid);
+		   /*int isExternal = srs.getIsExternal(callsid);
 		   if(isExternal == 0){
 			   if(loadInternalService(callsid) == false){
 				   return -2;      //部署内部服务的服务器出现错误
 			   }
-		   }
+		   }*/
 	       URL callURL = new URL(urlStr);
            HttpURLConnection urlcon = (HttpURLConnection)callURL.openConnection();
            urlcon.connect();         //获取连接
-           InputStream is = urlcon.getInputStream();
+           //InputStream is = urlcon.getInputStream();
            System.out.print(urlcon.getResponseCode()+"!!!!\n");
            return urlcon.getResponseCode();
 	   }
@@ -911,8 +911,9 @@ public class ParameterAction extends ActionSupport
    }
 
    /**
-    * 对企业内部服务的负载调用
-	* 需要根据新的服务监控、rancher新版本进行修改
+    * 对企业内部开发部署的服务的负载调用
+	* 需要根据新的服务监控istio进行修改
+	* istio已实现服务实例根据负载自动调整，不需要该函数了
     * @param serviceId
     */
    public boolean loadInternalService(int serviceId){
@@ -1008,19 +1009,45 @@ public class ParameterAction extends ActionSupport
 	   Service ser = srs.getUniqueService(String.valueOf(sidInt));
 	   double old_sReliability = ser.getServiceReliability();
 	   double new_sReliability = old_sReliability;
-	   double successRate = 0;
-	   int runtimes = ser.getRunTimes();
-	   if(runtimes != 0){
-		   successRate = (runtimes - ser.getFailTimes()) / runtimes;
+	   if(ser.getIsExternal() == 1){  //外部服务
+		   double successRate = 0;
+		   int runtimes = ser.getRunTimes();
+		   if(runtimes != 0){
+			   successRate = (runtimes - ser.getFailTimes()) / runtimes;
+		   }
+		   new_sReliability = ((runtimes/(100+runtimes))*successRate) + ((100/(100+runtimes))*old_sReliability);
 	   }
-	   
-	   //to do: 添加时间窗
-	   //可靠性数据通过草地项目采集
-	   
-	   new_sReliability = ((runtimes/(100+runtimes))*successRate) + ((100/(100+runtimes))*old_sReliability);
+	   else{  //内部服务
+		   MonitorDataFromIstio monitor = new MonitorDataFromIstio();
+		   new_sReliability = monitor.getReliability(ser.getServiceName());
+		   new_sReliability = new_sReliability * 0.9 + old_sReliability * 0.1;
+	   }
 	   ser.setServiceReliability(new_sReliability);
 	   srs.update(ser);
 	   return new_sReliability;
    }
+
+	/**
+	 * 重新计算服务的响应时间并更新
+	 * @param sidInt
+	 * @return
+	 */
+	public double computeServiceTime(int sidInt){
+		Service ser = srs.getUniqueService(String.valueOf(sidInt));
+		double old_serviceTime = Double.parseDouble(ser.getServiceTime());
+		old_serviceTime = (double) Math.round(old_serviceTime * 10000) / 10000; //保留4位小数
+		System.out.println(old_serviceTime);
+		double new_serviceTime = old_serviceTime;
+		if(ser.getIsExternal() == 1){  //外部服务，只能以最新运行的数据为准
+		}
+		else{  //内部服务
+			MonitorDataFromIstio monitor = new MonitorDataFromIstio();
+			new_serviceTime = monitor.getServiceTime(ser.getServiceName());
+			new_serviceTime = new_serviceTime * 0.9 + old_serviceTime * 0.1;
+		}
+		ser.setServiceTime(String.valueOf(new_serviceTime));
+		srs.update(ser);
+		return new_serviceTime;
+	}
    
 }

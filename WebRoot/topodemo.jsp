@@ -62,22 +62,72 @@
 		<script type="text/javascript">
 			jsPlumb.bind("ready", function() {
 				
-				// 鎷撴墤鏁版嵁缁撴瀯鏍硅妭鐐逛綅缃缃�				
-				var rootPosition = [200, 200];
-				var jq2 = document.getElementsByName("lsonid");
-				//alert(document.getElementsByName("lsonid").item(0).value);
-				var types = document.getElementsByName("ltype");
-				var address = document.getElementsByName("laddress");
-				var parameters = document.getElementsByName("lparameter");
-				var conditions = document.getElementsByName("lcondition");
+				// 鎷撴墤鏁版嵁缁撴瀯鏍硅妭鐐逛綅缃缃�
+                var rootPosition = [200, 200];
+                var sonids = document.getElementsByName("lsonid");
+                var sontypes = document.getElementsByName("lsontype");
+                var fatherids = document.getElementsByName("lfatherid");
+                var fathertypes = document.getElementsByName("lfathertype");
+
+                var fatheraddress = document.getElementsByName("lfatheraddress");
+                var sonaddress = document.getElementsByName("lsonaddress");
+                var fathernames = document.getElementsByName("lfathername");
+                var sonnames = document.getElementsByName("lsonname");
+
+                if(fatherids.length == 0 && document.getElementById('relationFather').value !== ""){
+                    //alert(document.getElementById('relationFather').value);
+                    $('#topoRegion').html("该服务没有调用其他服务！");
+                }
+                else{
+                    var nodeTypeArray = ['APPLICATION', 'SERVICE', 'BUSINESS', 'LOCAL'];
+                    var topoData = {
+                        type: fathertypes.item(0).value,
+                        key: fatherids.item(0).value + "_" + fathernames.item(0).value,
+                        rel: [
+                            {
+                                type: sontypes.item(0).value,
+                                key: sonids.item(0).value + "_" + sonnames.item(0).value,
+                                data: {'url': sonaddress.item(0).value}
+                            },
+                        ],
+                        data: {'url': fatheraddress.item(0).value}
+                    };
+
+                    drawTopo(topoData, rootPosition, nodeTypeArray);
+                    for(var i = 1; i < fatherids.length; i++)
+                    {
+                        //alert(sontypes.item(i).value);
+                        var newTopoData = {
+                            type: fathertypes.item(i).value,
+                            key: fatherids.item(i).value + "_" + fathernames.item(i).value,
+                            rel: [
+                                {
+                                    type: sontypes.item(i).value,
+                                    key: sonids.item(i).value + "_" + sonnames.item(i).value,
+                                    data: {'url': sonaddress.item(i).value}
+                                },
+                            ],
+                            data: {'url': fatheraddress.item(i).value}
+                        };
+                        var mergedTopoData = mergeNewTopo(topoData, newTopoData);
+                        if(mergedTopoData == topoData){
+                            drawTopo(newTopoData, rootPosition, nodeTypeArray);
+                        }
+                        else{
+                            $('#topoRegion').empty();
+                            drawTopo(mergedTopoData, rootPosition, nodeTypeArray);
+                        }
+                        topoData = mergedTopoData;
+                    }
+                }
 				
 				//alert(jq2.length);
-				if(jq2.length == 1){
+				/*if(jq2.length == 1){
 					//alert(document.getElementById('relationFather').value);
 					//$('#topoRegion').html("该服务不是组合服务！");
 				}
 				else{
-					var first = jq2.item(1).value + conditions.item(1).value;
+					//var first = jq2.item(1).value + conditions.item(1).value;
 				
 					var nodeTypeArray = ['APPLICATION', 'SERVICE', 'BUSINESS', 'LOCAL'];
 					var topoData = {
@@ -114,7 +164,7 @@
 						drawTopo(mergedTopoData, rootPosition, nodeTypeArray);
 					}
 				
-				}
+				}*/
 			});
 		
 		    function loadservice(serviceid){
@@ -156,8 +206,8 @@
 				<!-- <input name="btn" type="button" class="btn" onclick="form1.submit()" value="关系图"> -->
 				<!-- <input name="btn" type="button" class="btn" onclick="document.getElementById('table1').style.display=''" value="详情"> -->
 			<!--  </div> -->
-			 <div class="input-group">
-				 <div class="control-group">
+			 <span class="input-group">
+				 <span class="control-group">
 					 <label class="control-label" for="inputCombinedService"></label>
 					 <div class="controls" >
 						 <select name="comservices" id="inputCombinedService">  <!-- 审核通过的组合服务 -->
@@ -166,13 +216,13 @@
 							 </s:iterator>
 						 </select>
 					 </div>
-				 </div>
+				 </span>
 
       			<span class="input-group-btn">
         			<button class="btn btn-default" type="button" onclick="submitValue()"><s:text name="RelationGraph"></s:text></button>
         			<button class="btn btn-default" type="button" onclick="document.getElementById('table1').style.display=''"><s:text name="Details"></s:text></button>
       			</span>
-    		</div><!-- /input-group -->
+    		</span><!-- /input-group -->
 
 			<input id="relationFather" name="relationFather" type="hidden" value="">
     		
@@ -187,8 +237,6 @@
 				<input name="cid" type="hidden" value="<s:property value="conditionId"/>">
 			</s:iterator>
 		</div>
-
-
 
 		<div>
 			<table>
@@ -208,6 +256,8 @@
 
 			</table>
 		</div>
+
+
 
 		<div>
 			<s:iterator value="relations" status="L" var="relations">
