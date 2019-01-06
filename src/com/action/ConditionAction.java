@@ -892,6 +892,22 @@ public class ConditionAction extends ActionSupport
 			results.add(cri);
 		}
 
+		List<Servicelinks> fatherLinks = serlinkssr.findByParentAppId(fatherService.getServiceId());
+		for(int i = 0 ;i < fatherLinks.size(); i++){
+			Service aService = srs.getUniqueService(String.valueOf(fatherLinks.get(i).getServiceId()));
+			Service bService = srs.getUniqueService(String.valueOf(fatherLinks.get(i).getSubServiceId()));
+			CallRelationInf aSerCri = new CallRelationInf(String.valueOf(aService.getServiceId()), aService.getServiceType(), aService.getRelateBusiness(),aService.getServiceName(),aService.getServiceAddress());
+			if(calldetails.contains(aSerCri) == false){
+				calldetails.add(aSerCri);
+			}
+			CallRelationInf bSerCri = new CallRelationInf(String.valueOf(bService.getServiceId()), bService.getServiceType(), bService.getRelateBusiness(),bService.getServiceName(),bService.getServiceAddress());
+			if(calldetails.contains(bSerCri) == false){
+				calldetails.add(bSerCri);
+			}
+			CallRelationInf cri = new CallRelationInf(String.valueOf(aService.getServiceId()), String.valueOf(bService.getServiceId()), aService.getServiceType(), bService.getServiceType(), aService.getRelateBusiness(), bService.getRelateBusiness(), aService.getServiceName(), bService.getServiceName());
+			results.add(cri);
+		}
+
 		//处理组合服务中的父服务与子服务间的关系，从condition表获取
 		if(fatherService.getCombineType() != null){  //说明是组合服务
 			List<Condition> conditions = conditionsr.getConditionDao().findByServiceId(fatherService.getServiceId());

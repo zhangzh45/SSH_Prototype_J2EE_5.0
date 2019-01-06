@@ -165,7 +165,7 @@
 							<input type="text" id="inputServiceReliability" name="serviceReliability" placeholder="ServiceReliability">
 						</div>
 					</div>
-					<div class="control-group" name="external" style="display:none">
+					<div class="control-group">
 						<label class="control-label" for="inputServiceAddress"><s:text name="ServiceAddress"></s:text></label>
 						<div class="controls">
 							<input type="text" id="inputServiceAddress" name="sr.serviceAddress" placeholder="ServiceAddress">

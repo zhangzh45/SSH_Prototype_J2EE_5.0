@@ -76,6 +76,8 @@ import com.service.VariableService;
 import com.util.graph.CycleDetector;
 import com.util.graph.DirectedGraph;
 
+import javax.swing.text.html.HTMLDocument;
+
 
 public class ServiceAction extends ActionSupport{
 
@@ -326,7 +328,7 @@ public class ServiceAction extends ActionSupport{
 			}
 		}
 		if (callfail == false) {
-			saveCallrelation();
+			//saveCallrelation();
 			System.out.println("ok!");
 			if (myFile != null) {
 				try {
@@ -381,7 +383,7 @@ public class ServiceAction extends ActionSupport{
 		        }
 		        srs.update(sr);
 		    }
-		    if (sr.getServiceType().equalsIgnoreCase("APPLICATION")) {//若注册的是应用，其后端的微服务也要进行注册
+		    /*if (sr.getServiceType().equalsIgnoreCase("APPLICATION")) {//若注册的是应用，其后端的微服务也要进行注册
 		        String servicesOfStack = iwrUtil.getServicesOfStack(sr.getServiceName());
 		        String containedServices = ",";
 		        if (servicesOfStack != null) {
@@ -410,7 +412,14 @@ public class ServiceAction extends ActionSupport{
 		            saveRelationInStack(sr.getServiceName());//保存应用内的服务关联关系
                     saveRelationBetweenStacks(sr.getServiceName());//保存应用间的服务关联关系
                 }
-		    }
+		    }*/
+
+		    //如果是注册内部开发的应用，还需要保存应用内部的服务调用关系
+			//默认其内部服务已经注册到系统中，且保存在callservices字段中
+		    if(sr.getServiceType().equalsIgnoreCase("APPLICATION") && sr.getIsExternal() == 0){
+				saveLinksInApplication(sr.getServiceName());
+			}
+
 		}
 
 		//将注册成功的服务归入相应的服务类内
@@ -612,6 +621,29 @@ public class ServiceAction extends ActionSupport{
 		return ERROR;
 	}*/
 
+	public void saveLinksInApplication(String serName){
+		Service s = srs.getServiceidByServiename(serName);
+		List<String> serviceNames = new ArrayList<String>();
+		String callservices = s.getCallService();
+		if(callservices.length() > 0){
+			String[] sers = callservices.split(",");
+			for(int i = 0; i < sers.length; i++){
+				if(sers[i].length() > 0){//这是id
+					String serviceName = srs.getUniqueService(sers[i]).getServiceName();
+					serviceNames.add(serviceName);
+					System.out.println(serviceName);
+				}
+			}
+		}
+		MonitorDataFromIstio monotor = new MonitorDataFromIstio();
+		List<String> links = monotor.getServicelinksInApplication(serviceNames);
+		for(int i = 0 ; i < links.size(); i++){
+			String aService = links.get(i).split("&")[0];
+			String bService = links.get(i).split("&")[1];
+			Servicelinks link = new Servicelinks(srs.getServiceidByServiename(aService).getServiceId(), srs.getServiceidByServiename(bService).getServiceId(), s.getServiceId());
+			serlinkssr.save(link);
+		}
+	}
 
 	public String allService()
 	{

@@ -46,6 +46,12 @@ public class ConstantUtil {
     //prometheus = "http://222.200.180.59:32339/api/v1/query?query=istio_requests_total{destination_app=\"helloworld\", response_code=\"200\"}";
     //istio中获取服务请求总数的方法名，可在后面添加查询字段“istio_requests_total{destination_app=\"helloworld\"}”
 
+	//istio中获取服务图数据kiali的URL
+	private static final String kiali = "http://222.200.180.59:20001/api/namespaces/default/graph";
+
+	//kiali验证的请求header，账号和密码都是admin
+	private static final String kialiAuthorization = "Basic YWRtaW46YWRtaW4=";
+
     public static String getSearchrancherurl() {
 		return searchRancherURL;
 	}
@@ -98,4 +104,11 @@ public class ConstantUtil {
         return prometheus;
     }
 
+	public static String getKiali() {
+		return kiali;
+	}
+
+	public static String getKialiAuthorization() {
+		return kialiAuthorization;
+	}
 }

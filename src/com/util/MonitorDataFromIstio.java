@@ -1,7 +1,9 @@
 package com.util;
 
+import com.bean.Service;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.net.util.Base64;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -9,6 +11,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -95,7 +102,7 @@ public class MonitorDataFromIstio
 	    System.out.println(queryURL);
 		String result = null;
 	    try{
-			result = sendHttp(queryURL);
+			result = sendHttp(queryURL, null);
 		}catch(Exception e){
 	    	e.printStackTrace();
 		}
@@ -125,7 +132,7 @@ public class MonitorDataFromIstio
 		System.out.println(queryURL);
 		String result = null;
 		try{
-			result = sendHttp(queryURL);
+			result = sendHttp(queryURL, null);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -156,7 +163,7 @@ public class MonitorDataFromIstio
 		System.out.println(queryURL);
 		String result = null;
 		try{
-			result = sendHttp(queryURL);
+			result = sendHttp(queryURL, null);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -186,7 +193,7 @@ public class MonitorDataFromIstio
 		System.out.println(queryURL);
 		String result = null;
 		try{
-			result = sendHttp(queryURL);
+			result = sendHttp(queryURL, null);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -219,7 +226,7 @@ public class MonitorDataFromIstio
 		System.out.println(queryURL);
 		String result = null;
 		try{
-			result = sendHttp(queryURL);
+			result = sendHttp(queryURL, null);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -282,18 +289,85 @@ public class MonitorDataFromIstio
 	}
 
 	/**
+	 * 查询应用内部的服务调用关系，aService&bService表示aService调用了bService
+	 * @param serviceNames 应用内的服务名称列表
+	 * @return
+	 */
+	public List<String> getServicelinksInApplication(List<String> serviceNames){
+		List<String> links = new ArrayList<String>();
+		Map<String, String> id_apps = new HashMap<String, String>();//存放APP的ID与app值
+		String queryURL = ConstantUtil.getKiali();
+		System.out.println(queryURL);
+		String result = null;
+		try{
+			result = sendHttp(queryURL, ConstantUtil.getKialiAuthorization());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		System.out.println("result:"+result);
+		if(result != null){
+			JSONObject obj = JSONObject.fromObject(result);
+			if(obj.containsKey(("elements"))){
+				JSONObject elements = obj.getJSONObject("elements");
+				if(elements.containsKey("nodes")){
+					JSONArray nodesArr = JSONArray.fromObject(elements.get("nodes"));
+					for(int i = 0; i < nodesArr.size(); i++){
+						JSONObject node = nodesArr.getJSONObject(i);
+						if(node.containsKey("data")){
+							JSONObject data = node.getJSONObject("data");
+							if(data.containsKey("app")){
+								String appName = data.getString("app");
+								if(serviceNames.contains(appName)){
+									id_apps.put(data.getString("id"), appName);
+									System.out.println(data.getString("id") + ":"+appName);
+								}
+							}
+						}
+
+					}
+				}
+				if(elements.containsKey("edges")){
+					JSONArray edgesArr = JSONArray.fromObject(elements.get("edges"));
+					for(int i = 0; i < edgesArr.size(); i++){
+						JSONObject edge = edgesArr.getJSONObject(i);
+						if(edge.containsKey("data")){
+							JSONObject data = edge.getJSONObject("data");
+							if(data.containsKey("source") && data.containsKey("target")){
+								String source = data.getString("source");
+								String target = data.getString("target");
+								if(!source.equalsIgnoreCase(target) && id_apps.containsKey(source) && id_apps.containsKey(target)){
+									links.add(id_apps.get(source) + "&" + id_apps.get(target));
+									System.out.println(id_apps.get(source) + ":"+id_apps.get(target));
+								}
+							}
+						}
+
+					}
+				}
+			}
+		}
+		System.out.println("links:" + links.toString());
+		return links;
+	}
+
+
+	/**
 	 * 发送http请求
 	 * @param url
+	 * @param authorization 验证头，为null则不需要验证
 	 * @return
 	 * @throws Exception
 	 */
-	public static String sendHttp(String url) throws Exception {
+	public static String sendHttp(String url, String authorization) throws Exception {
 		URL localURL = new URL(url);
 		URLConnection connection = localURL.openConnection();
 		HttpURLConnection httpURLConnection = (HttpURLConnection)connection;
 
 		httpURLConnection.setRequestProperty("Accept-Charset", "utf-8");
 		httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		if(authorization != null){
+			httpURLConnection.setRequestProperty("Authorization", authorization);
+		}
 
 		InputStream inputStream = null;
 		InputStreamReader inputStreamReader = null;
