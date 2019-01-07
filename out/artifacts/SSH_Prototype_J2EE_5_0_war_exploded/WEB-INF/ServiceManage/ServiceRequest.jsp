@@ -177,7 +177,7 @@
 							<input type="text" id="inputWSDLLocation" name="sr.WSDLLocation" placeholder="WSDLLocation">
 						</div>
 					</div>
-					<div class="control-group" name="internal">
+					<div class="control-group" name="internal" style="display:none">
 						<label class="control-label" for="inputServicePort"><s:text name="ServicePort"></s:text></label>
 						<div class="controls">
 							<input type="text" id="inputServicePort" name="servicePort" value=<s:text name="Random"></s:text>>
@@ -207,7 +207,7 @@
 							<input type="text" id="inputServiceMaxLoad" name="maxLoad" placeholder="ServiceMaxLoad">
 						</div>
 					</div>
-					<div class="control-group" name="internal">
+					<div class="control-group" name="internal" style="display:none">
 						<label class="control-label" for="inputServiceScale"><s:text name="ServiceScale"></s:text></label>
 						<div class="controls">
 							<input type="text" id="inputServiceScale" name="serviceScale" placeholder="ServiceScale">
@@ -232,21 +232,21 @@
 						</div>
 					</div>
 
-					<div class="control-group" name="internal">
+					<div class="control-group" name="internal" style="display:none">
 						<label class="control-label" for="inputDockerImage"><s:text name="DockerImage"></s:text></label>
 						<div class="controls">
 							<input type="text" id="inputDockerImage" name="dockerImage" placeholder="DockerImage">
 						</div>
 					</div>
 
-					<div class="control-group">
+					<div class="control-group" style="display:none">
 						<label class="control-label" for="inputTeam"><s:text name="Team"></s:text></label>
 						<div class="controls">
 							<input type="text" id="inputTeam" name="team" placeholder="Team">
 						</div>
 					</div>
 
-					<div class="control-group">
+					<div class="control-group" style="display:none">
 						<label class="control-label" for="inputAccessRule"><s:text name="AccessRule"></s:text></label>
 						<div class="controls">
 							<label class="radio">
@@ -290,7 +290,7 @@
 
 					<div class="control-group">
 						<label class="control-label" for="inputServiceWay"><s:text name="ServiceProvidingMode"></s:text></label>
-						<div class="controls">
+						<div class="controls" id="inputServiceWay">
 							<label class="radio">
 								<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
 								<s:text name="ServiceInternalMode"></s:text>
@@ -419,20 +419,20 @@
         var external = document.getElementsByName("external").length;
         if(document.getElementById("optionsRadios2").checked == true){
             isExternal = "1";
-            for(var i = 0; i < internal; i++){
+            /*for(var i = 0; i < internal; i++){
                 document.getElementsByName("internal")[i].style="display:none";
             }
             for(var i = 0; i < external; i++){
                 document.getElementsByName("external")[i].style="display:block";
-            }
+            }*/
         }
         else{
-            for(var i = 0; i < internal; i++){
+            /*for(var i = 0; i < internal; i++){
                 document.getElementsByName("internal")[i].style="display:block";
             }
             for(var i = 0; i < external; i++){
                 document.getElementsByName("external")[i].style="display:none";
-            }
+            }*/
         }
         //document.getElementById("inputIsExternal").value = isExternal;
     });
