@@ -200,7 +200,7 @@
 
 	<div class="copyright">
 
-		2013 &copy;<s:text name="SchoolName"></s:text>
+		2017 &copy;<s:text name="SchoolName"></s:text>
 
 	</div>
 

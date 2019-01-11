@@ -1015,7 +1015,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<div class="footer">
 
 		<div class="footer-inner">
-			2013 &copy;  中山大学软件学院A304
+			2017 &copy;  中山大学软件学院A304
 		</div>
 
 		<div class="footer-tools">
