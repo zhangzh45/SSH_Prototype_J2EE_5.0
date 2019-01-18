@@ -77,8 +77,8 @@ public class ComputeServiceQoS {
     public double getTime(){
         double time = 0.0;
         if(construct != null){
-            double aTime = Double.parseDouble(aSer.getServiceTime());
-            double bTime = Double.parseDouble(bSer.getServiceTime());
+            double aTime = aSer.getServiceTime();
+            double bTime = bSer.getServiceTime();
             if(construct.equalsIgnoreCase("sequence")){
                 time = aTime + bTime;
             }

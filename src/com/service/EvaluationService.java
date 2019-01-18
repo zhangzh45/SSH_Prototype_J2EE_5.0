@@ -52,7 +52,7 @@ public class EvaluationService
 		}
 		int points = 0;
 		for(int i = 0 ; i < num; i++){
-			points += Integer.parseInt(evas.get(i).getEvaluationMark());
+			points += evas.get(i).getEvaluationMark();
 		}
 		return points * 1.0 / num;
 	}

@@ -251,9 +251,7 @@ public class ServiceAction extends ActionSupport{
 		sr.setFailTimes(0);
 		sr.setTeam(team);
 		sr.setAccessRule(accessRule);
-		if (sr.getServiceTime().isEmpty()) {
-			sr.setServiceTime("0.1");   //设置默认的服务最大请求时间，以秒为单位
-		}
+		//sr.setServiceTime(0.1);   //设置默认的服务最大请求时间，以秒为单位
 		sr.setServiceProvider(loginUser);
 		if (serviceReliability.isEmpty()) {
 			sr.setServiceReliability(0.9); //设置服务可靠性的默认初始值
@@ -1804,11 +1802,11 @@ public class ServiceAction extends ActionSupport{
                 System.out.println("invoke:"+s.getServiceId()+" " + times);
                 reliability *= Math.pow(s.getServiceReliability(),times);
                 servicecost += s.getServiceCost();
-                servicetime += Double.parseDouble(s.getServiceTime()) * times;
+                servicetime += s.getServiceTime() * times;
             }
             combineprocess.setServiceReliability(reliability);
             combineprocess.setServiceCost(servicecost);
-            combineprocess.setServiceTime(String.valueOf(servicetime));
+            combineprocess.setServiceTime(servicetime);
             srs.register(combineprocess);
 
 			//同时保存到流程表中
@@ -2355,7 +2353,7 @@ public class ServiceAction extends ActionSupport{
 				}
 				qos.setReliability(s.getServiceReliability());
 				qos.setAvailability(availability);
-				qos.setServiceTime(Double.parseDouble(s.getServiceTime()));
+				qos.setServiceTime(s.getServiceTime());
 				qos.setServiceCost(s.getServiceCost());
 				qos.setBusyDegree(busyDegree);
 				qos.setAvgEvaluation(avgEvaluation);
@@ -2409,10 +2407,7 @@ public class ServiceAction extends ActionSupport{
 		MonitorDataFromIstio monitorData = new MonitorDataFromIstio();//从Istio获取可用性和繁忙程度
 		double reliability = s.getServiceReliability();
 		double serviceCost = s.getServiceCost();
-		double serviceTime = 100.0;
-		if(s.getServiceTime() != null){
-			serviceTime = Double.parseDouble(s.getServiceTime());
-		}
+		double serviceTime = s.getServiceTime();
 		double avgEvaluation = evaluationsr.getAvgEvaluation(serviceid);
 		double original_avgEvaluation = avgEvaluation;
 		double availability = 1.0;
@@ -2470,7 +2465,7 @@ public class ServiceAction extends ActionSupport{
 		System.out.println(qosValue);
 
 		//不用均一化后的值，给用户显示原始的值
-		ServiceQos qos = new ServiceQos(s.getServiceId(), s.getServiceName(), s.getServiceType(), s.getServiceReliability(), availability, Double.parseDouble(s.getServiceTime()), s.getServiceCost(), original_busyDegree, original_avgEvaluation, qosValue);
+		ServiceQos qos = new ServiceQos(s.getServiceId(), s.getServiceName(), s.getServiceType(), s.getServiceReliability(), availability, s.getServiceTime(), s.getServiceCost(), original_busyDegree, original_avgEvaluation, qosValue);
 		return qos;
 	}
 

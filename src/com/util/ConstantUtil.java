@@ -24,19 +24,19 @@ public class ConstantUtil {
 	private static final String defaultDeployParams = "{'hostIPC':false,'hostNetwork':false,'hostPID':false,'paused':false,'type':'workload','namespaceId':'team1-private','scale':2,'dnsPolicy':'ClusterFirst','restartPolicy':'Always','labels':{},'containers':[{'initContainer':false,'restartCount':0,'stdin':true,'stdinOnce':false,'tty':true,'type':'container','privileged':false,'allowPrivilegeEscalation':false,'readOnly':false,'runAsNonRoot':false,'namespaceId':'team1-private','imagePullPolicy':'Always','environmentFrom':[],'resources':{'requests':{},'limits':{}},'capAdd':[],'capDrop':[],'image':'ubuntu:xenial','ports':[{'containerPort':'80','sourcePort':'30001','type':'containerPort','kind':'NodePort','protocol':'TCP'}],'livenessProbe':null,'name':'test','volumeMounts':[]}],'scheduling':{'node':{'nodeId':'c-vhcnl:m-77eb26772e5a'}},'deploymentConfig':{'minReadySeconds':0,'type':'deploymentConfig','revisionHistoryLimit':10,'strategy':'RollingUpdate','maxSurge':1,'maxUnavailable':0},'name':'test','volumes':[]}";
 
 	//组织管理中心的发布地址
-	private static final String demoEndpoint = "http://127.0.0.1:8020/demo/EmployeeServerInterfacePort?wsdl";
+	private static final String demoEndpoint = "http://192.168.0.93:8020/demo/EmployeeServerInterfacePort?wsdl";
 
 	//从sysuclient端获取所有角色的URL
-	private static final String getAllRoleURL = "http://127.0.0.1:8030/sysuClient/new/getAllRole.action";
+	private static final String getAllRoleURL = "http://192.168.0.93:8030/sysuClient/new/getAllRole.action";
 
 	//统计图片的存放文件路径
 	private static final String statisticsPicture = "E:\\workspace\\idea_projects\\SSH_Prototype_J2EE_5.0\\WebRoot\\images\\company.jpeg";
 
 	//映射中心的根据组织角色获取业务角色的URL
-	private static final String getBusiRoleByOrganRoleURL = "http://localhost:3000/rolemap/getBusiRoleByOrganRole/";
+	private static final String getBusiRoleByOrganRoleURL = "http://192.168.0.93:3000/rolemap/getBusiRoleByOrganRole/";
 
 	//获取流程角色的URL，必须填本机IP的地址
-	private static final String getSpecRoleURL = "http:\\\\localhost:8090\\SSH_Prototype_J2EE_5.0\\getSpecRoleFromSpec.action?specid=";
+	private static final String getSpecRoleURL = "http:\\\\192.168.0.93:8090\\SSH_Prototype_J2EE_5.0\\getSpecRoleFromSpec.action?specid=";
 
 	//利用层次分析法AHP确定QoS各属性权重中，平均随机一致性指标RI的取值（根据判断矩阵的维数决定，此处维数n=6）
 	private static final double  ri = 1.26;

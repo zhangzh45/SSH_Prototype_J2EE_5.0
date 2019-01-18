@@ -104,7 +104,7 @@ public class FormAction extends ActionSupport{
 			  map.put("serviceAddress", service.getServiceAddress());
 			  map.put("serviceVersion", service.getServiceVersion());
 			  map.put("serviceMaker", service.getServiceMaker());
-			  map.put("serviceTime", service.getServiceTime());
+			  map.put("serviceTime", String.valueOf(service.getServiceTime()));
 			  map.put("serviceHost", service.getServiceHost());
 			  map.put("serviceQuery", service.getServiceQuery());
 			  jsArray.put(map);

@@ -227,7 +227,7 @@ public class EvaluationAction extends ActionSupport
 				
 				for(int j = 0; j < num; j++)
 				{
-					sum = sum + Integer.parseInt(alle.get(j).getEvaluationMark());
+					sum = sum + alle.get(j).getEvaluationMark();
 				}
 				double avg = 0.0;
 				if(num != 0){
@@ -345,7 +345,7 @@ public class EvaluationAction extends ActionSupport
 		{
 			services.clear();
 			System.out.println(option2);
-			e.setEvaluationMark(option2);
+			e.setEvaluationMark(Integer.parseInt(option2));
 			e.setEvaluationService(Integer.valueOf(option1));
 			e.setEvaluationUser(Integer.valueOf(option3));
 			this.evaluationsr.addEvaluatuion(e);

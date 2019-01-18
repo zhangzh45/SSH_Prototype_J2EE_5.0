@@ -27,7 +27,7 @@ public class Service implements java.io.Serializable {
 	private String WSDLLocation;
 	private String serviceVersion;
 	private String serviceMaker;
-	private String serviceTime;
+	private double serviceTime;
 	private Integer runTimes;
 	private Integer failTimes;
 	private String preferredTarget;
@@ -61,7 +61,7 @@ public class Service implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Service(Integer serviceId, String serviceName, String serviceDesc, Integer maxLoad, String serviceType, String serviceLevel, String relateBusiness, String serviceTarget, String serviceRange, double serviceReliability, double serviceCost, String serviceState, String serviceAddress, String WSDLLocation, String serviceVersion, String serviceMaker, String serviceTime, Integer runTimes, Integer failTimes, String preferredTarget, String serviceHost, String serviceQuery, String callService, String serviceProvider, String appRoleUrl, String combineType, String businessFile, String attachments, String team, String accessRule, Integer isExternal) {
+	public Service(Integer serviceId, String serviceName, String serviceDesc, Integer maxLoad, String serviceType, String serviceLevel, String relateBusiness, String serviceTarget, String serviceRange, double serviceReliability, double serviceCost, String serviceState, String serviceAddress, String WSDLLocation, String serviceVersion, String serviceMaker, double serviceTime, Integer runTimes, Integer failTimes, String preferredTarget, String serviceHost, String serviceQuery, String callService, String serviceProvider, String appRoleUrl, String combineType, String businessFile, String attachments, String team, String accessRule, Integer isExternal) {
 		this.serviceId = serviceId;
 		this.serviceName = serviceName;
 		this.serviceDesc = serviceDesc;
@@ -228,11 +228,11 @@ public class Service implements java.io.Serializable {
 		this.serviceMaker = serviceMaker;
 	}
 
-	public String getServiceTime() {
+	public double getServiceTime() {
 		return this.serviceTime;
 	}
 
-	public void setServiceTime(String serviceTime) {
+	public void setServiceTime(double serviceTime) {
 		this.serviceTime = serviceTime;
 	}
 

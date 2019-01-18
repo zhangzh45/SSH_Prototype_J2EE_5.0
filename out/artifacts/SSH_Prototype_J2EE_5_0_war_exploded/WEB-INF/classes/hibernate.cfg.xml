@@ -7,9 +7,7 @@
 <hibernate-configuration>
 
 	<session-factory>
-        <property name="connection.url">jdbc:mysql://localhost:3306/enterpriseservicemanagementsystem</property>
-        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <mapping resource="com/bean/Service.hbm.xml" />
+		<mapping resource="com/bean/Service.hbm.xml" />
 		<mapping resource="com/bean/User.hbm.xml" />
 		<mapping resource="com/bean/Role.hbm.xml" />
 		<mapping resource="com/bean/Parameter.hbm.xml" />
@@ -42,9 +40,8 @@
 		<mapping resource="com/bean/Permissionservice.hbm.xml" />
 		<mapping resource="com/bean/Servicelinks.hbm.xml" />
 		<mapping resource="com/bean/Serviceclass.hbm.xml" />
-        <mapping class="com.bean.Service"/>
 
-    </session-factory>
+	</session-factory>
 
 
 </hibernate-configuration>

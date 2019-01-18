@@ -11,7 +11,7 @@ public class Evaluation implements java.io.Serializable {
 	private Integer evaluationId;
 	private Integer evaluationUser;
 	private Integer evaluationService;
-	private String evaluationMark;
+	private Integer evaluationMark;
 	private String suggestion;
 
 	// Constructors
@@ -27,7 +27,7 @@ public class Evaluation implements java.io.Serializable {
 
 	/** full constructor */
 	public Evaluation(Integer evaluationId, Integer evaluationUser,
-			Integer evaluationService, String evaluationMark, String suggestion) {
+			Integer evaluationService, Integer evaluationMark, String suggestion) {
 		this.evaluationId = evaluationId;
 		this.evaluationUser = evaluationUser;
 		this.evaluationService = evaluationService;
@@ -61,11 +61,11 @@ public class Evaluation implements java.io.Serializable {
 		this.evaluationService = evaluationService;
 	}
 
-	public String getEvaluationMark() {
+	public Integer getEvaluationMark() {
 		return this.evaluationMark;
 	}
 
-	public void setEvaluationMark(String evaluationMark) {
+	public void setEvaluationMark(Integer evaluationMark) {
 		this.evaluationMark = evaluationMark;
 	}
 

@@ -55,9 +55,10 @@
         <property name="serviceMaker" type="string">
             <column name="ServiceMaker" length="45" />
         </property>
-        <property name="serviceTime" type="string">
-            <column name="ServiceTime" length="45" />
+        <property name="serviceTime" type="double">
+            <column name="ServiceTime" precision="22" scale="0" />
         </property>
+
         <property name="runTimes" type="integer">
             <column name="runTimes" />
         </property>

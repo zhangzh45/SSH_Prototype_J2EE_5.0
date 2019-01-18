@@ -26,13 +26,13 @@
             <value>com.mysql.jdbc.Driver</value>
         </property>
         <property name="url">
-            <value>jdbc:mysql://127.0.0.1:3306/enterpriseservicemanagementsystem?characterEncoding=UTF-8</value>
+            <value>jdbc:mysql://222.200.180.59:3306/enterpriseservicemanagementsystem?characterEncoding=utf8&amp;autoReconnect=true&amp;failOverReadOnly=false</value>
         </property>
         <property name="username">
             <value>root</value>
         </property>
         <property name="password">
-            <value>3330428190</value>
+            <value>workflow</value>
         </property>
     </bean>
     <!-- 事务管理器的配置 -->

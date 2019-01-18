@@ -274,19 +274,5 @@ public class SerService
 		return srDAO.findMinServiceCost();
 	}
 	
-	/**
-	 * 获取所有服务的最大QoS值
-	 * @return
-	 */
-	public double getMaxServiceQos(){
-		return srDAO.findMaxServiceQos();
-	}
-	
-	/**
-	 * 获取所有服务的最小QoS值
-	 * @return
-	 */
-	public double getMinServiceQos(){
-		return srDAO.findMinServiceQos();
-	}
+
 }

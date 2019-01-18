@@ -1034,7 +1034,7 @@ public class ParameterAction extends ActionSupport
 	 */
 	public double computeServiceTime(int sidInt){
 		Service ser = srs.getUniqueService(String.valueOf(sidInt));
-		double old_serviceTime = Double.parseDouble(ser.getServiceTime());
+		double old_serviceTime = ser.getServiceTime();
 		old_serviceTime = (double) Math.round(old_serviceTime * 10000) / 10000; //保留4位小数
 		System.out.println(old_serviceTime);
 		double new_serviceTime = old_serviceTime;
@@ -1045,7 +1045,7 @@ public class ParameterAction extends ActionSupport
 			new_serviceTime = monitor.getServiceTime(ser.getServiceName());
 			new_serviceTime = new_serviceTime * 0.9 + old_serviceTime * 0.1;
 		}
-		ser.setServiceTime(String.valueOf(new_serviceTime));
+		ser.setServiceTime(new_serviceTime);
 		srs.update(ser);
 		return new_serviceTime;
 	}

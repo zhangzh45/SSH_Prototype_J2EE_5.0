@@ -348,7 +348,7 @@ public class ServiceDAO extends HibernateDaoSupport {
 	 */
 	public double findMaxServiceTime(){
 		String hql="select max(serviceTime) from Service";
-		return Double.parseDouble((String) getHibernateTemplate().find(hql).get(0));
+		return (Double)getHibernateTemplate().find(hql).get(0);
 	}
 
 	/**
@@ -357,7 +357,7 @@ public class ServiceDAO extends HibernateDaoSupport {
 	 */
 	public double findMinServiceTime(){
 		String hql="select min(serviceTime) from Service";
-		return Double.parseDouble((String) getHibernateTemplate().find(hql).get(0));
+		return (Double)getHibernateTemplate().find(hql).get(0);
 	}
 
 	/**
@@ -366,7 +366,14 @@ public class ServiceDAO extends HibernateDaoSupport {
 	 */
 	public double findMaxServiceCost(){
 		String hql="select max(serviceCost) from Service";
-		return (Double) getHibernateTemplate().find(hql).get(0);
+		double result = 0;
+		try {
+			result = (Double) getHibernateTemplate().find(hql).get(0);
+		} catch (Exception e) {
+			System.out.println("----------------");
+			System.out.println(e);
+		}
+		return result;
 	}
 
 	/**
@@ -378,21 +385,4 @@ public class ServiceDAO extends HibernateDaoSupport {
 		return (Double) getHibernateTemplate().find(hql).get(0);
 	}
 
-	/**
-	 * 查找所有服务的最大QoS值
-	 * @return
-	 */
-	public double findMaxServiceQos(){
-		String hql="select max(serviceQos) from Service";
-		return (Double) getHibernateTemplate().find(hql).get(0);
-	}
-
-	/**
-	 * 查找所有服务的最小QoS值
-	 * @return
-	 */
-	public double findMinServiceQos(){
-		String hql="select min(serviceQos) from Service";
-		return (Double) getHibernateTemplate().find(hql).get(0);
-	}
 }

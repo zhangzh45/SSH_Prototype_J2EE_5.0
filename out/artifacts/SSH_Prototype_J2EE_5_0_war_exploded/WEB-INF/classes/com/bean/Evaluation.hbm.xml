@@ -16,8 +16,8 @@
         <property name="evaluationService" type="integer">
             <column name="EvaluationService" />
         </property>
-        <property name="evaluationMark" type="string">
-            <column name="EvaluationMark" length="45" />
+        <property name="evaluationMark" type="integer">
+            <column name="EvaluationMark" />
         </property>
         <property name="suggestion" type="string">
             <column name="Suggestion" length="45" />
