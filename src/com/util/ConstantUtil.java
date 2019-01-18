@@ -30,7 +30,7 @@ public class ConstantUtil {
 	private static final String getAllRoleURL = "http://192.168.0.93:8030/sysuClient/new/getAllRole.action";
 
 	//统计图片的存放文件路径
-	private static final String statisticsPicture = "E:\\workspace\\idea_projects\\SSH_Prototype_J2EE_5.0\\WebRoot\\images\\company.jpeg";
+	private static final String statisticsPicture = "/home/stack/zhangzhao/images/company.jpeg";
 
 	//映射中心的根据组织角色获取业务角色的URL
 	private static final String getBusiRoleByOrganRoleURL = "http://192.168.0.93:3000/rolemap/getBusiRoleByOrganRole/";
