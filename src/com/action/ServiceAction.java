@@ -366,7 +366,7 @@ public class ServiceAction extends ActionSupport{
         //2、以及服务之间的这两种关系的保存
 
         if (sr.getIsExternal() == 0) {   //注册的是内部服务
-		    if (sr.getServiceType().equalsIgnoreCase("SERVICE")) { //实现服务注册即部署
+		  /*  if (sr.getServiceType().equalsIgnoreCase("SERVICE")) { //实现服务注册即部署
 		        String namespace = team + "-" + accessRule;
 		        String serviceResult = iwrUtil.deployService(sr.getServiceName(), namespace, serviceScale, dockerImage, servicePort);
 		        if (serviceResult == null) {
@@ -381,7 +381,8 @@ public class ServiceAction extends ActionSupport{
 		        }
 		        srs.update(sr);
 		    }
-		    /*if (sr.getServiceType().equalsIgnoreCase("APPLICATION")) {//若注册的是应用，其后端的微服务也要进行注册
+
+		    if (sr.getServiceType().equalsIgnoreCase("APPLICATION")) {//若注册的是应用，其后端的微服务也要进行注册
 		        String servicesOfStack = iwrUtil.getServicesOfStack(sr.getServiceName());
 		        String containedServices = ",";
 		        if (servicesOfStack != null) {

@@ -330,7 +330,7 @@ public class ParseYawlFile {
 						Iterator initialValues = localVariable.elementIterator("initialValue");
 						if (initialValues.hasNext()) {
 							Element initialValue = (Element) initialValues.next();
-							if (initialValue.getText() != null && initialValue.getText().contains("?WSDL")) {
+							if (initialValue.getText() != null && (initialValue.getText().contains("?WSDL") || initialValue.getText().contains("?wsdl"))) {
 								String WSDLLocation = initialValue.getText();
 								System.out.println("WSDLLocation: " + WSDLLocation);
 								Service s = srs.findyByWSDLLocation(WSDLLocation).get(0);
